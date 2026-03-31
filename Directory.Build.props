@@ -1,0 +1,30 @@
+<Project>
+
+  <PropertyGroup>
+    <Version>0.0.1</Version>
+    <Product>PrepperBox</Product>
+    <Authors>Dima Kravtsov</Authors>
+    <Description>Emergency Stock Management</Description>
+    <RepositoryUrl>https://github.com/hwndmaster/prepper-box</RepositoryUrl>
+
+    <RootNamespace>Genius.$(MSBuildProjectName)</RootNamespace>
+    <AssemblyName>$(RootNamespace)</AssemblyName>
+
+    <AtomPackageVersion>0.1.4</AtomPackageVersion>
+    <!-- Local development: use the Atom source checkout directly -->
+    <AtomBuildDirectory Condition="Exists('C:\Dev\Src\atom\Atom.Build\build')">C:\Dev\Src\atom\Atom.Build\build</AtomBuildDirectory>
+    <!-- CI/Docker fallback: use the restored NuGet package (Windows) -->
+    <AtomBuildDirectory Condition="'$(AtomBuildDirectory)' == '' And '$(USERPROFILE)' != ''">$(USERPROFILE)/.nuget/packages/genius.atom.build/$(AtomPackageVersion)/build</AtomBuildDirectory>
+    <!-- CI/Docker fallback: use the restored NuGet package (Linux) -->
+    <AtomBuildDirectory Condition="'$(AtomBuildDirectory)' == '' And '$(HOME)' != ''">$(HOME)/.nuget/packages/genius.atom.build/$(AtomPackageVersion)/build</AtomBuildDirectory>
+    <AtomLocation>..\..\</AtomLocation>
+  </PropertyGroup>
+
+  <Import Project="$(AtomBuildDirectory)/Genius.Atom.Build.props" Condition="Exists('$(AtomBuildDirectory)/Genius.Atom.Build.props')" />
+  <Import Project="$(AtomBuildDirectory)/AtomReferences.targets" Condition="Exists('$(AtomBuildDirectory)/AtomReferences.targets')" />
+
+  <!-- Automated Testing components -->
+  <ItemGroup Condition="$(IsTestProject) == 'True' Or $(MSBuildProjectName.EndsWith('.TestingUtil'))">
+    <Using Include="AutoFixture.AutoFakeItEasy" />
+  </ItemGroup>
+</Project>

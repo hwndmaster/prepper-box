@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ReferenceAtomData>true</ReferenceAtomData>
+    <ReferenceAtomDataEf>true</ReferenceAtomDataEf>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../PrepperBox.Core/PrepperBox.Core.csproj" />
+  </ItemGroup>
+
+</Project>

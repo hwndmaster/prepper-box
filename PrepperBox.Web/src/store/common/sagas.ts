@@ -1,0 +1,50 @@
+import { call } from "redux-saga/effects";
+import { AxiosError } from "axios";
+import { withComponentName } from "@/shared/logger";
+import { ErrorInfo, RaiseErrorInfo, ValidationError } from "@/shared/errorInfo";
+import { isDev } from "@/shared/constants";
+import { toastService } from "@/shared/ui/toastService";
+import { ApiException } from "@/api/api.generated";
+import { SagaGenerator } from "../types";
+import * as commonActions from "./actions";
+
+const logger = withComponentName("Saga Common");
+
+function raiseErrorInternal(message: string, title?: string, ...args: unknown[]): void {
+    title = title ?? "Error";
+    message = message ?? "Unknown error";
+    toastService.showError(title, message);
+    logger.error(`${title}: ${message}` + (args.length > 0 ? ", details: %o" : ""), args);
+}
+
+function isGeneralErrorInfo(payload: RaiseErrorInfo): boolean {
+    return payload != null && typeof payload === "object" && "message" in payload;
+}
+
+function isValidationErrorInfo(payload: ValidationError | unknown): boolean {
+    return payload != null && typeof payload === "object" && "errors" in payload && "status" in payload;
+}
+
+/**
+ * Handles the raise error action saga.
+ * @param {PayloadAction<RaiseErrorInfo>} action - The action containing the error information.
+ */
+export function* raiseErrorSaga(action: ReturnType<typeof commonActions.raiseError>): SagaGenerator {
+    if (action.payload instanceof AxiosError) {
+        yield call(raiseErrorInternal, action.payload.message, "API Error", action.payload);
+    } else if (action.payload instanceof ApiException) {
+        yield call(raiseErrorInternal, action.payload.response, `API Error (status ${action.payload.status})`, action.payload);
+    } else if (action.payload instanceof Error) {
+        yield call(raiseErrorInternal, action.payload.message, (action.payload.cause ?? "Error").toString(), {
+            stack: isDev === true ? action.payload.stack : undefined,
+        });
+    } else if (isGeneralErrorInfo(action.payload)) {
+        const errorInfo: ErrorInfo = action.payload as ErrorInfo;
+        yield call(raiseErrorInternal, errorInfo.message, errorInfo.title);
+    } else if (isValidationErrorInfo(action.payload)) {
+        const errorInfo: ValidationError = action.payload as ValidationError;
+        yield call(raiseErrorInternal, Object.values(errorInfo.errors).flat().join("\n"), errorInfo.title);
+    } else {
+        yield call(raiseErrorInternal, (action.payload ?? "").toString());
+    }
+}

@@ -1,0 +1,100 @@
+﻿import { Task } from "redux-saga";
+import { takeLatest, cancel, CancelEffect, ForkEffect, takeEvery, put } from "redux-saga/effects";
+import { HasToastedError } from "@/shared/errorInfo";
+import * as commonSagas from "./common/sagas";
+import * as categoriesSagas from "./categories/sagas";
+import * as consumptionLogsSagas from "./consumptionLogs/sagas";
+import * as productsSagas from "./products/sagas";
+import * as trackedProductsSagas from "./trackedProducts/sagas";
+import * as common from "./common";
+import * as categories from "./categories";
+import * as consumptionLogs from "./consumptionLogs";
+import * as products from "./products";
+import * as trackedProducts from "./trackedProducts";
+
+/**
+ * A saga which cancels a worker.
+ * @param task The task.
+ */
+function* cancelWorkerSaga(task: Task): IterableIterator<CancelEffect> {
+    yield cancel(task);
+}
+
+enum SagaHandlingType {
+    TakeLatest = 1,
+    TakeEvery = 2,
+}
+
+const commonWatchers = [
+    { handlingType: SagaHandlingType.TakeEvery, action: common.Actions.raiseError, saga: commonSagas.raiseErrorSaga },
+];
+
+const categoriesWatchers = [
+    { handlingType: SagaHandlingType.TakeLatest, action: categories.Actions.fetchCategories, saga: categoriesSagas.fetchCategoriesSaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: categories.Actions.saveCategory, saga: categoriesSagas.saveCategorySaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: categories.Actions.deleteCategory, saga: categoriesSagas.deleteCategorySaga },
+];
+
+const productsWatchers = [
+    { handlingType: SagaHandlingType.TakeLatest, action: products.Actions.fetchProducts, saga: productsSagas.fetchProductsSaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: products.Actions.fetchProductsByBarCode, saga: productsSagas.fetchProductsByBarCodeSaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: products.Actions.saveProduct, saga: productsSagas.saveProductSaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: products.Actions.deleteProduct, saga: productsSagas.deleteProductSaga },
+];
+
+const trackedProductsWatchers = [
+    { handlingType: SagaHandlingType.TakeLatest, action: trackedProducts.Actions.fetchTrackedProducts, saga: trackedProductsSagas.fetchTrackedProductsSaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: trackedProducts.Actions.saveTrackedProduct, saga: trackedProductsSagas.saveTrackedProductSaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: trackedProducts.Actions.deleteTrackedProduct, saga: trackedProductsSagas.deleteTrackedProductSaga },
+];
+
+const consumptionLogsWatchers = [
+    { handlingType: SagaHandlingType.TakeLatest, action: consumptionLogs.Actions.fetchConsumptionLogs, saga: consumptionLogsSagas.fetchConsumptionLogsSaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: consumptionLogs.Actions.saveConsumptionLog, saga: consumptionLogsSagas.saveConsumptionLogSaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: consumptionLogs.Actions.deleteConsumptionLog, saga: consumptionLogsSagas.deleteConsumptionLogSaga },
+];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function* errorFallback<TFn extends (...args: any[]) => any>(sagaFunction: TFn, action: any): Generator<any, any, any> {
+    try {
+        yield sagaFunction(action);
+    } catch (error) {
+        if (error instanceof Object
+            && "toasted" in error
+            && (error as HasToastedError).toasted === true
+        ) {
+            return;
+        }
+        yield put(common.Actions.raiseError(error));
+    }
+}
+
+const applicationWatchers = [
+    ...commonWatchers,
+    ...categoriesWatchers,
+    ...consumptionLogsWatchers,
+    ...productsWatchers,
+    ...trackedProductsWatchers,
+];
+
+/**
+ * A saga to start watching the application state.
+ */
+function* watchApplication(): IterableIterator<ForkEffect<never>> {
+    for (const item of applicationWatchers) {
+        if (item.handlingType === SagaHandlingType.TakeLatest) {
+            yield takeLatest(item.action, errorFallback, item.saga);
+        } else if (item.handlingType === SagaHandlingType.TakeEvery) {
+            yield takeEvery(item.action, errorFallback, item.saga);
+        } else {
+            throw new Error("Unexpected value of the saga handling type.");
+        }
+    }
+}
+
+export {
+    cancelWorkerSaga, // TODO: Not used yet!
+    SagaHandlingType, // for fakeStore only
+    applicationWatchers, // for fakeStore only
+    watchApplication,
+};

@@ -1,0 +1,24 @@
+services:
+  prepper-box-api:
+    build:
+      context: .                          # Root, so all projects are in scope
+      dockerfile: PrepperBox.WebApi/Dockerfile
+      args:
+        ATOM_PKG_ACCESS_TOKEN: ${ATOM_PKG_ACCESS_TOKEN:-}
+    container_name: prepper-box-api
+    ports:
+      - "5095:8045"                       # Host port 5095 → container port 8045
+    volumes:
+      - C:/Dev/Src/prepper-box-docker-data:/app/Data      # Persist SQLite database
+    restart: unless-stopped
+
+  prepper-box-web:
+    build:
+      context: ./PrepperBox.Web
+      dockerfile: Dockerfile
+    container_name: prepper-box-web
+    ports:
+      - "5096:8046"                         # Host port 5096 → container port 8046
+    depends_on:
+      - prepper-box-api
+    restart: unless-stopped

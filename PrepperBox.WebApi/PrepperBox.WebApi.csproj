@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <AssemblyName>PrepperBox.WebApi</AssemblyName>
+    <ReferenceAtomData>true</ReferenceAtomData>
+    <ReferenceAtomDataEf>true</ReferenceAtomDataEf>
+    <ReferenceAtomInfrastructure>true</ReferenceAtomInfrastructure>
+    <ReferenceAtomWeb>true</ReferenceAtomWeb>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../PrepperBox.Core/PrepperBox.Core.csproj" />
+    <ProjectReference Include="../PrepperBox.Db/PrepperBox.Db.csproj" />
+    <ProjectReference Include="../PrepperBox.Dto/PrepperBox.Dto.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,19 @@
+<Project>
+  <Import Project="$(AtomBuildDirectory)/PackageVersions.props" />
+
+  <ItemGroup>
+    <!-- Microsoft ASP.NET dependencies -->
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.3" />
+
+    <!-- Atom Framework -->
+    <PackageVersion Include="Genius.Atom.Data" Version="$(AtomPackageVersion)" />
+    <PackageVersion Include="Genius.Atom.Data.Ef" Version="$(AtomPackageVersion)" />
+    <PackageVersion Include="Genius.Atom.Data.Generators" Version="$(AtomPackageVersion)" />
+    <PackageVersion Include="Genius.Atom.Infrastructure" Version="$(AtomPackageVersion)" />
+    <PackageVersion Include="Genius.Atom.Infrastructure.TestingUtil" Version="$(AtomPackageVersion)" />
+    <PackageVersion Include="Genius.Atom.Web" Version="$(AtomPackageVersion)" />
+  </ItemGroup>
+</Project>

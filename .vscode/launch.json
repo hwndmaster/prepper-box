@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch WebAPI (no build)",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/PrepperBox.WebApi/bin/Debug/net10.0/PrepperBox.WebApi.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}/PrepperBox.WebApi",
+      "console": "internalConsole",
+      "stopAtEntry": false
+    },
+    {
+      "name": "Launch WebAPI",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/PrepperBox.WebApi/bin/Debug/net10.0/PrepperBox.WebApi.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}/PrepperBox.WebApi",
+      "console": "internalConsole",
+      "stopAtEntry": false
+    },
+    {
+      "name": ".NET Core Attach",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    }
+  ]
+}

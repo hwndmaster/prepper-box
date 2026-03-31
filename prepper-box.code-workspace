@@ -1,0 +1,119 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "files.exclude": {
+            "PrepperBox.Web/build/": true,
+            "PrepperBox.Web/node_modules/": true,
+        },
+        "commands.workspaceCommands": {
+            "PrepperBox.Web":
+            {
+                "nestedItems":
+                {
+                    "Install": {
+                        "command": "commands.runInTerminal",
+                        "args": {
+                            "text": "npm install",
+                            "cwd": "${workspaceFolder}/PrepperBox.Web",
+                        },
+                        "icon": "debug-restart",
+                        "iconColor": "errorForeground"
+                    },
+                    "Build": {
+                        "command": "commands.runInTerminal",
+                        "args": {
+                            "text": "npm run build",
+                            "cwd": "${workspaceFolder}/PrepperBox.Web",
+                        },
+                        "icon": "runtime-extensions-editor-label-icon",
+                        "iconColor": "textLink.activeForeground"
+                    },
+                    "Lint": {
+                        "command": "commands.runInTerminal",
+                        "args": {
+                            "text": "npm run lint",
+                            "cwd": "${workspaceFolder}/PrepperBox.Web"
+                        },
+                        "icon": "diff-editor-toggle-whitespace",
+                        "iconColor": "textLink.activeForeground"
+                    },
+                    "Lint Inspect config": {
+                        "command": "commands.runInTerminal",
+                        "args": {
+                            "text": "npx eslint --inspect-config",
+                            "cwd": "${workspaceFolder}/PrepperBox.Web"
+                        },
+                        "icon": "diff-editor-toggle-whitespace",
+                        "iconColor": "textLink.activeForeground"
+                    },
+                    "Run (Dev)": {
+                        "command": "commands.runInTerminal",
+                        "args": {
+                            "text": "npm run start",
+                            "cwd": "${workspaceFolder}/PrepperBox.Web"
+                        },
+                        "icon": "debug-start"
+                    },
+                    "Test": {
+                        "command": "commands.runInTerminal",
+                        "args": {
+                            "text": "npm run test",
+                            "cwd": "${workspaceFolder}/PrepperBox.Web"
+                        },
+                        "icon": "output",
+                        "iconColor": "editorBracketHighlight.foreground2"
+                    },
+                    "NSwag": {
+                        "command": "commands.runInTerminal",
+                        "args": {
+                            "text": "npm run nswag",
+                            "cwd": "${workspaceFolder}/PrepperBox.Web"
+                        },
+                        "icon": "file-code",
+                        "iconColor": "terminal.ansiYellow"
+                    }
+                }
+            }
+        },
+        "cSpell.words": [
+            "primereact",
+            "reduxjs",
+        ],
+        "cSpell.ignorePaths": [
+            "package-lock.json",
+            "node_modules",
+            "vscode-extension",
+            ".git",
+            ".vscode",
+            "*.code-workspace"
+        ],
+        "eslint.lintTask.enable": true,
+        "eslint.useFlatConfig": true,
+        //"eslint.debug": true,
+        //"eslint.options": {
+        //	"overrideConfigFile": "C:/Dev/Src/prepper-box/PrepperBox.Web/eslint.config.js"
+        //},
+        //"eslint.lintTask.options": "--global describe,test,beforeAll --parser-options \"{ project: './tsconfig.eslint.json'}\"",
+        "eslint.workingDirectories": [
+            {
+                "directory": "./PrepperBox.Web",
+                "changeProcessCWD": true
+            }
+        ],
+        "[typescript]": {
+            "editor.tabSize": 4,
+            "editor.insertSpaces": true
+        },
+        "[csharp]": {
+            "editor.tabSize": 4
+        },
+        "chat.tools.terminal.autoApprove": {
+            "dotnet test": true,
+            "mkdir": true
+        }
+    }
+}

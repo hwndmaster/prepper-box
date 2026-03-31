@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/PrepperBox.Core/">
+    <Project Path="PrepperBox.Core\PrepperBox.Core.csproj" Type="C#" />
+  </Folder>
+  <Folder Name="/PrepperBox.Db/">
+    <Project Path="PrepperBox.Db\PrepperBox.Db.csproj" Type="C#" />
+  </Folder>
+  <Folder Name="/PrepperBox.Dto/">
+    <Project Path="PrepperBox.Dto\PrepperBox.Dto.csproj" Type="C#" />
+  </Folder>
+  <Folder Name="/PrepperBox.WebApi/">
+    <Project Path="PrepperBox.WebApi\PrepperBox.WebApi.csproj" Type="C#" />
+  </Folder>
+  <Project Path="PrepperBox.Db.Tests/PrepperBox.Db.Tests.csproj" />
+  <Properties Name="Configuration">
+    <Property Name="Debug|AnyCPU" />
+    <Property Name="Release|AnyCPU" />
+  </Properties>
+</Solution>

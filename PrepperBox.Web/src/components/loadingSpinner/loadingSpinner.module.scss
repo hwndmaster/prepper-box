@@ -1,0 +1,28 @@
+$z-index-spinner: 9000000;
+
+.loadingSpinnerContainer {
+  position: relative;
+
+  &[data-loading="true"] {
+    background: $color-bg-overlay;
+
+    > .loadingSpinner {
+      display: block;
+    }
+
+    > .loadingSpinnerContent {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+}
+
+.loadingSpinner {
+  position: absolute;
+  left: calc(50% - 20px);
+  top: 0;
+  bottom: 0;
+  display: none;
+  align-content: center;
+  z-index: $z-index-spinner;
+}

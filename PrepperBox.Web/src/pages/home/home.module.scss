@@ -1,0 +1,79 @@
+@use "../../styles/datatable.scss";
+
+.nameCell {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    margin-right: 0.3rem;
+    flex-shrink: 0;
+
+    img {
+        width: 2rem;
+        height: 2rem;
+        object-fit: cover;
+    }
+}
+
+.emptyAvatar {
+    background-color: var(--surface-d);
+    color: var(--text-color-secondary);
+    margin-right: 0.3rem;
+    flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+    .headerRight {
+        > :global(.p-button) > :global(.p-button-label) {
+            display: none;
+        }
+    }
+}
+
+.recordAvatar {
+    flex-shrink: 0;
+
+    img {
+        width: 2rem;
+        height: 2rem;
+        object-fit: cover;
+    }
+}
+
+.recordInfoCell {
+    padding: 0 !important;
+    width: 3rem;
+}
+
+.recordInfoColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.recordKentekenCell {
+    width: 1rem;
+}
+
+.recordDetails {
+    font-size: 0.85em;
+    color: var(--text-color-secondary);
+}
+
+.recordStatusTag {
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    :global(.p-datatable .p-datatable-thead > tr > th),
+    :global(.p-datatable .p-datatable-tbody > tr > td) {
+        padding: 0.3rem 0.25rem;
+    }
+
+    :global(.p-datatable .p-column-header-content) {
+        gap: 0.15rem;
+    }
+}

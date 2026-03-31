@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ReferenceAtomData>true</ReferenceAtomData>
+    <ReferenceAtomDataEf>true</ReferenceAtomDataEf>
+    <ReferenceAtomInfrastructure>true</ReferenceAtomInfrastructure>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PrepperBox.Db\PrepperBox.Db.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+  </ItemGroup>
+</Project>
