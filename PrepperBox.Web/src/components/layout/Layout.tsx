@@ -8,8 +8,12 @@ import { LoadingSpinner } from "../loadingSpinner";
 import "./layout.module.scss";
 
 const routeTitles = new Map([
-    [AppRoutes.Default.path, "Home"],
-    [AppRoutes.Categories.path, "Categories"]
+    [AppRoutes.Default.path, "Prepper Box"],
+    [AppRoutes.Categories.path, "Categories"],
+    [AppRoutes.StorageLocations.path, "Storage Locations"],
+    [AppRoutes.AddProduct.path, "Add Product"],
+    [AppRoutes.EditProduct.path, "Edit Product"],
+    [AppRoutes.AddTrackedProduct.path, "Add Tracked Product"],
 ]);
 
 const Layout: React.FC = () => {
@@ -26,6 +30,11 @@ const Layout: React.FC = () => {
             label: "Categories",
             icon: "pi pi-tags",
             command: () => void goTo(navigate, AppRoutes.Categories),
+        },
+        {
+            label: "Storage Locations",
+            icon: "pi pi-warehouse",
+            command: () => void goTo(navigate, AppRoutes.StorageLocations),
         }
     ];
 

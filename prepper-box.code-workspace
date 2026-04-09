@@ -113,7 +113,12 @@
         },
         "chat.tools.terminal.autoApprove": {
             "dotnet test": true,
-            "mkdir": true
+            "mkdir": true,
+            "npx tsc": true,
+            "New-Item": true,
+            "dotnet list": true,
+            "npx vitest": true,
+            "npm run build": true
         }
     }
 }

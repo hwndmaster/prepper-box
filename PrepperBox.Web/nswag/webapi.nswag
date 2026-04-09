@@ -52,7 +52,9 @@
       "generateDefaultValues": true,
       "excludedTypeNames": [
         "CategoryRef",
+        "ConsumptionLogRef",
         "ProductRef",
+        "StorageLocationRef",
         "TrackedProductRef",
       ],
       "excludedParameterNames": [],

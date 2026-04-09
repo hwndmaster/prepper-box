@@ -4,6 +4,7 @@
     - Exposed all endpoints with the `operations` and `operationParams` properties.
     - Fixed the issue of rendering class names (controllers) with dot '.' in the name.
     - Used a past of operationId after '_' as method names instead of generating complete names with 'Client Name' in it.
+    - Support of reference types added with AdditionalPropertiesSchema on the WebAPI side.
 {% endcomment %}
 
 {% if HasOperations -%}
@@ -18,7 +19,7 @@
 {% if ExportTypes %}export {% endif %}class {{ Class | replace: ".", "" }} {% if HasBaseClass %}extends {{ BaseClass }} {% endif %}{% if GenerateClientInterfaces %}implements I{{ Class }} {% endif %}{
     protected instance: AxiosInstance;
     protected baseUrl: string;
-    protected jsonParseReviver: {% if SupportsStrictNullChecks %}((key: string, value: any) => any) | undefined{% else %}(key: string, value: any) => any{% endif %} = undefined;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
 {%- if HasExtendedConstructor == false %}
     constructor({% if HasConfigurationClass %}configuration: {{ ConfigurationClass }}, {% endif %}baseUrl?: string, instance?: AxiosInstance) {
@@ -50,19 +51,20 @@
 {% assign operationName = operation.ActualOperationName | split: '_' | last %}
         {{ operationName }}: {} as {
 {%- for parameter in operation.PathParameters -%}
-            {{ parameter.Name }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }};
+            {{ parameter.Name }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {% template ParameterType %};
 {%- endfor -%}
 {%- for parameter in operation.QueryParameters -%}
-            {{ parameter.Name }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }};
+            {{ parameter.Name }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {% template ParameterType %};
 {%- endfor -%}
+{% if operation.HasContent %}            body{% if GenerateOptionalParameters and operation.ContentParameter.IsOptional %}?{% endif %}: Partial<{{ operation.ContentParameter.Type }}>{{ operation.ContentParameter.TypePostfix }};
+{%- endif -%}
         },{% endfor %}
     }
 
 {% for operation in Operations %}
-    {% assign operationName = operation.ActualOperationName | split: '_' | last %}
-
+{% assign operationName = operation.ActualOperationName | split: '_' | last %}
     {% template Client.Method.Documentation %}
-    {{ operation.MethodAccessModifier }}{{ operationName }}({% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false %}, {% endif %}{% endfor %}{% if UseAbortSignal %}{% if operation.Parameters.size > 0 %}, {% endif %}signal?: AbortSignal{% else %}{% if operation.Parameters.size > 0 %},{%endif%} cancelToken?: CancelToken{% endif %}): Promise<{{ operation.ResultType }}> {
+    {{ operation.MethodAccessModifier }}{{ operationName }}({% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {% template ParameterType %}{% if parameter.IsLast == false %}, {% endif %}{% endfor %}{% if UseAbortSignal %}{% if operation.Parameters.size > 0 %}, {% endif %}signal?: AbortSignal{% else %}{% if operation.Parameters.size > 0 %},{%endif%} cancelToken?: CancelToken{% endif %}): Promise<{{ operation.ResultType }}> {
         {% template Client.RequestUrl %}
 
 {%     if operation.HasBody -%}

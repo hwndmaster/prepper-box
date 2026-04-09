@@ -1,6 +1,5 @@
 import * as api from "@/api/api.generated";
 import TrackedProduct from "@/models/trackedProduct";
-import { ticksToDate } from "@/shared/helper";
 
 /**
  * Converts an API TrackedProductDto to a TrackedProduct model.
@@ -11,10 +10,11 @@ export function convertTrackedProductApiToModel(apiTrackedProduct: api.TrackedPr
     return {
         id: apiTrackedProduct.id,
         productId: apiTrackedProduct.productId,
-        expirationDate: apiTrackedProduct.expirationDate != null ? ticksToDate(apiTrackedProduct.expirationDate) : undefined,
+        storageLocationId: apiTrackedProduct.storageLocationId,
+        expirationDate: apiTrackedProduct.expirationDate ?? undefined,
         quantity: apiTrackedProduct.quantity,
         notes: apiTrackedProduct.notes ?? undefined,
         lastModified: apiTrackedProduct.lastModified,
-        dateCreated: new Date(apiTrackedProduct.dateCreated),
+        dateCreated: apiTrackedProduct.dateCreated,
     };
 }

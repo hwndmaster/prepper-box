@@ -9,13 +9,19 @@
 
 import { ApiClientBase } from "@/api/apiClientBase";
 import { ApiResponse } from "@/api/apiResponse";
-import { CategoryRef, ProductRef, TrackedProductRef } from "@/models/types";import axios, { AxiosError } from 'axios';
+import {
+    CategoryRef,
+    ConsumptionLogRef,
+    ProductRef,
+    StorageLocationRef,
+    TrackedProductRef
+} from "@/models/types";import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
 export class CategoriesClient extends ApiClientBase {
     protected instance: AxiosInstance;
     protected baseUrl: string;
-    protected jsonParseReviver: (key: string, value: any) => any = undefined;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
 
@@ -29,29 +35,148 @@ export class CategoriesClient extends ApiClientBase {
 
     static operations = {
 
+        categoriesGET: "api/v1/Categories/{id}",
+        categoriesDELETE: "api/v1/Categories/{id}",
         categoriesAll: "api/v1/Categories",
         categoriesPOST: "api/v1/Categories",
         categoriesPUT: "api/v1/Categories",
-        categoriesDELETE: "api/v1/Categories/{id}",
     }
 
     static operationParams = {
+
+        categoriesGET: {} as {
+            id: CategoryRef;
+        },
+
+        categoriesDELETE: {} as {
+            id: CategoryRef;
+        },
 
         categoriesAll: {} as {
         },
 
         categoriesPOST: {} as {
+            body: Partial<CreateCategoryRequest>;
         },
 
         categoriesPUT: {} as {
-        },
-
-        categoriesDELETE: {} as {
-            id: string;
+            body: Partial<UpdateCategoryRequest>;
         },
     }
 
+    /**
+     * @return OK
+     */
+    categoriesGET(id: CategoryRef, cancelToken?: CancelToken): Promise<ApiResponse<CategoryDto>> {
+        let url_ = this.baseUrl + "/api/v1/Categories/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
 
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCategoriesGET(_response);
+        });
+    }
+
+    protected processCategoriesGET(response: AxiosResponse): Promise<ApiResponse<CategoryDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<CategoryDto>>(new ApiResponse<CategoryDto>(status, _headers, result200));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<CategoryDto>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    categoriesDELETE(id: CategoryRef, cancelToken?: CancelToken): Promise<ApiResponse<void>> {
+        let url_ = this.baseUrl + "/api/v1/Categories/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "DELETE",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCategoriesDELETE(_response);
+        });
+    }
+
+    protected processCategoriesDELETE(response: AxiosResponse): Promise<ApiResponse<void>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<ApiResponse<void>>(new ApiResponse<void>(status, _headers, null as any));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
+    }
 
     /**
      * @return OK
@@ -108,8 +233,6 @@ export class CategoriesClient extends ApiClientBase {
         }
         return Promise.resolve<ApiResponse<CategoryDto[]>>(new ApiResponse(status, _headers, null as any));
     }
-
-
 
     /**
      * @return OK
@@ -171,8 +294,6 @@ export class CategoriesClient extends ApiClientBase {
         return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndCategoryRef>>(new ApiResponse(status, _headers, null as any));
     }
 
-
-
     /**
      * @return OK
      */
@@ -232,14 +353,118 @@ export class CategoriesClient extends ApiClientBase {
         }
         return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndCategoryRef>>(new ApiResponse(status, _headers, null as any));
     }
+}
 
+export class ConsumptionLogsClient extends ApiClientBase {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        super();
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "http://localhost:5095/";
+
+    }
+
+    static operations = {
+
+        consumptionLogsGET: "api/v1/ConsumptionLogs/{id}",
+        consumptionLogsDELETE: "api/v1/ConsumptionLogs/{id}",
+        consumptionLogsAll: "api/v1/ConsumptionLogs",
+        consumptionLogsPOST: "api/v1/ConsumptionLogs",
+        consumptionLogsPUT: "api/v1/ConsumptionLogs",
+    }
+
+    static operationParams = {
+
+        consumptionLogsGET: {} as {
+            id: ConsumptionLogRef;
+        },
+
+        consumptionLogsDELETE: {} as {
+            id: ConsumptionLogRef;
+        },
+
+        consumptionLogsAll: {} as {
+        },
+
+        consumptionLogsPOST: {} as {
+            body: Partial<CreateConsumptionLogRequest>;
+        },
+
+        consumptionLogsPUT: {} as {
+            body: Partial<UpdateConsumptionLogRequest>;
+        },
+    }
 
     /**
      * @return OK
      */
-    categoriesDELETE(id: string, cancelToken?: CancelToken): Promise<ApiResponse<void>> {
-        let url_ = this.baseUrl + "/api/v1/Categories/{id}";
+    consumptionLogsGET(id: ConsumptionLogRef, cancelToken?: CancelToken): Promise<ApiResponse<ConsumptionLogDto>> {
+        let url_ = this.baseUrl + "/api/v1/ConsumptionLogs/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processConsumptionLogsGET(_response);
+        });
+    }
+
+    protected processConsumptionLogsGET(response: AxiosResponse): Promise<ApiResponse<ConsumptionLogDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<ConsumptionLogDto>>(new ApiResponse<ConsumptionLogDto>(status, _headers, result200));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<ConsumptionLogDto>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    consumptionLogsDELETE(id: ConsumptionLogRef, cancelToken?: CancelToken): Promise<ApiResponse<void>> {
+        let url_ = this.baseUrl + "/api/v1/ConsumptionLogs/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
@@ -262,11 +487,11 @@ export class CategoriesClient extends ApiClientBase {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processCategoriesDELETE(_response);
+            return this.processConsumptionLogsDELETE(_response);
         });
     }
 
-    protected processCategoriesDELETE(response: AxiosResponse): Promise<ApiResponse<void>> {
+    protected processConsumptionLogsDELETE(response: AxiosResponse): Promise<ApiResponse<void>> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -289,48 +514,6 @@ export class CategoriesClient extends ApiClientBase {
         }
         return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
     }
-}
-
-export class ConsumptionLogsClient extends ApiClientBase {
-    protected instance: AxiosInstance;
-    protected baseUrl: string;
-    protected jsonParseReviver: (key: string, value: any) => any = undefined;
-
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
-
-        super();
-
-        this.instance = instance || axios.create();
-
-        this.baseUrl = baseUrl ?? "http://localhost:5095/";
-
-    }
-
-    static operations = {
-
-        consumptionLogsAll: "api/v1/ConsumptionLogs",
-        consumptionLogsPOST: "api/v1/ConsumptionLogs",
-        consumptionLogsPUT: "api/v1/ConsumptionLogs",
-        consumptionLogsDELETE: "api/v1/ConsumptionLogs/{id}",
-    }
-
-    static operationParams = {
-
-        consumptionLogsAll: {} as {
-        },
-
-        consumptionLogsPOST: {} as {
-        },
-
-        consumptionLogsPUT: {} as {
-        },
-
-        consumptionLogsDELETE: {} as {
-            id: string;
-        },
-    }
-
-
 
     /**
      * @return OK
@@ -387,8 +570,6 @@ export class ConsumptionLogsClient extends ApiClientBase {
         }
         return Promise.resolve<ApiResponse<ConsumptionLogDto[]>>(new ApiResponse(status, _headers, null as any));
     }
-
-
 
     /**
      * @return OK
@@ -450,8 +631,6 @@ export class ConsumptionLogsClient extends ApiClientBase {
         return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndConsumptionLogRef>>(new ApiResponse(status, _headers, null as any));
     }
 
-
-
     /**
      * @return OK
      */
@@ -511,69 +690,12 @@ export class ConsumptionLogsClient extends ApiClientBase {
         }
         return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndConsumptionLogRef>>(new ApiResponse(status, _headers, null as any));
     }
-
-
-
-    /**
-     * @return OK
-     */
-    consumptionLogsDELETE(id: string, cancelToken?: CancelToken): Promise<ApiResponse<void>> {
-        let url_ = this.baseUrl + "/api/v1/ConsumptionLogs/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "DELETE",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.instance.request(transformedOptions_);
-        }).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processConsumptionLogsDELETE(_response);
-        });
-    }
-
-    protected processConsumptionLogsDELETE(response: AxiosResponse): Promise<ApiResponse<void>> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<ApiResponse<void>>(new ApiResponse<void>(status, _headers, null as any));
-
-        } else if (status === 404) {
-            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
-        }
-        else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
-    }
 }
 
 export class ProductsClient extends ApiClientBase {
     protected instance: AxiosInstance;
     protected baseUrl: string;
-    protected jsonParseReviver: (key: string, value: any) => any = undefined;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
 
@@ -587,34 +709,39 @@ export class ProductsClient extends ApiClientBase {
 
     static operations = {
 
-        productsAll: "api/v1/Products",
         byBarcode: "api/v1/Products/by-barcode/{barCode}",
+        productsGET: "api/v1/Products/{id}",
+        productsDELETE: "api/v1/Products/{id}",
+        productsAll: "api/v1/Products",
         productsPOST: "api/v1/Products",
         productsPUT: "api/v1/Products",
-        productsDELETE: "api/v1/Products/{id}",
     }
 
     static operationParams = {
-
-        productsAll: {} as {
-        },
 
         byBarcode: {} as {
             barCode: string;
         },
 
-        productsPOST: {} as {
-        },
-
-        productsPUT: {} as {
+        productsGET: {} as {
+            id: ProductRef;
         },
 
         productsDELETE: {} as {
-            id: string;
+            id: ProductRef;
+        },
+
+        productsAll: {} as {
+        },
+
+        productsPOST: {} as {
+            body: Partial<CreateProductRequest>;
+        },
+
+        productsPUT: {} as {
+            body: Partial<UpdateProductRequest>;
         },
     }
-
-
 
     /**
      * @return OK
@@ -675,7 +802,119 @@ export class ProductsClient extends ApiClientBase {
         return Promise.resolve<ApiResponse<ProductDto[]>>(new ApiResponse(status, _headers, null as any));
     }
 
+    /**
+     * @return OK
+     */
+    productsGET(id: ProductRef, cancelToken?: CancelToken): Promise<ApiResponse<ProductDto>> {
+        let url_ = this.baseUrl + "/api/v1/Products/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
 
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processProductsGET(_response);
+        });
+    }
+
+    protected processProductsGET(response: AxiosResponse): Promise<ApiResponse<ProductDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<ProductDto>>(new ApiResponse<ProductDto>(status, _headers, result200));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<ProductDto>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    productsDELETE(id: ProductRef, cancelToken?: CancelToken): Promise<ApiResponse<void>> {
+        let url_ = this.baseUrl + "/api/v1/Products/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "DELETE",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processProductsDELETE(_response);
+        });
+    }
+
+    protected processProductsDELETE(response: AxiosResponse): Promise<ApiResponse<void>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<ApiResponse<void>>(new ApiResponse<void>(status, _headers, null as any));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
+    }
 
     /**
      * @return OK
@@ -732,8 +971,6 @@ export class ProductsClient extends ApiClientBase {
         }
         return Promise.resolve<ApiResponse<ProductDto[]>>(new ApiResponse(status, _headers, null as any));
     }
-
-
 
     /**
      * @return OK
@@ -795,8 +1032,6 @@ export class ProductsClient extends ApiClientBase {
         return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndProductRef>>(new ApiResponse(status, _headers, null as any));
     }
 
-
-
     /**
      * @return OK
      */
@@ -856,14 +1091,118 @@ export class ProductsClient extends ApiClientBase {
         }
         return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndProductRef>>(new ApiResponse(status, _headers, null as any));
     }
+}
 
+export class StorageLocationsClient extends ApiClientBase {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        super();
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "http://localhost:5095/";
+
+    }
+
+    static operations = {
+
+        storageLocationsGET: "api/v1/StorageLocations/{id}",
+        storageLocationsDELETE: "api/v1/StorageLocations/{id}",
+        storageLocationsAll: "api/v1/StorageLocations",
+        storageLocationsPOST: "api/v1/StorageLocations",
+        storageLocationsPUT: "api/v1/StorageLocations",
+    }
+
+    static operationParams = {
+
+        storageLocationsGET: {} as {
+            id: StorageLocationRef;
+        },
+
+        storageLocationsDELETE: {} as {
+            id: StorageLocationRef;
+        },
+
+        storageLocationsAll: {} as {
+        },
+
+        storageLocationsPOST: {} as {
+            body: Partial<CreateStorageLocationRequest>;
+        },
+
+        storageLocationsPUT: {} as {
+            body: Partial<UpdateStorageLocationRequest>;
+        },
+    }
 
     /**
      * @return OK
      */
-    productsDELETE(id: string, cancelToken?: CancelToken): Promise<ApiResponse<void>> {
-        let url_ = this.baseUrl + "/api/v1/Products/{id}";
+    storageLocationsGET(id: StorageLocationRef, cancelToken?: CancelToken): Promise<ApiResponse<StorageLocationDto>> {
+        let url_ = this.baseUrl + "/api/v1/StorageLocations/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processStorageLocationsGET(_response);
+        });
+    }
+
+    protected processStorageLocationsGET(response: AxiosResponse): Promise<ApiResponse<StorageLocationDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<StorageLocationDto>>(new ApiResponse<StorageLocationDto>(status, _headers, result200));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<StorageLocationDto>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    storageLocationsDELETE(id: StorageLocationRef, cancelToken?: CancelToken): Promise<ApiResponse<void>> {
+        let url_ = this.baseUrl + "/api/v1/StorageLocations/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
@@ -886,11 +1225,11 @@ export class ProductsClient extends ApiClientBase {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processProductsDELETE(_response);
+            return this.processStorageLocationsDELETE(_response);
         });
     }
 
-    protected processProductsDELETE(response: AxiosResponse): Promise<ApiResponse<void>> {
+    protected processStorageLocationsDELETE(response: AxiosResponse): Promise<ApiResponse<void>> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -913,12 +1252,188 @@ export class ProductsClient extends ApiClientBase {
         }
         return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
     }
+
+    /**
+     * @return OK
+     */
+    storageLocationsAll( cancelToken?: CancelToken): Promise<ApiResponse<StorageLocationDto[]>> {
+        let url_ = this.baseUrl + "/api/v1/StorageLocations";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processStorageLocationsAll(_response);
+        });
+    }
+
+    protected processStorageLocationsAll(response: AxiosResponse): Promise<ApiResponse<StorageLocationDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<StorageLocationDto[]>>(new ApiResponse<StorageLocationDto[]>(status, _headers, result200));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<StorageLocationDto[]>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    storageLocationsPOST(body: CreateStorageLocationRequest, cancelToken?: CancelToken): Promise<ApiResponse<CreatedEntityDtoOfintAndStorageLocationRef>> {
+        let url_ = this.baseUrl + "/api/v1/StorageLocations";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processStorageLocationsPOST(_response);
+        });
+    }
+
+    protected processStorageLocationsPOST(response: AxiosResponse): Promise<ApiResponse<CreatedEntityDtoOfintAndStorageLocationRef>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndStorageLocationRef>>(new ApiResponse<CreatedEntityDtoOfintAndStorageLocationRef>(status, _headers, result200));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndStorageLocationRef>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    storageLocationsPUT(body: UpdateStorageLocationRequest, cancelToken?: CancelToken): Promise<ApiResponse<UpdatedEntityDtoOfintAndStorageLocationRef>> {
+        let url_ = this.baseUrl + "/api/v1/StorageLocations";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "PUT",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processStorageLocationsPUT(_response);
+        });
+    }
+
+    protected processStorageLocationsPUT(response: AxiosResponse): Promise<ApiResponse<UpdatedEntityDtoOfintAndStorageLocationRef>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndStorageLocationRef>>(new ApiResponse<UpdatedEntityDtoOfintAndStorageLocationRef>(status, _headers, result200));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndStorageLocationRef>>(new ApiResponse(status, _headers, null as any));
+    }
 }
 
 export class TrackedProductsClient extends ApiClientBase {
     protected instance: AxiosInstance;
     protected baseUrl: string;
-    protected jsonParseReviver: (key: string, value: any) => any = undefined;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
 
@@ -932,29 +1447,148 @@ export class TrackedProductsClient extends ApiClientBase {
 
     static operations = {
 
+        trackedProductsGET: "api/v1/TrackedProducts/{id}",
+        trackedProductsDELETE: "api/v1/TrackedProducts/{id}",
         trackedProductsAll: "api/v1/TrackedProducts",
         trackedProductsPOST: "api/v1/TrackedProducts",
         trackedProductsPUT: "api/v1/TrackedProducts",
-        trackedProductsDELETE: "api/v1/TrackedProducts/{id}",
     }
 
     static operationParams = {
+
+        trackedProductsGET: {} as {
+            id: TrackedProductRef;
+        },
+
+        trackedProductsDELETE: {} as {
+            id: TrackedProductRef;
+        },
 
         trackedProductsAll: {} as {
         },
 
         trackedProductsPOST: {} as {
+            body: Partial<CreateTrackedProductRequest>;
         },
 
         trackedProductsPUT: {} as {
-        },
-
-        trackedProductsDELETE: {} as {
-            id: string;
+            body: Partial<UpdateTrackedProductRequest>;
         },
     }
 
+    /**
+     * @return OK
+     */
+    trackedProductsGET(id: TrackedProductRef, cancelToken?: CancelToken): Promise<ApiResponse<TrackedProductDto>> {
+        let url_ = this.baseUrl + "/api/v1/TrackedProducts/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
 
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processTrackedProductsGET(_response);
+        });
+    }
+
+    protected processTrackedProductsGET(response: AxiosResponse): Promise<ApiResponse<TrackedProductDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<TrackedProductDto>>(new ApiResponse<TrackedProductDto>(status, _headers, result200));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<TrackedProductDto>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    trackedProductsDELETE(id: TrackedProductRef, cancelToken?: CancelToken): Promise<ApiResponse<void>> {
+        let url_ = this.baseUrl + "/api/v1/TrackedProducts/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "DELETE",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processTrackedProductsDELETE(_response);
+        });
+    }
+
+    protected processTrackedProductsDELETE(response: AxiosResponse): Promise<ApiResponse<void>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<ApiResponse<void>>(new ApiResponse<void>(status, _headers, null as any));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
+    }
 
     /**
      * @return OK
@@ -1011,8 +1645,6 @@ export class TrackedProductsClient extends ApiClientBase {
         }
         return Promise.resolve<ApiResponse<TrackedProductDto[]>>(new ApiResponse(status, _headers, null as any));
     }
-
-
 
     /**
      * @return OK
@@ -1074,8 +1706,6 @@ export class TrackedProductsClient extends ApiClientBase {
         return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndTrackedProductRef>>(new ApiResponse(status, _headers, null as any));
     }
 
-
-
     /**
      * @return OK
      */
@@ -1135,63 +1765,6 @@ export class TrackedProductsClient extends ApiClientBase {
         }
         return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndTrackedProductRef>>(new ApiResponse(status, _headers, null as any));
     }
-
-
-
-    /**
-     * @return OK
-     */
-    trackedProductsDELETE(id: string, cancelToken?: CancelToken): Promise<ApiResponse<void>> {
-        let url_ = this.baseUrl + "/api/v1/TrackedProducts/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "DELETE",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.instance.request(transformedOptions_);
-        }).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processTrackedProductsDELETE(_response);
-        });
-    }
-
-    protected processTrackedProductsDELETE(response: AxiosResponse): Promise<ApiResponse<void>> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (const k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
-        }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<ApiResponse<void>>(new ApiResponse<void>(status, _headers, null as any));
-
-        } else if (status === 404) {
-            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
-        }
-        else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
-    }
 }
 
 export interface CategoryDto {
@@ -1210,10 +1783,6 @@ export interface ConsumptionLogDto {
     reason: string | undefined;
     dateCreated: any;
     lastModified: any;
-}
-
-export interface ConsumptionLogRef {
-    id: number;
 }
 
 export interface CreateCategoryRequest {
@@ -1243,6 +1812,11 @@ export interface CreatedEntityDtoOfintAndProductRef {
     lastModified: any;
 }
 
+export interface CreatedEntityDtoOfintAndStorageLocationRef {
+    entityId: StorageLocationRef;
+    lastModified: any;
+}
+
 export interface CreatedEntityDtoOfintAndTrackedProductRef {
     entityId: TrackedProductRef;
     lastModified: any;
@@ -1254,6 +1828,12 @@ export interface CreateProductRequest {
     categoryId: CategoryRef;
     manufacturer: string | undefined;
     barCode: string | undefined;
+    unitOfMeasure: number;
+    minimumStockLevel: number;
+}
+
+export interface CreateStorageLocationRequest {
+    name: string;
 }
 
 export interface CreateTrackedProductRequest {
@@ -1273,14 +1853,16 @@ export interface ProductDto {
     barCode: string | undefined;
     unitOfMeasure: number;
     minimumStockLevel: number;
+    trackedProductsCount: number;
     dateCreated: any;
     lastModified: any;
-    trackedProductsCount: number;
 }
 
-export interface StorageLocationRef {
-
-    [key: string]: any;
+export interface StorageLocationDto {
+    id: StorageLocationRef;
+    name: string;
+    dateCreated: any;
+    lastModified: any;
 }
 
 export interface TrackedProductDto {
@@ -1325,6 +1907,11 @@ export interface UpdatedEntityDtoOfintAndProductRef {
     lastModified: any;
 }
 
+export interface UpdatedEntityDtoOfintAndStorageLocationRef {
+    entityId: StorageLocationRef;
+    lastModified: any;
+}
+
 export interface UpdatedEntityDtoOfintAndTrackedProductRef {
     entityId: TrackedProductRef;
     lastModified: any;
@@ -1338,6 +1925,14 @@ export interface UpdateProductRequest {
     categoryId: CategoryRef;
     manufacturer: string | undefined;
     barCode: string | undefined;
+    unitOfMeasure: number;
+    minimumStockLevel: number;
+}
+
+export interface UpdateStorageLocationRequest {
+    id: StorageLocationRef;
+    lastModified: any;
+    name: string;
 }
 
 export interface UpdateTrackedProductRequest {

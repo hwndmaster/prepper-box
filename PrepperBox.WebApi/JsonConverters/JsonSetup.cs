@@ -11,6 +11,7 @@ namespace Genius.PrepperBox.WebApi.JsonConverters
             Guard.NotNull(options);
 
             options.Converters.Add(new ReferenceConverter<CategoryRef>());
+            options.Converters.Add(new ReferenceConverter<ConsumptionLogRef>());
             options.Converters.Add(new ReferenceConverter<ProductRef>());
             options.Converters.Add(new ReferenceConverter<StorageLocationRef>());
             options.Converters.Add(new ReferenceConverter<TrackedProductRef>());

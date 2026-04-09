@@ -1,0 +1,19 @@
+@use "../../styles/forms.scss";
+
+.editDialog {
+    width: 28rem;
+}
+
+.formContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 0.5rem;
+}
+
+.formActions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}

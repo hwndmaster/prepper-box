@@ -2,6 +2,7 @@ import * as Common from "./common/state";
 import * as Categories from "./categories/state";
 import * as ConsumptionLogs from "./consumptionLogs/state";
 import * as Products from "./products/state";
+import * as StorageLocations from "./storageLocations/state";
 import * as TrackedProducts from "./trackedProducts/state";
 
 interface AppState {
@@ -9,6 +10,7 @@ interface AppState {
     categories: Categories.default;
     consumptionLogs: ConsumptionLogs.default;
     products: Products.default;
+    storageLocations: StorageLocations.default;
     trackedProducts: TrackedProducts.default;
 }
 

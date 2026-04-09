@@ -6,8 +6,8 @@ import { StorageLocationRef } from "./types";
 interface StorageLocation {
     id: StorageLocationRef;
     name: string;
-    lastModified: string;
-    dateCreated: Date;
+    lastModified: number;
+    dateCreated: number;
 }
 
 export default StorageLocation;

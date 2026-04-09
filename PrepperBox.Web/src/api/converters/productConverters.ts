@@ -1,5 +1,6 @@
 import * as api from "@/api/api.generated";
 import Product from "@/models/product";
+import { UnitOfMeasure } from "@/models/unitOfMeasure";
 
 /**
  * Converts an API ProductDto to a Product model.
@@ -14,8 +15,10 @@ export function convertProductApiToModel(apiProduct: api.ProductDto): Product {
         categoryId: apiProduct.categoryId,
         manufacturer: apiProduct.manufacturer,
         barCode: apiProduct.barCode,
+        unitOfMeasure: apiProduct.unitOfMeasure as UnitOfMeasure,
         trackedProductsCount: apiProduct.trackedProductsCount,
+        minimumStockLevel: apiProduct.minimumStockLevel,
         lastModified: apiProduct.lastModified,
-        dateCreated: new Date(apiProduct.dateCreated),
+        dateCreated: apiProduct.dateCreated,
     };
 }

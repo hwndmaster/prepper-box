@@ -1,4 +1,5 @@
 import { CategoryRef, ProductRef } from "./types";
+import { UnitOfMeasure } from "./unitOfMeasure";
 
 /**
  * Represents a product.
@@ -11,9 +12,11 @@ interface Product {
     manufacturer?: string;
     barCode?: string;
     trackedProductsCount: number;
+    minimumStockLevel: number;
+    unitOfMeasure: UnitOfMeasure;
 
-    lastModified: string;
-    dateCreated: Date;
+    lastModified: number;
+    dateCreated: number;
 }
 
 export default Product;

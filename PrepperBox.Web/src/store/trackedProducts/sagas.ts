@@ -2,66 +2,15 @@ import { put } from "redux-saga/effects";
 import apiClient from "@/api/apiAxios";
 import { convertTrackedProductApiToModel } from "@/api/converters/trackedProductConverters";
 import LoadingTargets from "@/shared/loadingTargets";
+import { dateToTicks } from "@/shared/helper";
 import TrackedProduct from "@/models/trackedProduct";
 import * as api from "@/api/api.generated";
-import { trackedProductRef } from "@/models/types";
 import { callApi } from "../apiRequest";
 import { SagaGenerator } from "../types";
-import { withCallback, withLoading } from "../utils";
+import { typedSelect, withCallback, withLoading } from "../utils";
 import * as trackedProductsActions from "./actions";
 import * as trackedProductsActionsInternal from "./actionsInternal";
-
-/**
- * Core logic for saving a tracked product to the API and updating the store.
- */
-function* saveTrackedProductCore(trackedProductToSave: TrackedProduct): SagaGenerator {
-    const isNewTrackedProduct = trackedProductToSave.id === trackedProductRef.default();
-
-    if (isNewTrackedProduct) {
-        const createRequest: api.CreateTrackedProductRequest = {
-            productId: trackedProductToSave.productId,
-            expirationDate: trackedProductToSave.expirationDate,
-            notes: trackedProductToSave.notes,
-        };
-        const result = yield* callApi(() => apiClient().trackedProducts.trackedProductsPOST(createRequest))
-            .invoke();
-
-        if (result == null) {
-            throw new Error("API did not return created tracked product.");
-        }
-
-        const createdTrackedProduct: TrackedProduct = {
-            ...trackedProductToSave,
-            id: result.entityId,
-            lastModified: result.lastModified,
-        };
-        yield put(trackedProductsActionsInternal.setTrackedProduct(createdTrackedProduct));
-
-        return result.entityId;
-    } else {
-        const updateRequest: api.UpdateTrackedProductRequest = {
-            id: trackedProductToSave.id,
-            lastModified: trackedProductToSave.lastModified,
-            productId: trackedProductToSave.productId,
-            expirationDate: trackedProductToSave.expirationDate,
-            notes: trackedProductToSave.notes,
-        };
-        const result = yield* callApi(() => apiClient().trackedProducts.trackedProductsPUT(updateRequest))
-            .invoke();
-
-        if (result == null) {
-            throw new Error("API did not return updated tracked product.");
-        }
-
-        const updatedTrackedProduct: TrackedProduct = {
-            ...trackedProductToSave,
-            lastModified: result.lastModified,
-        };
-        yield put(trackedProductsActionsInternal.setTrackedProduct(updatedTrackedProduct));
-
-        return result.entityId;
-    }
-}
+import { selectTrackedProductById } from "./selectors";
 
 /**
  * Fetches tracked products from the API and updates the store.
@@ -75,13 +24,75 @@ export function* fetchTrackedProductsSaga(): Generator<unknown, void, unknown> {
 }
 
 /**
- * Saves a tracked product via the API.
- * @param action The action containing the tracked product to save.
+ * Creates a tracked product via the API.
+ * @param action The action containing the tracked product to create.
  */
-export function* saveTrackedProductSaga(action: ReturnType<typeof trackedProductsActions.saveTrackedProduct>): SagaGenerator {
+export function* createTrackedProductSaga(action: ReturnType<typeof trackedProductsActions.createTrackedProduct>): SagaGenerator {
     yield* withLoading(LoadingTargets.ActiveView, function* () {
         yield* withCallback(action.meta, function* () {
-            return yield* saveTrackedProductCore(action.payload);
+            const createRequest: api.CreateTrackedProductRequest = {
+                productId: action.payload.productId,
+                storageLocationId: action.payload.storageLocationId,
+                expirationDate: action.payload.expirationDate,
+                quantity: action.payload.quantity,
+                notes: action.payload.notes,
+            };
+            const result = yield* callApi(() => apiClient().trackedProducts.trackedProductsPOST(createRequest))
+                .invoke();
+
+            if (result == null) {
+                throw new Error("API did not return created tracked product.");
+            }
+
+            const createdTrackedProduct: TrackedProduct = {
+                ...action.payload,
+                id: result.entityId,
+                lastModified: result.lastModified,
+                dateCreated: dateToTicks(new Date()),
+            };
+            yield put(trackedProductsActionsInternal.setTrackedProduct(createdTrackedProduct));
+
+            return result.entityId;
+        });
+    });
+}
+
+/**
+ * Updates a tracked product via the API.
+ * @param action The action containing the tracked product to update.
+ */
+export function* updateTrackedProductSaga(action: ReturnType<typeof trackedProductsActions.updateTrackedProduct>): SagaGenerator {
+    yield* withLoading(LoadingTargets.ActiveView, function* () {
+        yield* withCallback(action.meta, function* () {
+            const existing: TrackedProduct | undefined = yield* typedSelect(selectTrackedProductById, action.payload.id);
+            if (existing == null) {
+                throw new Error(`Cannot update product with ID ${action.payload.id} because it does not exist in the store.`);
+            }
+
+            const updateRequest: api.UpdateTrackedProductRequest = {
+                id: action.payload.id,
+                lastModified: action.payload.lastModified,
+                productId: action.payload.productId,
+                storageLocationId: action.payload.storageLocationId,
+                expirationDate: action.payload.expirationDate,
+                quantity: action.payload.quantity,
+                notes: action.payload.notes,
+            };
+            const result = yield* callApi(() => apiClient().trackedProducts.trackedProductsPUT(updateRequest))
+                .invoke();
+
+            if (result == null) {
+                throw new Error("API did not return updated tracked product.");
+            }
+
+            const updatedTrackedProduct: TrackedProduct = {
+                ...existing,
+                ...action.payload,
+                lastModified: result.lastModified,
+            };
+            yield put(trackedProductsActionsInternal.setTrackedProduct(updatedTrackedProduct));
+
+            return result.entityId;
         });
     });
 }

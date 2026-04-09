@@ -1,4 +1,5 @@
 using Genius.PrepperBox.WebApi.JsonConverters;
+using Genius.PrepperBox.WebApi.OpenApi;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,7 @@ Genius.Atom.Web.Module.Configure(builder,
     jsonOptions => JsonSetup.SetupJsonOptions(jsonOptions));
 Genius.PrepperBox.Core.Module.Configure(builder.Services);
 Genius.PrepperBox.Db.Module.Configure(builder.Services);
-Genius.PrepperBox.WebApi.Module.Configure(builder.Services);
+Genius.PrepperBox.WebApi.Module.Configure(builder.Services, builder.Configuration);
 
 builder.Environment.ContentRootPath = Path.Combine(AppContext.BaseDirectory);
 var dbPath = Path.Combine(builder.Environment.ContentRootPath, "Data", "PrepperBox.db");
@@ -20,7 +21,10 @@ builder.Services.AddDbContext<Genius.PrepperBox.Db.PrepperBoxDbContext>(options 
 {
     options.UseSqlite($"Data Source={dbPath};Foreign Keys=True");
 });
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddOperationTransformer<ReferenceParameterTransformer>();
+});
 
 var corsOrigins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>() ?? [];
 builder.Services.AddCors(options =>

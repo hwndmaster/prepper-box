@@ -1,4 +1,9 @@
 /**
+ * Ticks offset between .NET epoch (Jan 1, 0001) and Unix epoch (Jan 1, 1970).
+ */
+const DotNetEpochOffsetTicks = 621355968000000000;
+
+/**
  * Returns an array of enum options suitable for dropdowns or selection components.
  * @param enumObj The enum object to convert.
  * @returns An array of objects containing label and value properties.
@@ -32,15 +37,36 @@ export function mapDictionary<TKey extends string | number | symbol, TValue, TTa
 }
 
 /**
- * Ticks offset between .NET epoch (Jan 1, 0001) and Unix epoch (Jan 1, 1970).
- */
-const DotNetEpochOffsetTicks = 621355968000000000;
-
-/**
  * Converts .NET DateTimeOffset ticks to a JavaScript Date.
  * @param ticks The .NET ticks value (100-nanosecond intervals since Jan 1, 0001).
  * @returns A JavaScript Date object.
  */
 export function ticksToDate(ticks: number): Date {
     return new Date((ticks - DotNetEpochOffsetTicks) / 10000);
+}
+
+/**
+ * Converts a JavaScript Date to .NET DateTimeOffset ticks.
+ * @param date The JavaScript Date object.
+ * @returns The .NET ticks value (100-nanosecond intervals since Jan 1, 0001).
+ */
+export function dateToTicks(date: Date): number {
+    return date.getTime() * 10000 + DotNetEpochOffsetTicks;
+}
+
+/**
+ * Converts an input date string (e.g., from a date input field) to .NET ticks.
+ * If the input is empty or invalid, it returns undefined.
+ * @param input The input date string (e.g., "2024-12-31").
+ * @returns The .NET ticks value or undefined if the input is empty or invalid.
+ */
+export function inputDateToTicks(input: string | undefined): number | undefined {
+    if (input == undefined) {
+        return undefined;
+    }
+    const date = new Date(input);
+    if (isNaN(date.getTime())) {
+        return undefined;
+    }
+    return dateToTicks(date);
 }

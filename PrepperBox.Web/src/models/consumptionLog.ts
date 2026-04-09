@@ -9,8 +9,8 @@ interface ConsumptionLog {
     quantity: number;
     reason?: string;
 
-    lastModified: string;
-    dateCreated: Date;
+    lastModified: number;
+    dateCreated: number;
 }
 
 export default ConsumptionLog;

@@ -6,10 +6,10 @@ import { CategoryRef } from "./types";
 interface Category {
     id: CategoryRef;
     name: string;
-    description: string;
+    description: string | undefined;
     iconName: string;
-    lastModified: string;
-    dateCreated: Date;
+    lastModified: number;
+    dateCreated: number;
 }
 
 export default Category;

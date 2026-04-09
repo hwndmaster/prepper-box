@@ -1,3 +1,9 @@
 import { ApiClientBase } from "@/api/apiClientBase";
 import { ApiResponse } from "@/api/apiResponse";
-import { CategoryRef, ProductRef, TrackedProductRef } from "@/models/types";
+import {
+    CategoryRef,
+    ConsumptionLogRef,
+    ProductRef,
+    StorageLocationRef,
+    TrackedProductRef
+} from "@/models/types";

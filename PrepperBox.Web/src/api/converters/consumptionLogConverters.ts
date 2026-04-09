@@ -13,6 +13,6 @@ export function convertConsumptionLogApiToModel(apiLog: api.ConsumptionLogDto): 
         quantity: apiLog.quantity,
         reason: apiLog.reason ?? undefined,
         lastModified: apiLog.lastModified,
-        dateCreated: new Date(apiLog.dateCreated),
+        dateCreated: apiLog.dateCreated,
     };
 }

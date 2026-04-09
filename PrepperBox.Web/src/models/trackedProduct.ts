@@ -1,4 +1,4 @@
-import { ProductRef, TrackedProductRef } from "./types";
+import { ProductRef, StorageLocationRef, TrackedProductRef } from "./types";
 
 /**
  * Represents a tracked product.
@@ -6,12 +6,13 @@ import { ProductRef, TrackedProductRef } from "./types";
 interface TrackedProduct {
     id: TrackedProductRef;
     productId: ProductRef;
-    expirationDate?: Date;
+    storageLocationId: StorageLocationRef;
+    expirationDate?: number;
     quantity: number;
     notes?: string;
 
-    lastModified: string;
-    dateCreated: Date;
+    lastModified: number;
+    dateCreated: number;
 }
 
 export default TrackedProduct;

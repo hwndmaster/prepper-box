@@ -10,6 +10,9 @@ services:
       - "5095:8045"                       # Host port 5095 → container port 8045
     volumes:
       - C:/Dev/Src/prepper-box-docker-data:/app/Data      # Persist SQLite database
+    environment:
+      - Telegram__BotToken=${TELEGRAM_BOT_TOKEN:-}
+      - Telegram__ChatId=${TELEGRAM_CHAT_ID:-}
     restart: unless-stopped
 
   prepper-box-web:

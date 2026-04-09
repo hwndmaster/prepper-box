@@ -1,0 +1,11 @@
+@use "../../styles/datatable.scss";
+
+.iconColumn {
+    width: 4rem;
+    text-align: center;
+}
+
+.actionsCell {
+    display: flex;
+    gap: 0.25rem;
+}

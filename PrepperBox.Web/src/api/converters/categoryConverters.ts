@@ -13,6 +13,6 @@ export function convertCategoryApiToModel(apiCategory: api.CategoryDto): Categor
         description: apiCategory.description,
         iconName: apiCategory.iconName,
         lastModified: apiCategory.lastModified,
-        dateCreated: new Date(apiCategory.dateCreated)
+        dateCreated: apiCategory.dateCreated
     };
 }

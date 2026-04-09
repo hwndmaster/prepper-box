@@ -1,8 +1,9 @@
 import { createAction } from "@reduxjs/toolkit";
-import TrackedProduct from "@/models/trackedProduct";
+import { CreateTrackedProductRequest, UpdateTrackedProductRequest } from "@/api/api.generated";
 import { TrackedProductRef } from "@/models/types";
 import { createActionWithMeta } from "../actionExtensions";
 
 export const fetchTrackedProducts = createAction<void>("trackedProducts/fetch");
-export const saveTrackedProduct = createActionWithMeta<TrackedProduct, TrackedProductRef>("trackedProducts/saveTrackedProduct");
+export const createTrackedProduct = createActionWithMeta<CreateTrackedProductRequest, TrackedProductRef>("trackedProducts/createTrackedProduct");
+export const updateTrackedProduct = createActionWithMeta<UpdateTrackedProductRequest, TrackedProductRef>("trackedProducts/updateTrackedProduct");
 export const deleteTrackedProduct = createActionWithMeta<TrackedProductRef>("trackedProducts/deleteTrackedProduct");

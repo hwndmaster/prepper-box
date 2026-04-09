@@ -1,5 +1,5 @@
 import { NavigateFunction, Location as ReactLocation } from "react-router-dom";
-import { productRef, categoryRef } from "@/models/types";
+import { productRef } from "@/models/types";
 
 interface RouteDefinition {
     path: string;
@@ -16,22 +16,27 @@ const AppRoutes = {
         path: "/categories",
         defaultParams: {},
     },
-    /* TODO: Category: {
-        path: "/category/:categoryId?",
-        defaultParams: {
-            categoryId: categoryRef(0),
-        },
+    StorageLocations: {
+        path: "/storage-locations",
+        defaultParams: {},
     },
-    Product: {
-        path: "/product/:productId?",
+    AddProduct: {
+        path: "/add-product",
+        defaultParams: {},
+    },
+    EditProduct: {
+        path: "/edit-product/:productId",
         defaultParams: {
             productId: productRef(0),
         },
-    },*/
+    },
+    AddTrackedProduct: {
+        path: "/add-tracked-product/:productId",
+        defaultParams: {
+            productId: productRef(0),
+        },
+    },
 };
-
-// TODO: type CategoryRouteType = typeof AppRoutes.Category.defaultParams;
-// TODO: type ProductRouteType = typeof AppRoutes.Product.defaultParams;
 
 /**
  * Creates a route string from a route definition and parameters.
@@ -88,5 +93,4 @@ function getCurrentRoute(location: Location | ReactLocation): RouteDefinition | 
 }
 
 export default AppRoutes;
-// TODO: export type { CategoryRouteType, ProductRouteType };
 export { getRouteWithParameters, getCurrentRoute, goTo };

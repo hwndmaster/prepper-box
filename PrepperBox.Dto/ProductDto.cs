@@ -12,7 +12,7 @@ public sealed record ProductDto(
     string? BarCode,
     UnitOfMeasure UnitOfMeasure,
     int MinimumStockLevel,
+    decimal TrackedProductsCount,
     DateTimeOffset DateCreated,
-    DateTimeOffset LastModified,
-    decimal TrackedProductsCount
+    DateTimeOffset LastModified
 );

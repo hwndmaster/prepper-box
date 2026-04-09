@@ -8,6 +8,7 @@ enum LoadingTargets {
     Categories = 100,
     ConsumptionLogs = 150,
     Products = 200,
+    StorageLocations = 250,
     TrackedProducts = 300,
 }
 

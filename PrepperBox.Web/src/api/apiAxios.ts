@@ -3,7 +3,9 @@ import * as api from "./api.generated";
 
 interface ApiClient {
     categories: api.CategoriesClient;
+    consumptionLogs: api.ConsumptionLogsClient;
     products: api.ProductsClient;
+    storageLocations: api.StorageLocationsClient;
     trackedProducts: api.TrackedProductsClient;
 }
 let axiosInstance: AxiosInstance | null = null;
@@ -24,7 +26,9 @@ const getApiAxiosInstance = (): AxiosInstance => {
 const apiClient = (): ApiClient => {
     client ??= {
         categories: new api.CategoriesClient("", getApiAxiosInstance()),
+        consumptionLogs: new api.ConsumptionLogsClient("", getApiAxiosInstance()),
         products: new api.ProductsClient("", getApiAxiosInstance()),
+        storageLocations: new api.StorageLocationsClient("", getApiAxiosInstance()),
         trackedProducts: new api.TrackedProductsClient("", getApiAxiosInstance()),
     };
 

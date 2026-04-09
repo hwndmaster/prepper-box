@@ -15,6 +15,7 @@ import commonReducer from "./common/reducers";
 import categoriesReducer from "./categories/reducers";
 import consumptionLogsReducer from "./consumptionLogs/reducers";
 import productsReducer from "./products/reducers";
+import storageLocationsReducer from "./storageLocations/reducers";
 import trackedProductsReducer from "./trackedProducts/reducers";
 
 type AppStore = Store<Partial<AppState>, UnknownAction, unknown>;
@@ -55,13 +56,14 @@ function setupStore(
         categories: categoriesReducer,
         consumptionLogs: consumptionLogsReducer,
         products: productsReducer,
+        storageLocations: storageLocationsReducer,
         trackedProducts: trackedProductsReducer,
     };
 
     const persistConfig: PersistConfig<AppState> = {
         key: "root",
         storage: storage,
-        version: 1, // Increment this number if the persisted state structure changes
+        version: 2, // Increment this number if the persisted state structure changes
         blacklist: ["common"],
 
         // This is a workaround to avoid persisting the whole state in the test environment:
