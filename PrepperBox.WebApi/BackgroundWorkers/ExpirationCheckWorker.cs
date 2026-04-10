@@ -60,8 +60,8 @@ internal sealed class ExpirationCheckWorker : BackgroundService
         var productsRepo = scope.ServiceProvider.GetRequiredService<IProductsRepository>();
         var telegramService = scope.ServiceProvider.GetRequiredService<ITelegramNotificationService>();
 
-        var trackedProducts = await trackedProductsRepo.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
-        var products = await productsRepo.GetAllAsync(null, cancellationToken).ConfigureAwait(false);
+        var trackedProducts = await trackedProductsRepo.GetAllAsync(cancellationToken).ConfigureAwait(false);
+        var products = await productsRepo.GetAllAsync(cancellationToken).ConfigureAwait(false);
 
         var productLookup = products.ToDictionary(p => p.Id, p => p);
         var today = DateTimeOffset.UtcNow.Date;

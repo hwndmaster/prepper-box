@@ -14,16 +14,14 @@ public interface ICategoriesRepository : IRepository<int, CategoryRef, CategoryD
 
 internal sealed class CategoriesRepository : BaseRepository<Category, int, CategoryRef, CategoryDto, CreateCategoryRequest, UpdateCategoryRequest>, ICategoriesRepository
 {
-    public CategoriesRepository(IDateTime dateTime, IDbContextProvider dbContextProvider)
-        : base(dateTime, dbContextProvider)
+    public CategoriesRepository(IDateTime dateTime, IDatabaseContext databaseContext)
+        : base(dateTime, databaseContext)
     {
     }
 
     public async Task<CategoryDto?> FindByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        await using PrepperBoxDbContext dbContext = (PrepperBoxDbContext)WithDbContext();
-
-        return await dbContext.Set<Category>()
+        return await GetContext().Set<Category>()
             .Where(c => c.Name == name)
             .Select(ProjectToGetDto())
             .FirstOrDefaultAsync(cancellationToken);
@@ -32,14 +30,14 @@ internal sealed class CategoriesRepository : BaseRepository<Category, int, Categ
     protected override Expression<Func<Category, CategoryDto>> ProjectToGetDto()
         => b => new CategoryDto(b.Id, b.Name, b.Description, b.IconName, b.DateCreated, b.LastModified);
 
-    protected override Category MapCreateDto(CreateCategoryRequest dto, DbContext dbContext) => new()
+    protected override Category MapCreateDto(CreateCategoryRequest dto) => new()
     {
         Name = dto.Name,
         Description = dto.Description,
         IconName = dto.IconName
     };
 
-    protected override Category MapUpdateDto(UpdateCategoryRequest dto, Category existingEntity, DbContext dbContext) =>
+    protected override Category MapUpdateDto(UpdateCategoryRequest dto, Category existingEntity) =>
         existingEntity with
         {
             Name = dto.Name,

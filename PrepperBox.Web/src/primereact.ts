@@ -1,0 +1,28 @@
+// PrimeReact barrel — re-exports every PrimeReact component / type used in the app.
+
+export { PrimeReactProvider } from "primereact/api";
+export { AutoComplete } from "primereact/autocomplete";
+export type { AutoCompleteProps } from "primereact/autocomplete";
+export { Button } from "primereact/button";
+export { Chip } from "primereact/chip";
+export { Chips } from "primereact/chips";
+export type { ChipsProps } from "primereact/chips";
+export { Column } from "primereact/column";
+export { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+export { DataTable } from "primereact/datatable";
+export type { DataTableExpandedRows } from "primereact/datatable";
+export { Dialog } from "primereact/dialog";
+export { Divider } from "primereact/divider";
+export { Dropdown } from "primereact/dropdown";
+export type { DropdownProps } from "primereact/dropdown";
+export { FloatLabel } from "primereact/floatlabel";
+export { InputNumber } from "primereact/inputnumber";
+export { InputText } from "primereact/inputtext";
+export type { InputTextProps } from "primereact/inputtext";
+export { InputTextarea } from "primereact/inputtextarea";
+export type { InputTextareaProps } from "primereact/inputtextarea";
+export { Menubar } from "primereact/menubar";
+export type { MenuItem } from "primereact/menuitem";
+export { Toast } from "primereact/toast";
+export type { ToastMessage } from "primereact/toast";
+export { Tooltip } from "primereact/tooltip";

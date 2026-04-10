@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useRef, ReactNode, useEffect, useMemo, useCallback } from "react";
-import { Toast } from "primereact/toast";
+import { Toast } from "@/primereact";
 import { toastService } from "./toastService";
 
 interface ToastContextType {

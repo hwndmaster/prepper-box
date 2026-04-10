@@ -1,12 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "primereact/button";
-import { Chip } from "primereact/chip";
-import { Column } from "primereact/column";
-import { DataTable, DataTableExpandedRows } from "primereact/datatable";
-import { Dialog } from "primereact/dialog";
-import { InputNumber } from "primereact/inputnumber";
-import { Tooltip } from "primereact/tooltip";
+import { Button, Chip, Column, DataTable, Tooltip } from "@/primereact";
+import type { DataTableExpandedRows } from "@/primereact";
 import * as store from "@/store";
 import Product from "@/models/product";
 import TrackedProduct from "@/models/trackedProduct";
@@ -17,9 +12,10 @@ import { getCategoryIconClass } from "@/shared/categoryIcons";
 import { ticksToDate } from "@/shared/helper";
 import { StockValidationLevel, validateStockLevel } from "@/shared/stockValidation";
 import { UnitOfMeasureLabels } from "@/shared/unitOfMeasureLabels";
+import { toastService } from "@/shared/ui/toastService";
 import { LoadingSpinner } from "@/components/loadingSpinner";
+import WithdrawStockDialog from "./withdrawStockDialog";
 import styles from "./home.module.scss";
-
 
 const Home: React.FC = () => {
     const dispatch = store.useAppDispatch();
@@ -34,7 +30,6 @@ const Home: React.FC = () => {
     const [expandedTrackedRows, setExpandedTrackedRows] = useState<TrackedProduct[]>([]);
     const [isWithdrawDialogVisible, setIsWithdrawDialogVisible] = useState(false);
     const [withdrawTrackedProduct, setWithdrawTrackedProduct] = useState<TrackedProduct | null>(null);
-    const [withdrawQuantity, setWithdrawQuantity] = useState<number>(1);
 
     useEffect(() => {
         dispatch(store.Categories.Actions.fetchCategories());
@@ -66,33 +61,23 @@ const Home: React.FC = () => {
 
     const handleOpenWithdrawDialog = (tp: TrackedProduct): void => {
         setWithdrawTrackedProduct(tp);
-        setWithdrawQuantity(1);
         setIsWithdrawDialogVisible(true);
     };
 
-    const handleWithdrawConfirm = (): void => {
+    const handleWithdrawConfirm = (withdrawnQuantity: number): void => {
         if (withdrawTrackedProduct == null) {
             return;
         }
 
-        dispatch(store.ConsumptionLogs.Actions.createConsumptionLog(
+        const productName = products.find((p) => p.id === withdrawTrackedProduct.productId)?.name ?? "Unknown";
+
+        dispatch(store.TrackedProducts.Actions.withdrawTrackedProduct(
             {
-                productId: withdrawTrackedProduct.productId,
-                quantity: withdrawQuantity,
-                reason: "Withdrawn from stock"
+                trackedProductId: withdrawTrackedProduct.id,
+                quantity: withdrawnQuantity,
             },
             () => {
-                const newQuantity = withdrawTrackedProduct.quantity - withdrawQuantity;
-                if (newQuantity <= 0) {
-                    dispatch(store.TrackedProducts.Actions.deleteTrackedProduct(withdrawTrackedProduct.id));
-                } else {
-                    dispatch(store.TrackedProducts.Actions.updateTrackedProduct({
-                        ...withdrawTrackedProduct,
-                        quantity: newQuantity,
-                        expirationDate: withdrawTrackedProduct.expirationDate,
-                        notes: withdrawTrackedProduct.notes,
-                    }));
-                }
+                toastService.showSuccess(`${String(withdrawnQuantity)} items were withdrawn from product ${productName}`);
             }
         ));
 
@@ -129,9 +114,9 @@ const Home: React.FC = () => {
         const productTrackedProducts = [...(trackedProductsByProductId.get(product.id) ?? [])]
             .sort((a, b) => {
                 if (a.expirationDate == null && b.expirationDate == null) return 0;
-                if (a.expirationDate == null) return 1;
-                if (b.expirationDate == null) return -1;
-                return b.expirationDate - a.expirationDate;
+                if (a.expirationDate == null) return -1;
+                if (b.expirationDate == null) return 1;
+                return a.expirationDate - b.expirationDate;
             });
         const uomLabel = UnitOfMeasureLabels[product.unitOfMeasure];
         const category = categories.find((c) => c.id === product.categoryId);
@@ -332,44 +317,12 @@ const Home: React.FC = () => {
                 <Column header="" body={editActionTemplate} className={styles.actionColumn} />
             </DataTable>
 
-            <Dialog
-                header="Withdraw Stock"
+            <WithdrawStockDialog
+                trackedProduct={withdrawTrackedProduct}
                 visible={isWithdrawDialogVisible}
-                onHide={handleWithdrawCancel}
-                className={styles.withdrawDialog}
-                data-test_id="Home__Withdraw_Dialog"
-            >
-                <div className={styles.withdrawContent}>
-                    <p>Select the quantity to withdraw:</p>
-                    <InputNumber
-                        value={withdrawQuantity}
-                        onValueChange={(e) => {
-                            const max = withdrawTrackedProduct?.quantity ?? 1;
-                            const val = e.value ?? 1;
-                            setWithdrawQuantity(Math.min(Math.max(val, 1), max));
-                        }}
-                        min={1}
-                        max={withdrawTrackedProduct?.quantity ?? 1}
-                        showButtons
-                        data-test_id="Home__Withdraw_Quantity"
-                    />
-                    <div className={styles.withdrawActions}>
-                        <Button
-                            label="Withdraw"
-                            severity="warning"
-                            data-test_id="Home__Withdraw_Confirm"
-                            onClick={handleWithdrawConfirm}
-                        />
-                        <Button
-                            label="Cancel"
-                            severity="secondary"
-                            outlined
-                            data-test_id="Home__Withdraw_Cancel"
-                            onClick={handleWithdrawCancel}
-                        />
-                    </div>
-                </div>
-            </Dialog>
+                onConfirm={handleWithdrawConfirm}
+                onCancel={handleWithdrawCancel}
+            />
         </LoadingSpinner>
     );
 };

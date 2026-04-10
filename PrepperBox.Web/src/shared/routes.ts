@@ -36,6 +36,10 @@ const AppRoutes = {
             productId: productRef(0),
         },
     },
+    ConsumptionLogs: {
+        path: "/consumption-logs",
+        defaultParams: {},
+    },
 };
 
 /**

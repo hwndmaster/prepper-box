@@ -1,7 +1,7 @@
 import React from "react";
 import { Controller, FieldPath, FieldValues, UseFormReturn } from "react-hook-form";
-import { InputText, InputTextProps } from "primereact/inputtext";
-import { FloatLabel } from "primereact/floatlabel";
+import { FloatLabel, InputText } from "@/primereact";
+import type { InputTextProps } from "@/primereact";
 import styles from "./forms.module.scss";
 
 interface FormInputTextProps<TFieldValues extends FieldValues> {

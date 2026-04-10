@@ -1,7 +1,7 @@
 import React from "react";
 import { Controller, FieldPath, FieldValues, UseFormReturn } from "react-hook-form";
-import { Dropdown, DropdownProps } from "primereact/dropdown";
-import { FloatLabel } from "primereact/floatlabel";
+import { Dropdown, FloatLabel } from "@/primereact";
+import type { DropdownProps } from "@/primereact";
 import styles from "./forms.module.scss";
 
 interface FormDropdownProps<TFieldValues extends FieldValues, TOptionValue = unknown> {

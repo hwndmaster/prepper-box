@@ -10,8 +10,8 @@ import { EntityId } from "../entityId";
  *     dataSetRef: requiredRef<DataSetRef>(),
  * });
  */
-export const requiredRef = <T extends EntityId<string>>(): z.ZodType<T> =>
-    z.number().int().positive() as unknown as z.ZodType<T>;
+export const requiredRef = <T extends EntityId<string>>(message?: string): z.ZodType<T> =>
+    z.number().int().positive({ message }) as unknown as z.ZodType<T>;
 
 /**
  * Zod schema for an optional reference field of any Guid-based type.

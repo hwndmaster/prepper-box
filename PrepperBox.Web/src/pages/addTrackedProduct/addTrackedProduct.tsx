@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "primereact/button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/primereact";
 import * as store from "@/store";
-import { productRef } from "@/models/types";
+import { productRef, storageLocationRef } from "@/models/types";
 import AppRoutes, { goTo } from "@/shared/routes";
 import { inputDateToTicks } from "@/shared/helper";
 import { toastService } from "@/shared/ui/toastService";
-import { TrackedProductFormFields, useTrackedProductForm } from "@/components/trackedProductForm";
+import { TrackedProductFormFields, trackedProductFormSchema } from "@/components/trackedProductForm";
 import type { TrackedProductFormData } from "@/components/trackedProductForm";
 import styles from "./addTrackedProduct.module.scss";
 
@@ -26,7 +28,15 @@ const AddTrackedProduct: React.FC = () => {
         dispatch(store.StorageLocations.Actions.fetchStorageLocations());
     }, [dispatch]);
 
-    const form = useTrackedProductForm();
+    const form = useForm<TrackedProductFormData>({
+        resolver: zodResolver(trackedProductFormSchema),
+        defaultValues: {
+            quantity: 1,
+            storageLocationId: storageLocationRef.default(),
+            expirationDate: "",
+            notes: undefined,
+        },
+    });
 
     const handleSubmit = (data: TrackedProductFormData): void => {
         dispatch(store.TrackedProducts.Actions.createTrackedProduct(

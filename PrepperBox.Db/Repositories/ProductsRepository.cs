@@ -14,15 +14,14 @@ public interface IProductsRepository : IRepository<int, ProductRef, ProductDto, 
 
 internal sealed class ProductsRepository : BaseRepository<Product, int, ProductRef, ProductDto, CreateProductRequest, UpdateProductRequest>, IProductsRepository
 {
-    public ProductsRepository(IDateTime dateTime, IDbContextProvider dbContextProvider)
-        : base(dateTime, dbContextProvider)
+    public ProductsRepository(IDateTime dateTime, IDatabaseContext databaseContext)
+        : base(dateTime, databaseContext)
     {
     }
 
     public async Task<IEnumerable<ProductDto>> GetByBarCodeAsync(string barCode, CancellationToken cancellationToken = default)
     {
-        await using var context = WithDbContext();
-        return await context.Set<Product>()
+        return await GetContext().Set<Product>()
             .Where(p => p.BarCode == barCode)
             .Select(ProjectToGetDto())
             .ToArrayAsync(cancellationToken).ConfigureAwait(false);
@@ -31,7 +30,7 @@ internal sealed class ProductsRepository : BaseRepository<Product, int, ProductR
     protected override Expression<Func<Product, ProductDto>> ProjectToGetDto()
         => b => new ProductDto(b.Id, b.Name, b.Description, b.CategoryId, b.Manufacturer, b.BarCode, b.UnitOfMeasure, b.MinimumStockLevel, b.TrackedProducts.Sum(tp => tp.Quantity), b.DateCreated, b.LastModified);
 
-    protected override Product MapCreateDto(CreateProductRequest dto, DbContext dbContext) => new()
+    protected override Product MapCreateDto(CreateProductRequest dto) => new()
     {
         Name = dto.Name,
         Description = dto.Description,
@@ -42,7 +41,7 @@ internal sealed class ProductsRepository : BaseRepository<Product, int, ProductR
         MinimumStockLevel = dto.MinimumStockLevel
     };
 
-    protected override Product MapUpdateDto(UpdateProductRequest dto, Product existingEntity, DbContext dbContext) =>
+    protected override Product MapUpdateDto(UpdateProductRequest dto, Product existingEntity) =>
         existingEntity with
         {
             Name = dto.Name,

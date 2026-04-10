@@ -1,8 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { PrimeReactProvider } from "primereact/api";
-import { ConfirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog, PrimeReactProvider } from "@/primereact";
 
 import { setupAxiosInstances } from "./api/setup";
 import RootComponent from "./RootComponent";

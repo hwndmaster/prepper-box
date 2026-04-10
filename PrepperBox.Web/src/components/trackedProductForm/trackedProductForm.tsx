@@ -44,6 +44,9 @@ const TrackedProductFormFields: React.FC<TrackedProductFormFieldsProps> = ({ for
     );
 };
 
+/**
+ * Custom hook to initialize the form for tracked products with default values and validation schema.
+ */
 function useTrackedProductForm(): UseFormReturn<TrackedProductFormData> {
     return useForm<TrackedProductFormData>({
         resolver: zodResolver(trackedProductFormSchema),

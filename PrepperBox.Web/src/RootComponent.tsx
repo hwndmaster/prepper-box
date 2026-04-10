@@ -5,6 +5,7 @@ import Layout from "./components/layout/Layout";
 import Home from "./pages/home";
 import Categories from "./pages/categories";
 import StorageLocations from "./pages/storageLocations";
+import ConsumptionLogs from "./pages/consumptionLogs";
 import AddProduct from "./pages/addProduct";
 import EditProduct from "./pages/editProduct";
 import AddTrackedProduct from "./pages/addTrackedProduct";
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
             {
                 path: AppRoutes.AddTrackedProduct.path,
                 element: <AddTrackedProduct />,
+            },
+            {
+                path: AppRoutes.ConsumptionLogs.path,
+                element: <ConsumptionLogs />,
             },
             {
                 path: "*",

@@ -9,4 +9,4 @@ public sealed record CategoryDto(
     string IconName,
     DateTimeOffset DateCreated,
     DateTimeOffset LastModified
-);
+) : IEntity<int, CategoryRef>;

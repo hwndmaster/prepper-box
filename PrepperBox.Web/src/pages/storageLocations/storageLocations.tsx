@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { confirmDialog } from "primereact/confirmdialog";
-import { Button } from "primereact/button";
-import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
+import { Button, Column, confirmDialog, DataTable } from "@/primereact";
 import * as store from "@/store";
 import StorageLocation from "@/models/storageLocation";
 import { storageLocationRef, StorageLocationRef } from "@/models/types";

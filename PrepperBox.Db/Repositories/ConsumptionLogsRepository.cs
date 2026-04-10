@@ -13,22 +13,22 @@ public interface IConsumptionLogsRepository : IRepository<int, ConsumptionLogRef
 
 internal sealed class ConsumptionLogsRepository : BaseRepository<ConsumptionLog, int, ConsumptionLogRef, ConsumptionLogDto, CreateConsumptionLogRequest, UpdateConsumptionLogRequest>, IConsumptionLogsRepository
 {
-    public ConsumptionLogsRepository(IDateTime dateTime, IDbContextProvider dbContextProvider)
-        : base(dateTime, dbContextProvider)
+    public ConsumptionLogsRepository(IDateTime dateTime, IDatabaseContext databaseContext)
+        : base(dateTime, databaseContext)
     {
     }
 
     protected override Expression<Func<ConsumptionLog, ConsumptionLogDto>> ProjectToGetDto()
         => b => new ConsumptionLogDto(b.Id, b.ProductId, b.Quantity, b.Reason, b.DateCreated, b.LastModified);
 
-    protected override ConsumptionLog MapCreateDto(CreateConsumptionLogRequest dto, DbContext dbContext) => new()
+    protected override ConsumptionLog MapCreateDto(CreateConsumptionLogRequest dto) => new()
     {
         ProductId = dto.ProductId,
         Quantity = dto.Quantity,
         Reason = dto.Reason
     };
 
-    protected override ConsumptionLog MapUpdateDto(UpdateConsumptionLogRequest dto, ConsumptionLog existingEntity, DbContext dbContext) =>
+    protected override ConsumptionLog MapUpdateDto(UpdateConsumptionLogRequest dto, ConsumptionLog existingEntity) =>
         existingEntity with
         {
             ProductId = dto.ProductId,

@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
+import { Button, Dialog } from "@/primereact";
 import StorageLocation from "@/models/storageLocation";
 import { storageLocationRef } from "@/models/types";
 import { FormInputText } from "@/components/forms";

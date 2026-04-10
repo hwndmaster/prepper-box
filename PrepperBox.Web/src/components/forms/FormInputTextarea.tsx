@@ -1,6 +1,7 @@
 import React from "react";
 import { Controller, FieldPath, FieldValues, UseFormReturn } from "react-hook-form";
-import { InputTextarea, InputTextareaProps } from "primereact/inputtextarea";
+import { InputTextarea } from "@/primereact";
+import type { InputTextareaProps } from "@/primereact";
 import styles from "./forms.module.scss";
 
 interface FormInputTextareaProps<TFieldValues extends FieldValues> {

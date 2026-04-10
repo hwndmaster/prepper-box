@@ -1,7 +1,7 @@
 import React from "react";
 import { Controller, FieldPath, FieldValues, UseFormReturn } from "react-hook-form";
-import { AutoComplete, AutoCompleteProps } from "primereact/autocomplete";
-import { FloatLabel } from "primereact/floatlabel";
+import { AutoComplete, FloatLabel } from "@/primereact";
+import type { AutoCompleteProps } from "@/primereact";
 import styles from "./forms.module.scss";
 
 interface FormAutoCompleteProps<TFieldValues extends FieldValues> {

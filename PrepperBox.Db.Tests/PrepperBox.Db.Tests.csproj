@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Used in Atom.Data.Ef.TestingUtil, but here to ensure the package availability. -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
   </ItemGroup>
 </Project>

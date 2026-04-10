@@ -51,6 +51,7 @@ const trackedProductsWatchers = [
     { handlingType: SagaHandlingType.TakeLatest, action: trackedProducts.Actions.createTrackedProduct, saga: trackedProductsSagas.createTrackedProductSaga },
     { handlingType: SagaHandlingType.TakeLatest, action: trackedProducts.Actions.updateTrackedProduct, saga: trackedProductsSagas.updateTrackedProductSaga },
     { handlingType: SagaHandlingType.TakeLatest, action: trackedProducts.Actions.deleteTrackedProduct, saga: trackedProductsSagas.deleteTrackedProductSaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: trackedProducts.Actions.withdrawTrackedProduct, saga: trackedProductsSagas.withdrawTrackedProductSaga },
 ];
 
 const storageLocationsWatchers = [

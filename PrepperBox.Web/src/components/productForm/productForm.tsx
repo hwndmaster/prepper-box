@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "primereact/button";
-import { Divider } from "primereact/divider";
+import { Button, Divider } from "@/primereact";
 import * as store from "@/store";
 import { categoryRef } from "@/models/types";
 import Product from "@/models/product";

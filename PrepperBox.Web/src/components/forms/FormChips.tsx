@@ -1,6 +1,7 @@
 import React from "react";
 import { Controller, FieldPath, FieldValues, UseFormReturn } from "react-hook-form";
-import { Chips, ChipsProps } from "primereact/chips";
+import { Chips } from "@/primereact";
+import type { ChipsProps } from "@/primereact";
 import styles from "./forms.module.scss";
 
 interface FormChipsProps<TFieldValues extends FieldValues> {

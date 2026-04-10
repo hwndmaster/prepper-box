@@ -14,16 +14,14 @@ public interface IStorageLocationsRepository : IRepository<int, StorageLocationR
 
 internal sealed class StorageLocationsRepository : BaseRepository<StorageLocation, int, StorageLocationRef, StorageLocationDto, CreateStorageLocationRequest, UpdateStorageLocationRequest>, IStorageLocationsRepository
 {
-    public StorageLocationsRepository(IDateTime dateTime, IDbContextProvider dbContextProvider)
-        : base(dateTime, dbContextProvider)
+    public StorageLocationsRepository(IDateTime dateTime, IDatabaseContext databaseContext)
+        : base(dateTime, databaseContext)
     {
     }
 
     public async Task<StorageLocationDto?> FindByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        await using PrepperBoxDbContext dbContext = (PrepperBoxDbContext)WithDbContext();
-
-        return await dbContext.Set<StorageLocation>()
+        return await GetContext().Set<StorageLocation>()
             .Where(c => c.Name == name)
             .Select(ProjectToGetDto())
             .FirstOrDefaultAsync(cancellationToken);
@@ -32,12 +30,12 @@ internal sealed class StorageLocationsRepository : BaseRepository<StorageLocatio
     protected override Expression<Func<StorageLocation, StorageLocationDto>> ProjectToGetDto()
         => b => new StorageLocationDto(b.Id, b.Name, b.DateCreated, b.LastModified);
 
-    protected override StorageLocation MapCreateDto(CreateStorageLocationRequest dto, DbContext dbContext) => new()
+    protected override StorageLocation MapCreateDto(CreateStorageLocationRequest dto) => new()
     {
         Name = dto.Name,
     };
 
-    protected override StorageLocation MapUpdateDto(UpdateStorageLocationRequest dto, StorageLocation existingEntity, DbContext dbContext) =>
+    protected override StorageLocation MapUpdateDto(UpdateStorageLocationRequest dto, StorageLocation existingEntity) =>
         existingEntity with
         {
             Name = dto.Name,

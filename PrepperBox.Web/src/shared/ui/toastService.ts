@@ -1,4 +1,4 @@
-import type { Toast, ToastMessage } from "primereact/toast";
+import type { Toast, ToastMessage } from "@/primereact";
 import { isTest } from "../constants";
 
 class ToastService {

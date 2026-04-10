@@ -10,14 +10,14 @@ namespace Genius.PrepperBox.Db
     {
         public static void Configure(IServiceCollection services)
         {
-            services.AddTransient<IDbContextProvider, DbContextProvider>();
+            DatabaseContextRegistration.Register<PrepperBoxDbContext>(services);
 
             // Repositories
-            services.AddTransient<ICategoriesRepository, CategoriesRepository>();
-            services.AddTransient<IProductsRepository, ProductsRepository>();
-            services.AddTransient<IStorageLocationsRepository, StorageLocationsRepository>();
-            services.AddTransient<ITrackedProductsRepository, TrackedProductsRepository>();
-            services.AddTransient<IConsumptionLogsRepository, ConsumptionLogsRepository>();
+            services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            services.AddScoped<IProductsRepository, ProductsRepository>();
+            services.AddScoped<IStorageLocationsRepository, StorageLocationsRepository>();
+            services.AddScoped<ITrackedProductsRepository, TrackedProductsRepository>();
+            services.AddScoped<IConsumptionLogsRepository, ConsumptionLogsRepository>();
         }
 
         public static async Task InitializeAsync(IServiceProvider serviceProvider, bool isDevelopment)

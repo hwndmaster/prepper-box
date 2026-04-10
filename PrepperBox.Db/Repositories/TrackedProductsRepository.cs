@@ -13,15 +13,15 @@ public interface ITrackedProductsRepository : IRepository<int, TrackedProductRef
 
 internal sealed class TrackedProductsRepository : BaseRepository<TrackedProduct, int, TrackedProductRef, TrackedProductDto, CreateTrackedProductRequest, UpdateTrackedProductRequest>, ITrackedProductsRepository
 {
-    public TrackedProductsRepository(IDateTime dateTime, IDbContextProvider dbContextProvider)
-        : base(dateTime, dbContextProvider)
+    public TrackedProductsRepository(IDateTime dateTime, IDatabaseContext databaseContext)
+        : base(dateTime, databaseContext)
     {
     }
 
     protected override Expression<Func<TrackedProduct, TrackedProductDto>> ProjectToGetDto()
         => b => new TrackedProductDto(b.Id, b.ProductId, b.StorageLocationId, b.ExpirationDate, b.Quantity, b.Notes, b.DateCreated, b.LastModified);
 
-    protected override TrackedProduct MapCreateDto(CreateTrackedProductRequest dto, DbContext dbContext) => new()
+    protected override TrackedProduct MapCreateDto(CreateTrackedProductRequest dto) => new()
     {
         ProductId = dto.ProductId,
         StorageLocationId = dto.StorageLocationId,
@@ -30,7 +30,7 @@ internal sealed class TrackedProductsRepository : BaseRepository<TrackedProduct,
         Notes = dto.Notes
     };
 
-    protected override TrackedProduct MapUpdateDto(UpdateTrackedProductRequest dto, TrackedProduct existingEntity, DbContext dbContext) =>
+    protected override TrackedProduct MapUpdateDto(UpdateTrackedProductRequest dto, TrackedProduct existingEntity) =>
         existingEntity with
         {
             ProductId = dto.ProductId,

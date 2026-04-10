@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Menubar } from "primereact/menubar";
-import type { MenuItem } from "primereact/menuitem";
+import { Menubar } from "@/primereact";
+import type { MenuItem } from "@/primereact";
 import AppRoutes, { getCurrentRoute, goTo } from "@/shared/routes";
 import LoadingTargets from "@/shared/loadingTargets";
 import { LoadingSpinner } from "../loadingSpinner";
@@ -14,6 +14,7 @@ const routeTitles = new Map([
     [AppRoutes.AddProduct.path, "Add Product"],
     [AppRoutes.EditProduct.path, "Edit Product"],
     [AppRoutes.AddTrackedProduct.path, "Add Tracked Product"],
+    [AppRoutes.ConsumptionLogs.path, "Consumption Log"],
 ]);
 
 const Layout: React.FC = () => {
@@ -35,6 +36,11 @@ const Layout: React.FC = () => {
             label: "Storage Locations",
             icon: "pi pi-warehouse",
             command: () => void goTo(navigate, AppRoutes.StorageLocations),
+        },
+        {
+            label: "Consumption Log",
+            icon: "pi pi-list",
+            command: () => void goTo(navigate, AppRoutes.ConsumptionLogs),
         }
     ];
 
