@@ -10,6 +10,8 @@ public sealed record ProductDto(
     CategoryRef CategoryId,
     string? Manufacturer,
     string? BarCode,
+    string? ImageUrl,
+    string? ImageSmallUrl,
     UnitOfMeasure UnitOfMeasure,
     int MinimumStockLevel,
     decimal TrackedProductsCount,

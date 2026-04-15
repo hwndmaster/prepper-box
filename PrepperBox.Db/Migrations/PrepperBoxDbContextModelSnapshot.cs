@@ -91,6 +91,12 @@ namespace Genius.PrepperBox.Db.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ImageSmallUrl")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("TEXT");
+
                     b.Property<long>("LastModified")
                         .HasColumnType("INTEGER");
 

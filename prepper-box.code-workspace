@@ -80,6 +80,7 @@
             }
         },
         "cSpell.words": [
+            "persistor",
             "primereact",
             "reduxjs",
         ],
@@ -119,7 +120,9 @@
             "dotnet list": true,
             "npx vitest": true,
             "npm run build": true,
-            "npx eslint": true
+            "npx eslint": true,
+            "dotnet run": true,
+            "npm run nswag": true
         }
     }
 }

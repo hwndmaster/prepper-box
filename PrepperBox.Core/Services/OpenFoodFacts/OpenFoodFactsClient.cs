@@ -1,16 +1,20 @@
+using System.Globalization;
 using System.Net.Http.Json;
+using System.Text.RegularExpressions;
+using Genius.PrepperBox.Db.Models;
 
 namespace Genius.PrepperBox.Core.Services.OpenFoodFacts;
 
 public interface IOpenFoodFactsClient
 {
+    OpenFoodFactsQuantity? ExtractQuantity(string? quantityString);
     Task<IEnumerable<OpenFoodFactsProduct>> SearchProductsAsync(string query, CancellationToken cancellationToken = default);
     Task<OpenFoodFactsProduct?> SearchProductsByBarCodeAsync(string barCode, CancellationToken cancellationToken = default);
 }
 
 internal sealed class OpenFoodFactsClient : IOpenFoodFactsClient
 {
-    private const string ProductFields = "code,product_name,brands,categories,quantity,image_front_small_url,image_url,nutrition_grades";
+    private const string ProductFields = "code,product_name,brands,categories,quantity,image_url,image_small_url";
 
     private readonly HttpClient _httpClient;
 
@@ -41,5 +45,41 @@ internal sealed class OpenFoodFactsClient : IOpenFoodFactsClient
         }
 
         return null;
+    }
+
+    public OpenFoodFactsQuantity? ExtractQuantity(string? quantityString)
+    {
+        if (string.IsNullOrWhiteSpace(quantityString))
+        {
+            return null;
+        }
+
+        // Strip parenthetical groups like "(42 x 15 g)" and trim
+        var cleaned = Regex.Replace(quantityString.Trim(), @"\(.*?\)", "").Trim();
+
+        // Match a leading number (int or decimal with . or ,) optionally separated by whitespace from a unit
+        var match = Regex.Match(cleaned, @"^(\d+(?:[.,]\d+)?)\s*([a-zA-Z]+)", RegexOptions.IgnoreCase);
+        if (!match.Success)
+        {
+            return null;
+        }
+
+        var valueStr = match.Groups[1].Value.Replace(',', '.');
+        if (!decimal.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture, out var rawValue))
+        {
+            return null;
+        }
+
+        var unit = match.Groups[2].Value.ToLowerInvariant();
+
+        return unit switch
+        {
+            "g"  => new OpenFoodFactsQuantity(rawValue / 1000m, UnitOfMeasure.Kilogram),
+            "kg" => new OpenFoodFactsQuantity(rawValue, UnitOfMeasure.Kilogram),
+            "l"  => new OpenFoodFactsQuantity(rawValue, UnitOfMeasure.Liter),
+            "cl" => new OpenFoodFactsQuantity(rawValue / 100m, UnitOfMeasure.Liter),
+            "ml" => new OpenFoodFactsQuantity(rawValue / 1000m, UnitOfMeasure.Liter),
+            _    => null,
+        };
     }
 }

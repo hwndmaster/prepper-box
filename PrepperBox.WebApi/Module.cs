@@ -12,6 +12,8 @@ namespace Genius.PrepperBox.WebApi
     {
         public static void Configure(IServiceCollection services, IConfiguration configuration)
         {
+            Guard.NotNull(configuration);
+
             services
                 .AddTransient<IRequestValidator<CreateCategoryRequest>, CreateCategoryRequestValidator>();
 

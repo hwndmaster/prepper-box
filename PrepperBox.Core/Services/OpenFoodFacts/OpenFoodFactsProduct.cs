@@ -19,12 +19,9 @@ public sealed class OpenFoodFactsProduct
     [JsonPropertyName("quantity")]
     public string? Quantity { get; set; }
 
-    [JsonPropertyName("image_front_small_url")]
-    public string? ImageFrontSmallUrl { get; set; }
-
     [JsonPropertyName("image_url")]
     public string? ImageUrl { get; set; }
 
-    [JsonPropertyName("nutrition_grades")]
-    public string? NutritionGrade { get; set; }
+    [JsonPropertyName("image_small_url")]
+    public string? ImageSmallUrl { get; set; }
 }

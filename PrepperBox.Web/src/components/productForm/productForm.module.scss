@@ -1,5 +1,9 @@
 @use "../../styles/forms.scss";
 
+.barCodeWrapper {
+    position: relative;
+}
+
 .trackedProductList {
     list-style: none;
     padding: 0;

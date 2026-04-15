@@ -11,6 +11,8 @@ interface Product {
     categoryId: CategoryRef;
     manufacturer?: string;
     barCode?: string;
+    imageUrl?: string;
+    imageSmallUrl?: string;
     trackedProductsCount: number;
     minimumStockLevel: number;
     unitOfMeasure: UnitOfMeasure;

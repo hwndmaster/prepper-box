@@ -10,6 +10,8 @@ public sealed record Product : EntityBase<int, ProductRef>
     public CategoryRef CategoryId { get; init; }
     public string? Manufacturer { get; init; }
     public string? BarCode { get; init; }
+    public string? ImageUrl { get; init; }
+    public string? ImageSmallUrl { get; init; }
     public UnitOfMeasure UnitOfMeasure { get; init; }
     public int MinimumStockLevel { get; init; }
 

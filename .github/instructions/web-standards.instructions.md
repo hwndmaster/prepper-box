@@ -36,6 +36,7 @@ applyTo: '**/*.ts, **/*.tsx'
   4. Components from upper folder (e.g., `import AnotherComponent from "../anotherComponent";`)
   5. Local imports (e.g., `import AnotherComponent from "./anotherComponent";`)
   6. Styles (e.g., `import "./myComponent.module.scss";`)
+- API cannot be used directly in a component. Instead, create an action in the store, bind it to a saga that calls the API, and then call that action from the component.
 
 ## Tests
 

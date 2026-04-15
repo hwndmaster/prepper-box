@@ -8,6 +8,6 @@ public sealed record UpdateTrackedProductRequest(
     ProductRef ProductId,
     StorageLocationRef StorageLocationId,
     DateTimeOffset? ExpirationDate,
-    int Quantity,
+    decimal Quantity,
     string? Notes
 ) : IPrimaryInt32Id<TrackedProductRef>, ITimeStamped;

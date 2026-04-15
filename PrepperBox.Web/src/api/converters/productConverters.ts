@@ -15,6 +15,8 @@ export function convertProductApiToModel(apiProduct: api.ProductDto): Product {
         categoryId: apiProduct.categoryId,
         manufacturer: apiProduct.manufacturer,
         barCode: apiProduct.barCode,
+        imageUrl: apiProduct.imageUrl,
+        imageSmallUrl: apiProduct.imageSmallUrl,
         unitOfMeasure: apiProduct.unitOfMeasure as UnitOfMeasure,
         trackedProductsCount: apiProduct.trackedProductsCount,
         minimumStockLevel: apiProduct.minimumStockLevel,

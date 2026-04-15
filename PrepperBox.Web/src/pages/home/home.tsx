@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Chip, Column, DataTable, Tooltip } from "@/primereact";
-import type { DataTableExpandedRows } from "@/primereact";
+import { Button, Chip, Column, DataTable, SplitButton, TabPanel, TabView, Tooltip } from "@/primereact";
+import type { DataTableExpandedRows, MenuItem } from "@/primereact";
 import * as store from "@/store";
 import Product from "@/models/product";
 import TrackedProduct from "@/models/trackedProduct";
@@ -14,6 +14,8 @@ import { StockValidationLevel, validateStockLevel } from "@/shared/stockValidati
 import { UnitOfMeasureLabels } from "@/shared/unitOfMeasureLabels";
 import { toastService } from "@/shared/ui/toastService";
 import { LoadingSpinner } from "@/components/loadingSpinner";
+import BarcodeScannerDialog from "./barcodeScannerDialog";
+import ProductSelectionDialog from "./productSelectionDialog";
 import WithdrawStockDialog from "./withdrawStockDialog";
 import styles from "./home.module.scss";
 
@@ -30,6 +32,9 @@ const Home: React.FC = () => {
     const [expandedTrackedRows, setExpandedTrackedRows] = useState<TrackedProduct[]>([]);
     const [isWithdrawDialogVisible, setIsWithdrawDialogVisible] = useState(false);
     const [withdrawTrackedProduct, setWithdrawTrackedProduct] = useState<TrackedProduct | null>(null);
+    const [isScannerVisible, setIsScannerVisible] = useState(false);
+    const [matchedProducts, setMatchedProducts] = useState<Product[]>([]);
+    const [isProductSelectionVisible, setIsProductSelectionVisible] = useState(false);
 
     useEffect(() => {
         dispatch(store.Categories.Actions.fetchCategories());
@@ -89,6 +94,39 @@ const Home: React.FC = () => {
         setIsWithdrawDialogVisible(false);
         setWithdrawTrackedProduct(null);
     };
+
+    const handleBarcodeScan = (barcode: string): void => {
+        setIsScannerVisible(false);
+        dispatch(store.Products.Actions.fetchProductsByBarCode(barcode, (foundProducts) => {
+            if (foundProducts == null || foundProducts.length === 0) {
+                void goTo(navigate, AppRoutes.AddProduct, undefined, { barCode: barcode });
+            } else if (foundProducts.length === 1) {
+                void goTo(navigate, AppRoutes.AddTrackedProduct, { productId: foundProducts[0].id });
+            } else {
+                setMatchedProducts(foundProducts);
+                setIsProductSelectionVisible(true);
+            }
+        }));
+    };
+
+    const handleProductSelect = (product: Product): void => {
+        setIsProductSelectionVisible(false);
+        setMatchedProducts([]);
+        void goTo(navigate, AppRoutes.AddTrackedProduct, { productId: product.id });
+    };
+
+    const handleProductSelectionCancel = (): void => {
+        setIsProductSelectionVisible(false);
+        setMatchedProducts([]);
+    };
+
+    const addProductMenuItems: MenuItem[] = [
+        {
+            label: "Scan Barcode",
+            icon: "pi pi-camera",
+            command: () => setIsScannerVisible(true),
+        },
+    ];
 
     const expirationDateTemplate = (tp: TrackedProduct): React.ReactNode => {
         if (tp.expirationDate == null) {
@@ -279,24 +317,27 @@ const Home: React.FC = () => {
     return (
         <LoadingSpinner target={LoadingTargets.ActiveView}>
             <div className={styles.header}>
-                <div className={styles.categoryTabs} data-test_id="Home__Category_Tabs">
+                <TabView
+                    scrollable
+                    className={styles.categoryTabView}
+                    activeIndex={Math.max(0, categories.findIndex((c) => c.id === selectedCategoryId))}
+                    onTabChange={(e) => setSelectedCategoryId(categories[e.index].id)}
+                    data-test_id="Home__Category_Tabs"
+                >
                     {categories.map((category) => (
-                        <Button
+                        <TabPanel
                             key={category.id}
-                            label={category.name}
-                            icon={getCategoryIconClass(category.iconName)}
-                            severity={category.id === selectedCategoryId ? undefined : "secondary"}
-                            outlined={category.id !== selectedCategoryId}
-                            data-test_id="Home__Category_Button"
-                            onClick={() => setSelectedCategoryId(category.id)}
+                            header={category.name}
+                            leftIcon={getCategoryIconClass(category.iconName)}
                         />
                     ))}
-                </div>
+                </TabView>
                 <div className={styles.headerRight}>
-                    <Button
+                    <SplitButton
                         label="Add Product"
                         icon="pi pi-plus"
                         severity="success"
+                        model={addProductMenuItems}
                         data-test_id="Home__Add_Product"
                         onClick={() => void goTo(navigate, AppRoutes.AddProduct)}
                     />
@@ -322,6 +363,19 @@ const Home: React.FC = () => {
                 visible={isWithdrawDialogVisible}
                 onConfirm={handleWithdrawConfirm}
                 onCancel={handleWithdrawCancel}
+            />
+
+            <BarcodeScannerDialog
+                visible={isScannerVisible}
+                onScan={handleBarcodeScan}
+                onCancel={() => setIsScannerVisible(false)}
+            />
+
+            <ProductSelectionDialog
+                visible={isProductSelectionVisible}
+                products={matchedProducts}
+                onSelect={handleProductSelect}
+                onCancel={handleProductSelectionCancel}
             />
         </LoadingSpinner>
     );

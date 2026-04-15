@@ -11,6 +11,8 @@ public sealed record UpdateProductRequest(
     CategoryRef CategoryId,
     string? Manufacturer,
     string? BarCode,
+    string? ImageUrl,
+    string? ImageSmallUrl,
     UnitOfMeasure UnitOfMeasure,
     int MinimumStockLevel
 ) : IPrimaryInt32Id<ProductRef>, ITimeStamped;

@@ -3,8 +3,8 @@ import { productRef } from "@/models/types";
 
 interface RouteDefinition {
     path: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    defaultParams: Record<string, any>;
+    defaultParams: Record<string, unknown>;
+    state?: Record<string, unknown>;
 }
 
 const AppRoutes = {
@@ -23,6 +23,9 @@ const AppRoutes = {
     AddProduct: {
         path: "/add-product",
         defaultParams: {},
+        state: {
+            barCode: "",
+        },
     },
     EditProduct: {
         path: "/edit-product/:productId",
@@ -53,7 +56,7 @@ function getRouteWithParameters<TRoute extends RouteDefinition>(
     params?: TRoute["defaultParams"]
 ): string {
     params = { ...route.defaultParams, ...params };
-    return route.path.replace(/:(\w+)/g, (_match: string, paramName: string) => params[paramName].toString());
+    return route.path.replace(/:(\w+)/g, (_match: string, paramName: string) => params[paramName]!.toString());
 }
 
 /**
@@ -65,9 +68,10 @@ function getRouteWithParameters<TRoute extends RouteDefinition>(
 async function goTo<TRoute extends RouteDefinition>(
     navigate: NavigateFunction,
     route: TRoute,
-    params?: TRoute["defaultParams"]
+    params?: TRoute["defaultParams"],
+    state?: TRoute["state"]
 ): Promise<void> {
-    await navigate(getRouteWithParameters(route, params));
+    await navigate(getRouteWithParameters(route, params), { state });
 }
 
 /**

@@ -9,6 +9,8 @@ public sealed record CreateProductRequest(
     CategoryRef CategoryId,
     string? Manufacturer,
     string? BarCode,
+    string? ImageUrl,
+    string? ImageSmallUrl,
     UnitOfMeasure UnitOfMeasure,
     int MinimumStockLevel
 );

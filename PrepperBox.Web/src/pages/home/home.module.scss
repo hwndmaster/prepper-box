@@ -1,9 +1,20 @@
 @use "../../styles/datatable.scss";
 
-.categoryTabs {
+.header {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.categoryTabView {
+    flex: 1;
+    min-width: 0;
+
+    :global(.p-tabview-panels) {
+        display: none;
+    }
 }
 
 .stockCell {
@@ -56,7 +67,7 @@
 
 @media (max-width: 640px) {
     .headerRight {
-        > :global(.p-button) > :global(.p-button-label) {
+        > :global(.p-splitbutton) > :global(.p-button) > :global(.p-button-label) {
             display: none;
         }
     }

@@ -51,6 +51,8 @@ namespace Genius.PrepperBox.Db.Migrations
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: false),
                     Manufacturer = table.Column<string>(type: "TEXT", nullable: true),
                     BarCode = table.Column<string>(type: "TEXT", nullable: true),
+                    ImageUrl = table.Column<string>(type: "TEXT", nullable: true),
+                    ImageSmallUrl = table.Column<string>(type: "TEXT", nullable: true),
                     UnitOfMeasure = table.Column<int>(type: "INTEGER", nullable: false),
                     MinimumStockLevel = table.Column<int>(type: "INTEGER", nullable: false),
                     DateCreated = table.Column<long>(type: "INTEGER", nullable: false),

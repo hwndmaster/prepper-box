@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as store from "@/store";
 import AppRoutes, { goTo } from "@/shared/routes";
 import { inputDateToTicks } from "@/shared/helper";
@@ -9,9 +9,15 @@ import type { ProductFormData } from "@/components/productForm";
 import type { TrackedProductFormData } from "@/components/trackedProductForm";
 import styles from "./addProduct.module.scss";
 
+interface AddProductLocationState {
+    barCode?: string;
+}
+
 const AddProduct: React.FC = () => {
     const dispatch = store.useAppDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+    const locationState = location.state as AddProductLocationState | null;
 
     const handleSubmit = (data: ProductFormData, pendingTrackedProducts: TrackedProductFormData[]): void => {
         dispatch(store.Products.Actions.createProduct(
@@ -21,6 +27,8 @@ const AddProduct: React.FC = () => {
                 categoryId: data.categoryId,
                 manufacturer: data.manufacturer,
                 barCode: data.barCode,
+                imageUrl: data.imageUrl,
+                imageSmallUrl: data.imageSmallUrl,
                 unitOfMeasure: data.unitOfMeasure,
                 minimumStockLevel: data.minimumStockLevel
             },
@@ -51,6 +59,7 @@ const AddProduct: React.FC = () => {
             <h2>Add Product</h2>
             <ProductForm
                 submitLabel="Create Product"
+                initialBarCode={locationState?.barCode}
                 onSubmit={handleSubmit}
                 onCancel={handleCancel}
             />

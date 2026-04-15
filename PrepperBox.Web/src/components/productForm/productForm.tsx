@@ -5,11 +5,13 @@ import { Button, Divider } from "@/primereact";
 import * as store from "@/store";
 import { categoryRef } from "@/models/types";
 import Product from "@/models/product";
+import OpenFoodFactsProduct from "@/models/openFoodFactsProduct";
 import { UnitOfMeasure } from "@/models/unitOfMeasure";
 import { UnitOfMeasureOptions } from "@/shared/unitOfMeasureLabels";
 import { FormInputText, FormInputNumber, FormDropdown, FormInputTextarea } from "@/components/forms";
 import { TrackedProductFormFields, useTrackedProductForm } from "@/components/trackedProductForm";
 import type { TrackedProductFormData } from "@/components/trackedProductForm";
+import BarCodeSuggestions from "./BarCodeSuggestions";
 import { productFormSchema, ProductFormData } from "./productForm.schema";
 import styles from "./productForm.module.scss";
 
@@ -20,17 +22,20 @@ interface PendingTrackedProduct {
 
 interface ProductFormProps {
     product?: Product;
+    initialBarCode?: string;
     submitLabel: string;
     onSubmit: (data: ProductFormData, pendingTrackedProducts: TrackedProductFormData[]) => void;
     onCancel: () => void;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ product, submitLabel, onSubmit, onCancel }) => {
+const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, submitLabel, onSubmit, onCancel }) => {
     const dispatch = store.useAppDispatch();
     const categories = store.useAppSelector((state) => state.categories.categories);
     const [pendingTrackedProducts, setPendingTrackedProducts] = useState<PendingTrackedProduct[]>([]);
     const [isShowingTrackedProductForm, setIsShowingTrackedProductForm] = useState(false);
     const [nextKey, setNextKey] = useState(1);
+    const [barCodeSuggestions, setBarCodeSuggestions] = useState<OpenFoodFactsProduct[]>([]);
+    const [isLoadingBarCodeSuggestions, setIsLoadingBarCodeSuggestions] = useState(false);
 
     const trackedProductForm = useTrackedProductForm();
 
@@ -46,11 +51,57 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, submitLabel, onSubmi
             description: product?.description ?? undefined,
             categoryId: product?.categoryId ?? categoryRef.default(),
             manufacturer: product?.manufacturer ?? undefined,
-            barCode: product?.barCode ?? undefined,
+            barCode: product?.barCode ?? initialBarCode ?? undefined,
+            imageUrl: product?.imageUrl ?? undefined,
+            imageSmallUrl: product?.imageSmallUrl ?? undefined,
             unitOfMeasure: product?.unitOfMeasure ?? UnitOfMeasure.Piece,
             minimumStockLevel: product?.minimumStockLevel ?? 0,
         },
     });
+
+    const fetchBarCodeSuggestions = (barCode: string): void => {
+        if (barCode.trim() === "") {
+            return;
+        }
+        setIsLoadingBarCodeSuggestions(true);
+        setBarCodeSuggestions([]);
+        dispatch(store.OpenFoodFacts.Actions.searchByBarCode(barCode, (results) => {
+            setBarCodeSuggestions(results ?? []);
+            setIsLoadingBarCodeSuggestions(false);
+        }, () => {
+            setIsLoadingBarCodeSuggestions(false);
+        }));
+    };
+
+    useEffect(() => {
+        if (initialBarCode != null && initialBarCode.trim() !== "") {
+            fetchBarCodeSuggestions(initialBarCode);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleBarCodeBlur = (value: string): void => {
+        fetchBarCodeSuggestions(value);
+    };
+
+    const handleSelectSuggestion = (suggestion: OpenFoodFactsProduct): void => {
+        if (suggestion.productName != null) {
+            form.setValue("name", suggestion.productName, { shouldValidate: true });
+        }
+        if (suggestion.brands != null) {
+            form.setValue("manufacturer", suggestion.brands);
+        }
+        if (suggestion.unitOfMeasure != null) {
+            form.setValue("unitOfMeasure", suggestion.unitOfMeasure);
+        }
+        form.setValue("imageUrl", suggestion.imageUrl);
+        form.setValue("imageSmallUrl", suggestion.imageSmallUrl);
+        if (suggestion.quantity != null) {
+            trackedProductForm.setValue("quantity", suggestion.quantity);
+            setIsShowingTrackedProductForm(true);
+        }
+        setBarCodeSuggestions([]);
+    };
 
     const handleAddTrackedProduct = (data: TrackedProductFormData): void => {
         setPendingTrackedProducts((prev) => [...prev, { key: nextKey, data }]);
@@ -71,10 +122,19 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, submitLabel, onSubmi
         <form onSubmit={(e) => void handleSubmit(e)} className={styles.form} data-test_id="ProductForm__Form">
             <div className={styles.firstRow}>
                 <FormInputText name="name" form={form} label="Name" />
+            </div>
+            <div className={styles.row}>
                 <FormInputText name="manufacturer" form={form} label="Manufacturer" />
             </div>
             <div className={styles.row}>
-                <FormInputText name="barCode" form={form} label="Bar Code" />
+                <div className={styles.barCodeWrapper}>
+                    <FormInputText name="barCode" form={form} label="Bar Code" onBlur={handleBarCodeBlur} />
+                    <BarCodeSuggestions
+                        suggestions={barCodeSuggestions}
+                        isLoading={isLoadingBarCodeSuggestions}
+                        onSelect={handleSelectSuggestion}
+                    />
+                </div>
                 <FormDropdown
                     name="categoryId"
                     form={form}

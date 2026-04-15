@@ -9,7 +9,9 @@ interface FormInputTextProps<TFieldValues extends FieldValues> {
     form: UseFormReturn<TFieldValues>;
     label: string;
     inputProps?: Omit<InputTextProps, "id" | "value" | "onChange" | "onBlur">;
+    onBlur?: (value: string) => void;
     className?: string;
+    disableFloatingLabel?: boolean;
 }
 
 export const FormInputText = <TFieldValues extends FieldValues>({
@@ -17,7 +19,9 @@ export const FormInputText = <TFieldValues extends FieldValues>({
     form,
     label,
     inputProps,
-    className
+    onBlur,
+    className,
+    disableFloatingLabel
 }: FormInputTextProps<TFieldValues>): React.ReactElement => {
     const error = form.formState.errors[name];
 
@@ -32,6 +36,11 @@ export const FormInputText = <TFieldValues extends FieldValues>({
                             id={name}
                             {...field}
                             value={field.value ?? ""}
+                            onBlur={(e) => {
+                                field.onBlur();
+                                onBlur?.(e.target.value);
+                            }}
+                            className={`${disableFloatingLabel ? "no-float" : ""}`}
                             {...inputProps}
                         />
                     )}

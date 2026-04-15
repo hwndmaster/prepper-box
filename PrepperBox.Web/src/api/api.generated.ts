@@ -692,6 +692,93 @@ export class ConsumptionLogsClient extends ApiClientBase {
     }
 }
 
+export class OpenFoodFactsClient extends ApiClientBase {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        super();
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "http://localhost:5095/";
+
+    }
+
+    static operations = {
+
+        searchByBarCode: "api/v1/OpenFoodFacts/by-barcode/{barCode}",
+    }
+
+    static operationParams = {
+
+        searchByBarCode: {} as {
+            barCode: string;
+        },
+    }
+
+    /**
+     * @return OK
+     */
+    searchByBarCode(barCode: string, cancelToken?: CancelToken): Promise<ApiResponse<OpenFoodFactsProductDto[]>> {
+        let url_ = this.baseUrl + "/api/v1/OpenFoodFacts/by-barcode/{barCode}";
+        if (barCode === undefined || barCode === null)
+            throw new Error("The parameter 'barCode' must be defined.");
+        url_ = url_.replace(/{barCode}/gi, encodeURIComponent("" + barCode));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processSearchByBarCode(_response);
+        });
+    }
+
+    protected processSearchByBarCode(response: AxiosResponse): Promise<ApiResponse<OpenFoodFactsProductDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<OpenFoodFactsProductDto[]>>(new ApiResponse<OpenFoodFactsProductDto[]>(status, _headers, result200));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<OpenFoodFactsProductDto[]>>(new ApiResponse(status, _headers, null as any));
+    }
+}
+
 export class ProductsClient extends ApiClientBase {
     protected instance: AxiosInstance;
     protected baseUrl: string;
@@ -1828,6 +1915,8 @@ export interface CreateProductRequest {
     categoryId: CategoryRef;
     manufacturer: string | undefined;
     barCode: string | undefined;
+    imageUrl: string | undefined;
+    imageSmallUrl: string | undefined;
     unitOfMeasure: number;
     minimumStockLevel: number;
 }
@@ -1839,9 +1928,20 @@ export interface CreateStorageLocationRequest {
 export interface CreateTrackedProductRequest {
     productId: ProductRef;
     storageLocationId: StorageLocationRef;
-    expirationDate: number;
+    expirationDate: number | undefined;
     quantity: number;
     notes: string | undefined;
+}
+
+export interface OpenFoodFactsProductDto {
+    code: string;
+    productName: string | undefined;
+    brands: string | undefined;
+    categories: string | undefined;
+    quantity: number | undefined;
+    unitOfMeasure: number | undefined;
+    imageUrl: string | undefined;
+    imageSmallUrl: string | undefined;
 }
 
 export interface ProductDto {
@@ -1851,6 +1951,8 @@ export interface ProductDto {
     categoryId: CategoryRef;
     manufacturer: string | undefined;
     barCode: string | undefined;
+    imageUrl: string | undefined;
+    imageSmallUrl: string | undefined;
     unitOfMeasure: number;
     minimumStockLevel: number;
     trackedProductsCount: number;
@@ -1869,7 +1971,7 @@ export interface TrackedProductDto {
     id: TrackedProductRef;
     productId: ProductRef;
     storageLocationId: StorageLocationRef;
-    expirationDate: number;
+    expirationDate: number | undefined;
     quantity: number;
     notes: string | undefined;
     dateCreated: number;
@@ -1925,6 +2027,8 @@ export interface UpdateProductRequest {
     categoryId: CategoryRef;
     manufacturer: string | undefined;
     barCode: string | undefined;
+    imageUrl: string | undefined;
+    imageSmallUrl: string | undefined;
     unitOfMeasure: number;
     minimumStockLevel: number;
 }
@@ -1940,7 +2044,7 @@ export interface UpdateTrackedProductRequest {
     lastModified: number;
     productId: ProductRef;
     storageLocationId: StorageLocationRef;
-    expirationDate: number;
+    expirationDate: number | undefined;
     quantity: number;
     notes: string | undefined;
 }

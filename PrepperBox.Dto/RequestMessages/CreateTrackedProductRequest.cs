@@ -6,6 +6,6 @@ public sealed record CreateTrackedProductRequest(
     ProductRef ProductId,
     StorageLocationRef StorageLocationId,
     DateTimeOffset? ExpirationDate,
-    int Quantity,
+    decimal Quantity,
     string? Notes
 );

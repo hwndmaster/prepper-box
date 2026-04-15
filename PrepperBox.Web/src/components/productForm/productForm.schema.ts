@@ -9,6 +9,8 @@ export const productFormSchema = z.object({
     categoryId: requiredRef<CategoryRef>("Category is required"),
     manufacturer: z.string().optional(),
     barCode: z.string().optional(),
+    imageUrl: z.string().optional(),
+    imageSmallUrl: z.string().optional(),
     unitOfMeasure: z.enum(UnitOfMeasure),
     minimumStockLevel: z.number().min(0, "Minimum stock level cannot be negative"),
 });

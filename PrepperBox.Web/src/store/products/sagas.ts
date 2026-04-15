@@ -36,6 +36,8 @@ export function* createProductSaga(action: ReturnType<typeof productsActions.cre
                 categoryId: action.payload.categoryId,
                 manufacturer: action.payload.manufacturer,
                 barCode: action.payload.barCode,
+                imageUrl: action.payload.imageUrl,
+                imageSmallUrl: action.payload.imageSmallUrl,
                 unitOfMeasure: action.payload.unitOfMeasure,
                 minimumStockLevel: action.payload.minimumStockLevel,
             };
@@ -80,6 +82,8 @@ export function* updateProductSaga(action: ReturnType<typeof productsActions.upd
                 categoryId: action.payload.categoryId,
                 manufacturer: action.payload.manufacturer,
                 barCode: action.payload.barCode,
+                imageUrl: action.payload.imageUrl,
+                imageSmallUrl: action.payload.imageSmallUrl,
                 unitOfMeasure: action.payload.unitOfMeasure,
                 minimumStockLevel: action.payload.minimumStockLevel,
             };

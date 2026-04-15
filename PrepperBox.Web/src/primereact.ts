@@ -23,6 +23,8 @@ export { InputTextarea } from "primereact/inputtextarea";
 export type { InputTextareaProps } from "primereact/inputtextarea";
 export { Menubar } from "primereact/menubar";
 export type { MenuItem } from "primereact/menuitem";
+export { SplitButton } from "primereact/splitbutton";
+export { TabPanel, TabView } from "primereact/tabview";
 export { Toast } from "primereact/toast";
 export type { ToastMessage } from "primereact/toast";
 export { Tooltip } from "primereact/tooltip";

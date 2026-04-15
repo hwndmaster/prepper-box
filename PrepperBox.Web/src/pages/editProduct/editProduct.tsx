@@ -5,6 +5,7 @@ import { productRef } from "@/models/types";
 import AppRoutes, { goTo } from "@/shared/routes";
 import { inputDateToTicks } from "@/shared/helper";
 import { toastService } from "@/shared/ui/toastService";
+import { Button, confirmDialog } from "@/primereact";
 import { ProductForm } from "@/components/productForm";
 import type { ProductFormData } from "@/components/productForm";
 import type { TrackedProductFormData } from "@/components/trackedProductForm";
@@ -34,6 +35,8 @@ const EditProduct: React.FC = () => {
                 categoryId: data.categoryId,
                 manufacturer: data.manufacturer,
                 barCode: data.barCode,
+                imageUrl: data.imageUrl,
+                imageSmallUrl: data.imageSmallUrl,
                 unitOfMeasure: data.unitOfMeasure,
                 minimumStockLevel: data.minimumStockLevel,
             },
@@ -55,6 +58,24 @@ const EditProduct: React.FC = () => {
         ));
     };
 
+    const handleDelete = (): void => {
+        if (product == null) {
+            return;
+        }
+        confirmDialog({
+            message: "Are you sure you want to delete this product? This action cannot be undone.",
+            header: "Confirm Delete",
+            icon: "pi pi-exclamation-triangle",
+            acceptClassName: "p-button-danger",
+            accept: () => {
+                dispatch(store.Products.Actions.deleteProduct(product.id, () => {
+                    toastService.showSuccess("Product deleted successfully.");
+                    void goTo(navigate, AppRoutes.Default);
+                }));
+            },
+        });
+    };
+
     const handleCancel = (): void => {
         void goTo(navigate, AppRoutes.Default);
     };
@@ -65,7 +86,17 @@ const EditProduct: React.FC = () => {
 
     return (
         <div className={styles.pageContent} data-test_id="EditProduct__Page">
-            <h2>Edit Product</h2>
+            <div className={styles.pageHeader}>
+                <h2>Edit Product</h2>
+                <Button
+                    icon="pi pi-trash"
+                    label="Delete Product"
+                    severity="danger"
+                    outlined
+                    data-test_id="EditProduct__Delete_Button"
+                    onClick={handleDelete}
+                />
+            </div>
             <ProductForm
                 product={product}
                 submitLabel="Save Product"

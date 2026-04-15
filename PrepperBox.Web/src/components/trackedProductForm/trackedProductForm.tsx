@@ -18,15 +18,16 @@ const TrackedProductFormFields: React.FC<TrackedProductFormFieldsProps> = ({ for
     return (
         <>
             <div className={styles.row}>
-                <FormInputNumber name="quantity" form={form} label="Quantity" />
+                <FormInputNumber name="quantity" form={form}
+                    allowDecimals={true}
+                    label="Quantity" />
                 <FormInputText
                     name="expirationDate"
                     form={form}
                     label="Expiration Date"
+                    disableFloatingLabel
                     inputProps={{ type: "date", min: today }}
                 />
-            </div>
-            <div className={styles.row}>
                 <FormDropdown
                     name="storageLocationId"
                     form={form}

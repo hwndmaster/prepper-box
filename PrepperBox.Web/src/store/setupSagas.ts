@@ -1,12 +1,14 @@
 ﻿import { Task } from "redux-saga";
 import { takeLatest, cancel, CancelEffect, ForkEffect, takeEvery, put } from "redux-saga/effects";
 import { HasToastedError } from "@/shared/errorInfo";
+import * as openFoodFactsSagas from "./openFoodFacts/sagas";
 import * as commonSagas from "./common/sagas";
 import * as categoriesSagas from "./categories/sagas";
 import * as consumptionLogsSagas from "./consumptionLogs/sagas";
 import * as productsSagas from "./products/sagas";
 import * as storageLocationsSagas from "./storageLocations/sagas";
 import * as trackedProductsSagas from "./trackedProducts/sagas";
+import * as openFoodFacts from "./openFoodFacts";
 import * as common from "./common";
 import * as categories from "./categories";
 import * as consumptionLogs from "./consumptionLogs";
@@ -29,6 +31,10 @@ enum SagaHandlingType {
 
 const commonWatchers = [
     { handlingType: SagaHandlingType.TakeEvery, action: common.Actions.raiseError, saga: commonSagas.raiseErrorSaga },
+];
+
+const openFoodFactsWatchers = [
+    { handlingType: SagaHandlingType.TakeLatest, action: openFoodFacts.Actions.searchByBarCode, saga: openFoodFactsSagas.searchByBarCodeSaga },
 ];
 
 const categoriesWatchers = [
@@ -86,6 +92,7 @@ const applicationWatchers = [
     ...commonWatchers,
     ...categoriesWatchers,
     ...consumptionLogsWatchers,
+    ...openFoodFactsWatchers,
     ...productsWatchers,
     ...storageLocationsWatchers,
     ...trackedProductsWatchers,

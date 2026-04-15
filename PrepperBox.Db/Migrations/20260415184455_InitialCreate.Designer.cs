@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Genius.PrepperBox.Db.Migrations
 {
     [DbContext(typeof(PrepperBoxDbContext))]
-    [Migration("20260331204344_InitialCreate")]
+    [Migration("20260415184455_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -92,6 +92,12 @@ namespace Genius.PrepperBox.Db.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageSmallUrl")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("TEXT");
 
                     b.Property<long>("LastModified")

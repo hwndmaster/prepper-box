@@ -3,7 +3,6 @@ import createSagaMiddleware from "redux-saga";
 import { useDispatch, useSelector, type TypedUseSelectorHook } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { PersistConfig, Persistor, PersistorAction, persistReducer, PersistState, persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage
 
 import { toastService } from "@/shared/ui/toastService";
 import { isDev } from "@/shared/constants";
@@ -28,6 +27,19 @@ interface PersistPartial {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     _persist: PersistState;
 }
+
+// Custom localStorage adapter — avoids CJS/ESM interop issues with redux-persist's built-in storage in Vite 8+
+const storage = {
+    async getItem(key: string): Promise<string | null> {
+        return localStorage.getItem(key);
+    },
+    async setItem(key: string, value: string): Promise<void> {
+        localStorage.setItem(key, value);
+    },
+    async removeItem(key: string): Promise<void> {
+        localStorage.removeItem(key);
+    },
+};
 
 /**
  * Creates a new instance of a store.
