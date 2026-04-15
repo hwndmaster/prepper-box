@@ -118,7 +118,8 @@
             "New-Item": true,
             "dotnet list": true,
             "npx vitest": true,
-            "npm run build": true
+            "npm run build": true,
+            "npx eslint": true
         }
     }
 }

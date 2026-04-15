@@ -1,5 +1,5 @@
+using Genius.Atom.Web.OpenApi;
 using Genius.PrepperBox.WebApi.JsonConverters;
-using Genius.PrepperBox.WebApi.OpenApi;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +23,7 @@ builder.Services.AddDbContext<Genius.PrepperBox.Db.PrepperBoxDbContext>(options 
 });
 builder.Services.AddOpenApi(options =>
 {
+    options.AddSchemaTransformer<DateTimeOffsetSchemaTransformer>();
     options.AddOperationTransformer<ReferenceParameterTransformer>();
 });
 

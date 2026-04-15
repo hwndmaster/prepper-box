@@ -3,8 +3,12 @@ import MockAdapter from "axios-mock-adapter";
 import { setApiAxiosInstance } from "@/api/apiAxios";
 
 type GetReplyDescriptor = ReturnType<MockAdapter["onGet"]>;
+type PostReplyDescriptor = ReturnType<MockAdapter["onPost"]>;
+type PutReplyDescriptor = ReturnType<MockAdapter["onPut"]>;
 type ParamPrimitive = string | number | boolean;
-type ParamValue = ParamPrimitive | ParamPrimitive[] | null | undefined;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type BodyParam = Record<string, any> | any[]; // Object type for body parameters (for POST operations), which can be any shape
+type ParamValue = ParamPrimitive | ParamPrimitive[] | BodyParam | null | undefined;
 
 /**
  * A fake Axios instance for testing purposes.
@@ -15,7 +19,7 @@ class FakeAxios {
 
     constructor() {
         this.currentAxiosInstance = axios.create();
-        this.axiosMock = new MockAdapter(this.currentAxiosInstance);
+        this.axiosMock = new MockAdapter(this.currentAxiosInstance, { onNoMatch: "throwException" });
 
         setApiAxiosInstance(this.currentAxiosInstance);
     }
@@ -29,6 +33,7 @@ class FakeAxios {
 
     /**
      * Sets up an endpoint with the given axios mock adapter passed in.
+     * Use this for custom setups that are not covered by the provided helper methods (e.g. for POST/PUT requests with complex body matchers, or for third-party APIs).
      * @param handler The handler to set up the endpoint with the axios mock adapter.
      */
     public setupAxiosEndpoint(handler: (axiosMock: MockAdapter) => void): void {
@@ -58,31 +63,83 @@ class FakeAxios {
         params?: TClient["operationParams"][TOperation]
     ): GetReplyDescriptor {
         let url = client.operations[operation];
-        if (params != null) {
-            url += "?";
-            Object.keys(params).forEach(key => {
-                const value = params[key];
-                if (value == null) {
-                    return;
-                }
-                if (url.includes(`{${key}}`)) {
-                    // If the parameter is part of the URL route (before `?` sign), it is never an array
-                    const valueStr = String(value);
-                    url = url.replace(new RegExp("{" + key + "}", "g"), encodeURIComponent(valueStr));
-                } else {
-                    const items = Array.isArray(value) ? value : [value];
-                    items.forEach((item) => {
-                        url += `${key}=`;
-                        url += encodeURIComponent(item);
-                        url += "&";
-                    });
-                }
-            });
-
-            url = url.slice(0, -1); // Remove trailing '&'
-        }
+        url = extractParams<TClient, TOperation>(params, url);
 
         return this.axiosMock.onGet(url);
+    }
+
+    /**
+     * Checks whether a given operation has been called on the client.
+     * @param client The API client.
+     * @param operation The operation name, provided by the client.
+     * @returns True if the operation has been called; false otherwise.
+     */
+    public hasCalled<TClient extends {
+        operations: Record<string, string>;
+        operationParams: Record<string, Record<string, ParamValue>>;
+    }, TOperation extends keyof TClient["operationParams"] & keyof TClient["operations"]>(
+        client: TClient, operation: TOperation & string
+    ): boolean {
+        return this.axiosMock.history.find(x => x.url?.match(client.operations[operation])) !== undefined;
+    }
+
+    /**
+     * Sets up a POST request mock for the given client and operation.
+     * @example
+     * ```typescript
+     * fakeAxios.setupPost(processingApi.VbaImportClient, "Import", {
+     *     processingProjectId,
+     *     body: sessionIds
+     *   }).reply(200, {...});
+     * ```
+     * @param client The API client.
+     * @param operation The operation name, provided by the client.
+     * @param params The operation parameters.
+     * @returns The POST reply descriptor, to be used to set up the `reply`.
+     */
+    public setupPost<TClient extends {
+        operations: Record<string, string>;
+        operationParams: Record<string, Record<string, ParamValue>>;
+    }, TOperation extends keyof TClient["operationParams"] & keyof TClient["operations"]>(
+        client: TClient,
+        operation: TOperation & string,
+        params?: TClient["operationParams"][TOperation]
+    ): PostReplyDescriptor {
+        let url = client.operations[operation];
+        url = extractParams<TClient, TOperation>(params, url);
+
+        const bodyMatcher = extractBodyMatcher(params);
+
+        return this.axiosMock.onPost(url, bodyMatcher);
+    }
+
+    /**
+     * Sets up a PUT request mock for the given client and operation.
+     * @example
+     * ```typescript
+     * fakeAxios.setupPut(processingApi.GeowingVesselsClient, "Update", {
+     *     body: { id: projectId, version: 1, ... }
+     *   }).reply(200, {...});
+     * ```
+     * @param client The API client.
+     * @param operation The operation name, provided by the client.
+     * @param params The operation parameters.
+     * @returns The PUT reply descriptor, to be used to set up the `reply`.
+     */
+    public setupPut<TClient extends {
+        operations: Record<string, string>;
+        operationParams: Record<string, Record<string, ParamValue>>;
+    }, TOperation extends keyof TClient["operationParams"] & keyof TClient["operations"]>(
+        client: TClient,
+        operation: TOperation & string,
+        params?: TClient["operationParams"][TOperation]
+    ): PutReplyDescriptor {
+        let url = client.operations[operation];
+        url = extractParams<TClient, TOperation>(params, url);
+
+        const bodyMatcher = extractBodyMatcher(params);
+
+        return this.axiosMock.onPut(url, bodyMatcher);
     }
 
     /**
@@ -91,6 +148,82 @@ class FakeAxios {
     get axiosInstance(): AxiosInstance {
         return this.currentAxiosInstance;
     }
+}
+
+function extractBodyMatcher(params: Record<string, ParamValue> | undefined): { asymmetricMatch: (actual: unknown) => boolean } | undefined {
+    const body = params?.["body"];
+    if (body === undefined) {
+        return undefined;
+    }
+
+    return {
+        asymmetricMatch: (actual: unknown): boolean => {
+            if (typeof actual === "string") {
+                try {
+                    actual = JSON.parse(actual);
+                } catch {
+                    return false;
+                }
+            }
+
+            if (Array.isArray(body)) {
+                return JSON.stringify(actual) === JSON.stringify(body);
+            }
+
+            if (typeof body === "object" && body !== null && typeof actual === "object" && actual !== null) {
+                // Partial match: every key specified in the expected body must match in the actual body.
+                return Object.keys(body).every(key =>
+                    JSON.stringify((actual as Record<string, unknown>)[key]) === JSON.stringify((body as Record<string, unknown>)[key])
+                );
+            }
+
+            return actual === body;
+        },
+    };
+}
+
+function extractParams<
+    TClient extends {
+        operations: Record<string, string>;
+        operationParams: Record<string, Record<string, ParamValue>>;
+    },
+    TOperation extends keyof TClient["operationParams"] & keyof TClient["operations"]>(
+    params: TClient["operationParams"][TOperation] | undefined, url: string): string {
+    // Ensure URL starts with '/' to match the actual request URL (generated clients prepend '/' to the path).
+    if (!url.startsWith("/")) {
+        url = "/" + url;
+    }
+    if (params != null) {
+        let queryString = "";
+        Object.keys(params).forEach(key => {
+            if (key === "body") {
+                // 'body' is a request body parameter, not a URL parameter — skip it.
+                return;
+            }
+            const value = params[key];
+            if (value == null) {
+                return;
+            }
+            if (url.includes(`{${key}}`)) {
+                // If the parameter is part of the URL route, substitute it directly — it is never an array.
+                const valueStr = String(value);
+                url = url.replace(new RegExp("{" + key + "}", "g"), encodeURIComponent(valueStr));
+            } else {
+                const items = Array.isArray(value) ? value : [value];
+                items.forEach((item) => {
+                    queryString += `${key}=`;
+                    queryString += encodeURIComponent(item as ParamPrimitive);
+                    queryString += "&";
+                });
+            }
+        });
+
+        if (queryString.length > 0) {
+            // Remove trailing '&' and append to URL
+            url += "?" + queryString.slice(0, -1);
+        }
+    }
+    return url;
 }
 
 const fakeAxios = new FakeAxios();

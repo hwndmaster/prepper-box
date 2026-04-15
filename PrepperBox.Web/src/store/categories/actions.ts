@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
-import { CreateCategoryRequest, UpdateCategoryRequest } from "@/api/api.generated";
 import { CategoryRef } from "@/models/types";
 import { createActionWithMeta } from "../actionExtensions";
+import { CreateCategoryRequest, UpdateCategoryRequest } from "./messages";
 
 export const fetchCategories = createAction<void>("categories/fetch");
 export const createCategory = createActionWithMeta<CreateCategoryRequest, CategoryRef>("categories/createCategory");

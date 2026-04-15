@@ -1,5 +1,5 @@
-import { runSaga, Saga } from "redux-saga";
-import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
+import { runSaga, Saga, stdChannel } from "redux-saga";
+import { ActionCreatorWithPayload, UnknownAction } from "@reduxjs/toolkit";
 import { AppState } from "@/store";
 
 interface DispatchedAction {
@@ -14,15 +14,25 @@ class SagaRunner {
     private readonly dispatchedActions: DispatchedAction[] = [];
     private readonly errorsOccurred: string[] = [];
     private initialState: AppState | undefined = undefined;
+    private readonly channel: ReturnType<typeof stdChannel<UnknownAction>> | undefined;
+
+    /**
+     * Creates a new SagaRunner instance.
+     * @param channel Optional channel to use for saga communication (for take/put effects).
+     */
+    constructor(channel?: ReturnType<typeof stdChannel<UnknownAction>>) {
+        this.channel = channel;
+    }
 
     /**
      * Runs the given saga with the provided payload.
      * @param saga The saga to run.
      * @param payload The payload to pass to the saga.
      */
-    public async runSaga(saga: Saga, ...payload: unknown[]): Promise<void> {
+    public async runSaga<TSaga extends Saga>(saga: TSaga, ...payload: Parameters<TSaga>): Promise<void> {
         try {
             await runSaga({
+                channel: this.channel,
                 dispatch: (action) => {
                     if (action != null
                         && typeof action === "object"
@@ -39,6 +49,7 @@ class SagaRunner {
             }, saga, ...payload).toPromise();
         } catch (error) {
             this.errorsOccurred.push((error ?? "").toString());
+            throw error;
         }
     }
 
@@ -70,6 +81,16 @@ class SagaRunner {
             return found.payload as TPayload;
         }
         return undefined;
+    }
+
+    /**
+     * Finds all dispatched action by their action creator.
+     * @param action The action creator to search for.
+     * @returns The payloads of all the found actions, or empty array if not found any.
+     */
+    public findDispatchedActions<TPayload>(action: ActionCreatorWithPayload<TPayload, string>): TPayload[] {
+        return this.dispatchedActions.filter((dispatchedAction) => dispatchedAction.type === action.type)
+            .map(x => x.payload as TPayload);
     }
 
     /**

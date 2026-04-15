@@ -21,7 +21,10 @@ services:
       dockerfile: Dockerfile
     container_name: prepper-box-web
     ports:
-      - "5096:8046"                         # Host port 5096 → container port 8046
+      - "5096:8046"                         # Host port 5096 → container port 8046 (HTTP)
+      - "5097:8443"                         # Host port 5097 → container port 8443 (HTTPS)
+    volumes:
+      - ./certs:/etc/nginx/certs:ro         # Mount SSL certificates
     depends_on:
       - prepper-box-api
     restart: unless-stopped

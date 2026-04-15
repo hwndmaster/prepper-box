@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
-import { CreateTrackedProductRequest, UpdateTrackedProductRequest } from "@/api/api.generated";
 import { TrackedProductRef } from "@/models/types";
 import { createActionWithMeta } from "../actionExtensions";
+import { CreateTrackedProductRequest, UpdateTrackedProductRequest } from "./messages";
 
 export interface WithdrawTrackedProductPayload {
     trackedProductId: TrackedProductRef;

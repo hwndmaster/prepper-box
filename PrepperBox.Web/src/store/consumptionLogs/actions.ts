@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
-import { CreateConsumptionLogRequest } from "@/api/api.generated";
 import { ConsumptionLogRef } from "@/models/types";
 import { createActionWithMeta } from "../actionExtensions";
+import { CreateConsumptionLogRequest } from "./messages";
 
 export const fetchConsumptionLogs = createAction<void>("consumptionLogs/fetch");
 export const createConsumptionLog = createActionWithMeta<CreateConsumptionLogRequest, ConsumptionLogRef>("consumptionLogs/saveConsumptionLog");

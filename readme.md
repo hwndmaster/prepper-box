@@ -27,8 +27,8 @@ docker compose build
 Tag the images for the registry
 
 ```shell
-docker tag prepper-box-api ghcr.io/hwndmaster/prepper-box-api:latest
-docker tag prepper-box-web ghcr.io/hwndmaster/prepper-box-web:latest
+docker tag prepper-box-prepper-box-api ghcr.io/hwndmaster/prepper-box-api:latest
+docker tag prepper-box-prepper-box-web ghcr.io/hwndmaster/prepper-box-web:latest
 ```
 
 Push the images
@@ -57,6 +57,9 @@ services:
     container_name: prepper-box-web
     ports:
       - "5096:8046"
+      - "5097:8443"
+    volumes:
+      - ./certs:/etc/nginx/certs:ro
     depends_on:
       - prepper-box-api
     restart: unless-stopped
@@ -75,6 +78,51 @@ docker compose pull && docker compose up -d
 ```
 
 ### Miscellaneous
+
+#### HTTPS setup (required for camera/barcode scanning)
+
+Browsers require HTTPS for camera access (`getUserMedia`) when not on localhost. To enable HTTPS:
+
+1. Generate a self-signed certificate for your server's LAN IP address:
+
+```shell
+cd PrepperBox.Web/scripts
+sh generate-cert.sh 192.168.1.100 ../../certs
+```
+
+or using openssl.exe:
+
+```shell
+New-Item -ItemType Directory -Force -Path certs
+openssl req -x509 -newkey rsa:2048 -nodes `
+  -keyout certs/server.key `
+  -out certs/server.crt `
+  -days 3650 `
+  -subj "/CN=192.168.1.100" `
+  -addext "subjectAltName=IP:192.168.1.100"
+```
+
+Replace `192.168.1.100` with the actual IP address of the machine running the Docker containers.
+
+2. Install `certs/server.crt` as a trusted certificate on each client device:
+   - **Windows**: Double-click the `.crt` file → Install Certificate → Local Machine → Trusted Root Certification Authorities. Alternatively, run from Terminal:
+        ```shell
+        Import-Certificate -FilePath certs\server.crt -CertStoreLocation Cert:\LocalMachine\Root
+        ```
+   - **Android**: Settings → Security → Install from storage → select the `.crt` file
+   - **iOS**: AirDrop or email the `.crt` file → Install Profile → Settings → General → About → Certificate Trust Settings → enable
+
+3. Start the containers — HTTPS will be available on port 5097:
+
+```
+https://192.168.1.100:5097
+```
+
+4. Open the firewall port if needed:
+
+```shell
+New-NetFirewallRule -DisplayName "PrepperBox Web HTTPS" -Direction Inbound -Protocol TCP -LocalPort 5097 -Action Allow
+```
 
 #### Building locally
 

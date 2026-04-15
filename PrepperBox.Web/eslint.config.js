@@ -164,6 +164,34 @@ export default [
             "import-x/no-absolute-path": "error",
             "import-x/no-cycle": "error",
             "import-x/no-useless-path-segments": "error",
+            "import-x/no-restricted-paths": ["error", {
+                zones: [
+                    {
+                        // Restrict api/ imports: only sagas.ts, messages.ts, and apiRequest.ts in store/ can import from api/
+                        target: "./src/store/**/!(sagas|messages|apiRequest).{ts,tsx}",
+                        from: "./src/api",
+                        message: "Only sagas.ts and messages.ts can import from the api/ folder.",
+                    },
+                    {
+                        // Nothing outside store/ and api/ can import from api/
+                        target: "./src/!(api|store|__tests__)/**",
+                        from: "./src/api",
+                        message: "The api/ folder can only be accessed from the store/ folder.",
+                    },
+                    {
+                        // actionsInternal.ts files can only be used within store/
+                        target: "./src/!(store)/**",
+                        from: "./src/store/**/actionsInternal.{ts,tsx}",
+                        message: "actionsInternal.ts can only be imported within the store/ folder.",
+                    },
+                    {
+                        // sagas.ts files can only be used within store/
+                        target: "./src/!(store|__tests__)/**",
+                        from: "./src/store/**/sagas.{ts,tsx}",
+                        message: "sagas.ts can only be imported within the store/ folder.",
+                    },
+                ],
+            }],
             "import-x/exports-last": "error",
             "import-x/first": "error",
             "import-x/max-dependencies": ["warn", {
