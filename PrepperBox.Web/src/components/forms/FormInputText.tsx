@@ -40,7 +40,7 @@ export const FormInputText = <TFieldValues extends FieldValues>({
                                 field.onBlur();
                                 onBlur?.(e.target.value);
                             }}
-                            className={`${disableFloatingLabel ? "no-float" : ""}`}
+                            className={disableFloatingLabel === true ? "no-float" : ""}
                             {...inputProps}
                         />
                     )}

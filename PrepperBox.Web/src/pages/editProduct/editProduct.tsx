@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import * as store from "@/store";
 import { productRef } from "@/models/types";
 import AppRoutes, { goTo } from "@/shared/routes";
@@ -14,6 +14,8 @@ import styles from "./editProduct.module.scss";
 const EditProduct: React.FC = () => {
     const dispatch = store.useAppDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+    const locationState = location.state as { selectedCategoryId?: number } | null;
     const { productId } = useParams<{ productId: string }>();
     const products = store.useAppSelector((state) => state.products.products);
 
@@ -53,7 +55,7 @@ const EditProduct: React.FC = () => {
                     }
                 }
                 toastService.showSuccess("Product updated successfully.");
-                void goTo(navigate, AppRoutes.Default);
+                void goTo(navigate, AppRoutes.Default, undefined, { selectedCategoryId: locationState?.selectedCategoryId ?? 0 });
             }
         ));
     };
@@ -70,14 +72,14 @@ const EditProduct: React.FC = () => {
             accept: () => {
                 dispatch(store.Products.Actions.deleteProduct(product.id, () => {
                     toastService.showSuccess("Product deleted successfully.");
-                    void goTo(navigate, AppRoutes.Default);
+                    void goTo(navigate, AppRoutes.Default, undefined, { selectedCategoryId: locationState?.selectedCategoryId ?? 0 });
                 }));
             },
         });
     };
 
     const handleCancel = (): void => {
-        void goTo(navigate, AppRoutes.Default);
+        void goTo(navigate, AppRoutes.Default, undefined, { selectedCategoryId: locationState?.selectedCategoryId ?? 0 });
     };
 
     if (product == null) {

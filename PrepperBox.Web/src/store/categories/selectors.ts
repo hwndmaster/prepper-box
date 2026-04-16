@@ -9,3 +9,10 @@ export const selectCategoryById: (state: AppState, categoryId: CategoryRef) => C
         return categories.find((category) => category.id === categoryId);
     }
 );
+
+export const selectCategoryByName: (state: AppState, name: string) => Category | undefined = createSelector(
+    [(state: AppState, name: string): { categories: Category[]; name: string } => ({ categories: state.categories.categories, name })],
+    ({ categories, name }) => {
+        return categories.find((category) => category.name === name);
+    }
+);

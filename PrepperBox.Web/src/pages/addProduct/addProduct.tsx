@@ -11,6 +11,7 @@ import styles from "./addProduct.module.scss";
 
 interface AddProductLocationState {
     barCode?: string;
+    selectedCategoryId?: number;
 }
 
 const AddProduct: React.FC = () => {
@@ -45,13 +46,13 @@ const AddProduct: React.FC = () => {
                     }
                 }
                 toastService.showSuccess("Product created successfully.");
-                void goTo(navigate, AppRoutes.Default);
+                void goTo(navigate, AppRoutes.Default, undefined, { selectedCategoryId: locationState?.selectedCategoryId ?? 0 });
             }
         ));
     };
 
     const handleCancel = (): void => {
-        void goTo(navigate, AppRoutes.Default);
+        void goTo(navigate, AppRoutes.Default, undefined, { selectedCategoryId: locationState?.selectedCategoryId ?? 0 });
     };
 
     return (

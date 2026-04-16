@@ -14,7 +14,7 @@ public interface IOpenFoodFactsClient
 
 internal sealed class OpenFoodFactsClient : IOpenFoodFactsClient
 {
-    private const string ProductFields = "code,product_name,brands,categories,quantity,image_url,image_small_url";
+    private const string ProductFields = "code,product_name,brands,quantity,image_url,image_small_url";
 
     private readonly HttpClient _httpClient;
 

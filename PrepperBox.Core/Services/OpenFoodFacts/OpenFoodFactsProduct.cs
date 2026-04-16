@@ -13,9 +13,6 @@ public sealed class OpenFoodFactsProduct
     [JsonPropertyName("brands")]
     public string? Brands { get; set; }
 
-    [JsonPropertyName("categories")]
-    public string? Categories { get; set; }
-
     [JsonPropertyName("quantity")]
     public string? Quantity { get; set; }
 

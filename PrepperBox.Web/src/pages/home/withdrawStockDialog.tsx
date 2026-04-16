@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Dialog, InputNumber } from "@/primereact";
 import TrackedProduct from "@/models/trackedProduct";
+import { toastService } from "@/shared/ui/toastService";
 import styles from "./withdrawStockDialog.module.scss";
 
 interface WithdrawStockDialogProps {
@@ -17,6 +18,14 @@ const WithdrawStockDialog: React.FC<WithdrawStockDialogProps> = ({ trackedProduc
         setQuantity(1);
     };
 
+    const handleConfirm = (): void => {
+        if (quantity <= 0) {
+            toastService.showError("Quantity to withdraw must be greater than zero.");
+            return;
+        }
+        onConfirm(quantity);
+    };
+
     return (
         <Dialog
             header="Withdraw Stock"
@@ -31,13 +40,16 @@ const WithdrawStockDialog: React.FC<WithdrawStockDialogProps> = ({ trackedProduc
                 <InputNumber
                     value={quantity}
                     onValueChange={(e) => {
-                        const max = trackedProduct?.quantity ?? 1;
-                        const val = e.value ?? 1;
-                        setQuantity(Math.min(Math.max(val, 1), max));
+                        const max = trackedProduct?.quantity ?? 0;
+                        const val = e.value ?? 0;
+                        setQuantity(Math.min(Math.max(val, 0), max));
                     }}
-                    min={1}
-                    max={trackedProduct?.quantity ?? 1}
+                    min={0}
+                    max={trackedProduct?.quantity ?? undefined}
+                    minFractionDigits={0}
+                    maxFractionDigits={4}
                     showButtons
+                    className={styles.quantityInput}
                     data-test_id="WithdrawStockDialog__Quantity"
                 />
                 <div className={styles.withdrawActions}>
@@ -45,7 +57,7 @@ const WithdrawStockDialog: React.FC<WithdrawStockDialogProps> = ({ trackedProduc
                         label="Withdraw"
                         severity="warning"
                         data-test_id="WithdrawStockDialog__Confirm"
-                        onClick={() => onConfirm(quantity)}
+                        onClick={handleConfirm}
                     />
                     <Button
                         label="Cancel"

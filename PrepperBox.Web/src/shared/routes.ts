@@ -11,6 +11,9 @@ const AppRoutes = {
     Default: {
         path: "/",
         defaultParams: {},
+        state: {
+            selectedCategoryId: 0,
+        },
     },
     Categories: {
         path: "/categories",
@@ -25,6 +28,7 @@ const AppRoutes = {
         defaultParams: {},
         state: {
             barCode: "",
+            selectedCategoryId: 0,
         },
     },
     EditProduct: {
@@ -32,11 +36,17 @@ const AppRoutes = {
         defaultParams: {
             productId: productRef(0),
         },
+        state: {
+            selectedCategoryId: 0,
+        },
     },
     AddTrackedProduct: {
         path: "/add-tracked-product/:productId",
         defaultParams: {
             productId: productRef(0),
+        },
+        state: {
+            selectedCategoryId: 0,
         },
     },
     ConsumptionLogs: {

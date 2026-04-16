@@ -20,7 +20,17 @@ public sealed class OpenFoodFactsController : ControllerBase
         [FromRoute] string barCode,
         CancellationToken cancellationToken)
     {
-        var product = await _openFoodFactsClient.SearchProductsByBarCodeAsync(barCode, cancellationToken).ConfigureAwait(false);
+        OpenFoodFactsProduct? product;
+
+        try
+        {
+            product = await _openFoodFactsClient.SearchProductsByBarCodeAsync(barCode, cancellationToken).ConfigureAwait(false);
+        }
+        catch (HttpRequestException ex)
+        {
+            // Log the exception (not implemented here)
+            return StatusCode((int)(ex.StatusCode ?? System.Net.HttpStatusCode.InternalServerError), "An error occurred while fetching product information.");
+        }
 
         if (product is null)
         {
@@ -35,7 +45,6 @@ public sealed class OpenFoodFactsController : ControllerBase
                 Code: product.Code,
                 ProductName: product.ProductName,
                 Brands: product.Brands,
-                Categories: product.Categories,
                 Quantity: quantity?.Quantity,
                 UnitOfMeasure: quantity?.UnitOfMeasure,
                 ImageUrl: product.ImageUrl,

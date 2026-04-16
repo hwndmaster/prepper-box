@@ -7,7 +7,6 @@ interface OpenFoodFactsProduct {
     barCode: string;
     productName?: string;
     brands?: string;
-    categories?: string;
     quantity?: number;
     unitOfMeasure?: UnitOfMeasure;
     imageUrl?: string;

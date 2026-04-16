@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Chip, Column, DataTable, SplitButton, TabPanel, TabView, Tooltip } from "@/primereact";
 import type { DataTableExpandedRows, MenuItem } from "@/primereact";
 import * as store from "@/store";
@@ -22,6 +22,8 @@ import styles from "./home.module.scss";
 const Home: React.FC = () => {
     const dispatch = store.useAppDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+    const locationState = location.state as { selectedCategoryId?: number } | null;
     const categories = store.useAppSelector((state) => state.categories.categories);
     const products = store.useAppSelector((state) => state.products.products);
     const storageLocations = store.useAppSelector((state) => state.storageLocations.storageLocations);
@@ -45,7 +47,9 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         if (selectedCategoryId == null && categories.length > 0) {
-            setSelectedCategoryId(categories[0].id);
+            const restoredId = locationState?.selectedCategoryId;
+            const match = restoredId != null ? categories.find((c) => c.id === restoredId) : null;
+            setSelectedCategoryId(match != null ? match.id : categories[0].id);
         }
     }, [categories, selectedCategoryId]);
 
@@ -99,9 +103,9 @@ const Home: React.FC = () => {
         setIsScannerVisible(false);
         dispatch(store.Products.Actions.fetchProductsByBarCode(barcode, (foundProducts) => {
             if (foundProducts == null || foundProducts.length === 0) {
-                void goTo(navigate, AppRoutes.AddProduct, undefined, { barCode: barcode });
+                void goTo(navigate, AppRoutes.AddProduct, undefined, { barCode: barcode, selectedCategoryId: selectedCategoryId ?? 0 });
             } else if (foundProducts.length === 1) {
-                void goTo(navigate, AppRoutes.AddTrackedProduct, { productId: foundProducts[0].id });
+                void goTo(navigate, AppRoutes.AddTrackedProduct, { productId: foundProducts[0].id }, { selectedCategoryId: selectedCategoryId ?? 0 });
             } else {
                 setMatchedProducts(foundProducts);
                 setIsProductSelectionVisible(true);
@@ -112,7 +116,7 @@ const Home: React.FC = () => {
     const handleProductSelect = (product: Product): void => {
         setIsProductSelectionVisible(false);
         setMatchedProducts([]);
-        void goTo(navigate, AppRoutes.AddTrackedProduct, { productId: product.id });
+        void goTo(navigate, AppRoutes.AddTrackedProduct, { productId: product.id }, { selectedCategoryId: selectedCategoryId ?? 0 });
     };
 
     const handleProductSelectionCancel = (): void => {
@@ -157,7 +161,6 @@ const Home: React.FC = () => {
                 return a.expirationDate - b.expirationDate;
             });
         const uomLabel = UnitOfMeasureLabels[product.unitOfMeasure];
-        const category = categories.find((c) => c.id === product.categoryId);
 
         const quantityTemplate = (tp: TrackedProduct): React.ReactNode => {
             return <span>{tp.quantity} {uomLabel}</span>;
@@ -198,7 +201,6 @@ const Home: React.FC = () => {
                     {product.barCode != null && product.barCode !== "" && (
                         <div><strong>Bar Code:</strong> {product.barCode}</div>
                     )}
-                    <div><strong>Category:</strong> {category?.name ?? "—"}</div>
                     <div><strong>Unit of Measure:</strong> {uomLabel}</div>
                     <div><strong>Minimum Stock Level:</strong> {product.minimumStockLevel}</div>
                 </div>
@@ -223,7 +225,7 @@ const Home: React.FC = () => {
                         severity="secondary"
                         text
                         data-test_id="Home__Add_TrackedProduct"
-                        onClick={() => void goTo(navigate, AppRoutes.AddTrackedProduct, { productId: product.id })}
+                        onClick={() => void goTo(navigate, AppRoutes.AddTrackedProduct, { productId: product.id }, { selectedCategoryId: selectedCategoryId ?? 0 })}
                     />
                 </div>
             </div>
@@ -248,13 +250,20 @@ const Home: React.FC = () => {
             ? `${product.name}, ${product.manufacturer}`
             : product.name;
         return (
-            <span
-                className={styles.clickableName}
-                data-test_id="Home__Product_Name"
-                onClick={() => toggleRowExpansion(product)}
-            >
-                {label}
-            </span>
+            <div className={styles.nameCell}>
+                {product.imageSmallUrl != null && (
+                    <div className={styles.avatar}>
+                        <img src={product.imageSmallUrl} alt={product.name} />
+                    </div>
+                )}
+                <span
+                    className={styles.clickableName}
+                    data-test_id="Home__Product_Name"
+                    onClick={() => toggleRowExpansion(product)}
+                >
+                    {label}
+                </span>
+            </div>
         );
     };
 
@@ -309,7 +318,7 @@ const Home: React.FC = () => {
                 text
                 rounded
                 data-test_id="Home__Edit_Product"
-                onClick={() => void goTo(navigate, AppRoutes.EditProduct, { productId: product.id })}
+                onClick={() => void goTo(navigate, AppRoutes.EditProduct, { productId: product.id }, { selectedCategoryId: selectedCategoryId ?? 0 })}
             />
         );
     };
@@ -339,7 +348,7 @@ const Home: React.FC = () => {
                         severity="success"
                         model={addProductMenuItems}
                         data-test_id="Home__Add_Product"
-                        onClick={() => void goTo(navigate, AppRoutes.AddProduct)}
+                        onClick={() => void goTo(navigate, AppRoutes.AddProduct, undefined, { barCode: "", selectedCategoryId: selectedCategoryId ?? 0 })}
                     />
                 </div>
             </div>

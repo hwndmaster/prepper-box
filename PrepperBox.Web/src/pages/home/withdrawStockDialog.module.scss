@@ -8,6 +8,14 @@
     gap: 1rem;
 }
 
+.quantityInput {
+    width: 100%;
+
+    :global(.p-inputnumber-input) {
+        width: 100%;
+    }
+}
+
 .withdrawActions {
     display: flex;
     gap: 0.5rem;

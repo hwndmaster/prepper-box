@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/primereact";
@@ -15,6 +15,8 @@ import styles from "./addTrackedProduct.module.scss";
 const AddTrackedProduct: React.FC = () => {
     const dispatch = store.useAppDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+    const locationState = location.state as { selectedCategoryId?: number } | null;
     const { productId: productIdParam } = useParams<{ productId: string }>();
     const products = store.useAppSelector((state) => state.products.products);
 
@@ -49,13 +51,13 @@ const AddTrackedProduct: React.FC = () => {
             },
             () => {
                 toastService.showSuccess("Tracked product added successfully.");
-                void goTo(navigate, AppRoutes.Default);
+                void goTo(navigate, AppRoutes.Default, undefined, { selectedCategoryId: locationState?.selectedCategoryId ?? 0 });
             }
         ));
     };
 
     const handleCancel = (): void => {
-        void goTo(navigate, AppRoutes.Default);
+        void goTo(navigate, AppRoutes.Default, undefined, { selectedCategoryId: locationState?.selectedCategoryId ?? 0 });
     };
 
     return (

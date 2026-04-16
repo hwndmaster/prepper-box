@@ -8,6 +8,7 @@ import Product from "@/models/product";
 import OpenFoodFactsProduct from "@/models/openFoodFactsProduct";
 import { UnitOfMeasure } from "@/models/unitOfMeasure";
 import { UnitOfMeasureOptions } from "@/shared/unitOfMeasureLabels";
+import { toastService } from "@/shared/ui/toastService";
 import { FormInputText, FormInputNumber, FormDropdown, FormInputTextarea } from "@/components/forms";
 import { TrackedProductFormFields, useTrackedProductForm } from "@/components/trackedProductForm";
 import type { TrackedProductFormData } from "@/components/trackedProductForm";
@@ -31,6 +32,7 @@ interface ProductFormProps {
 const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, submitLabel, onSubmit, onCancel }) => {
     const dispatch = store.useAppDispatch();
     const categories = store.useAppSelector((state) => state.categories.categories);
+    const foodCategory = store.useAppSelector((state) => store.Categories.Selectors.selectCategoryByName(state, "Food"));
     const [pendingTrackedProducts, setPendingTrackedProducts] = useState<PendingTrackedProduct[]>([]);
     const [isShowingTrackedProductForm, setIsShowingTrackedProductForm] = useState(false);
     const [nextKey, setNextKey] = useState(1);
@@ -94,6 +96,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
         if (suggestion.unitOfMeasure != null) {
             form.setValue("unitOfMeasure", suggestion.unitOfMeasure);
         }
+        if (foodCategory != null) {
+            form.setValue("categoryId", foodCategory.id);
+        }
         form.setValue("imageUrl", suggestion.imageUrl);
         form.setValue("imageSmallUrl", suggestion.imageSmallUrl);
         if (suggestion.quantity != null) {
@@ -115,6 +120,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
     };
 
     const handleSubmit = form.handleSubmit((data) => {
+        if (isShowingTrackedProductForm) {
+            toastService.showWarn("Please confirm or cancel the pending tracked product before submitting.");
+            return;
+        }
         onSubmit(data, pendingTrackedProducts.map((tp) => tp.data));
     });
 
