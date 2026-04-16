@@ -13,7 +13,7 @@ namespace Genius.PrepperBox.Core
             services.AddHttpClient<IOpenFoodFactsClient, OpenFoodFactsClient>(client =>
             {
                 client.BaseAddress = new Uri("https://world.openfoodfacts.org");
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("PrepperBox/0.0.1 (https://github.com/hwndmaster/prepper-box)");
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("PrepperBox/0.2.0 (https://github.com/hwndmaster/prepper-box)");
             });
 
             services.AddHttpClient<ITelegramNotificationService, TelegramNotificationService>();

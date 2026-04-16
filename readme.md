@@ -41,6 +41,15 @@ docker push ghcr.io/hwndmaster/prepper-box-web:latest
 
 Create `docker-compose.yml`:
 
+Create a `.env` file on the remote server with your secrets:
+
+```
+TELEGRAM_BOT_TOKEN=123123:xxxxxxx
+TELEGRAM_CHAT_ID=-10099999999
+```
+
+Then create `docker-compose.yml`:
+
 ```yaml
 services:
   prepper-box-api:
@@ -50,6 +59,10 @@ services:
       - "5095:8045"
     volumes:
       - C:/path/to/your/remote/data:/app/Data
+      - C:/path/to/logs/folder:/app/Logs
+    environment:
+      - Telegram__BotToken=${TELEGRAM_BOT_TOKEN:-}
+      - Telegram__ChatId=${TELEGRAM_CHAT_ID:-}
     restart: unless-stopped
 
   prepper-box-web:
@@ -126,9 +139,21 @@ New-NetFirewallRule -DisplayName "PrepperBox Web HTTPS" -Direction Inbound -Prot
 
 #### Building locally
 
-```shell
-docker compose build --build-arg ATOM_PKG_ACCESS_TOKEN=ghp_TOKEN
+Create a `.env` file at the repo root with your secrets (this file should not be committed):
+
 ```
+ATOM_PKG_ACCESS_TOKEN=ghp_TOKEN
+TELEGRAM_BOT_TOKEN=123123:xxxxxxx
+TELEGRAM_CHAT_ID=-10099999999
+```
+
+Then build:
+
+```shell
+docker compose build
+```
+
+The `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` values are passed as runtime environment variables to the API container (see `docker-compose.yml`). They are mapped to `Telegram__BotToken` / `Telegram__ChatId`, which ASP.NET Core binds automatically to the `Telegram` config section.
 
 ### Troubleshooting
 

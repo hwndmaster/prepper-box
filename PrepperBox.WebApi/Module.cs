@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Genius.Atom.Data.Validation;
 using Genius.PrepperBox.Core.Configuration;
 using Genius.PrepperBox.Dto.RequestMessages;
@@ -25,6 +27,24 @@ namespace Genius.PrepperBox.WebApi
 
         public static void Initialize(IServiceProvider serviceProvider)
         {
+            var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+            LogEnvironmentVariables(logger);
+        }
+
+        private static void LogEnvironmentVariables(ILogger logger)
+        {
+            if (logger.IsEnabled(LogLevel.Debug))
+            {
+                StringBuilder envVars = new();
+                foreach (DictionaryEntry env in Environment.GetEnvironmentVariables())
+                {
+                    envVars.AppendLine(
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        $"{env.Key}={env.Value}");
+                }
+
+                logger.LogDebug("Environment variables:\n{EnvVars}", envVars);
+            }
         }
     }
 }

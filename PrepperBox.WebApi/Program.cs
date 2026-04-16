@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Genius.Atom.Infrastructure.Module.Configure(builder.Services);
+Genius.Atom.Infrastructure.Module.Configure(builder.Services, builder.Configuration);
 Genius.Atom.Data.Module.Configure(builder.Services);
 Genius.Atom.Web.Module.Configure(builder,
     new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0),
