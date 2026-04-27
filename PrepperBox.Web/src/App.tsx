@@ -11,6 +11,9 @@ import { getPersistor } from "./store";
 import { getStore } from "./store/setup";
 import LoadingTargets from "./shared/loadingTargets";
 
+// Atom package styles are emitted as separate CSS bundles and must be imported once at app root.
+import "@hwndmaster/atom-react-core/styles.css";
+import "@hwndmaster/atom-react-redux/styles.css";
 import "primereact/resources/themes/viva-dark/theme.css";
 import "primeicons/primeicons.css";
 import "./styles/main.scss";

@@ -25,6 +25,17 @@ export default defineConfig(({ mode }) => {
                 projects: ["./tsconfig.app.json"]
             })
         ],
+        optimizeDeps: {
+            // Local atom-web packages are linked from a sibling repo.
+            // Excluding them prevents stale pre-bundled copies in node_modules/.vite.
+            exclude: [
+                "@hwndmaster/atom-api-core",
+                "@hwndmaster/atom-react-core",
+                "@hwndmaster/atom-react-prime",
+                "@hwndmaster/atom-react-redux",
+                "@hwndmaster/atom-web-core"
+            ]
+        },
         resolve: {
             preserveSymlinks: true,
             dedupe: ["react", "react-dom", "react-redux"],
