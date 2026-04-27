@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { toastService } from "@hwndmaster/atom-react-prime";
 import { Button, Dialog, InputNumber } from "@/primereact";
 import TrackedProduct from "@/models/trackedProduct";
-import { toastService } from "@/shared/ui/toastService";
 import styles from "./withdrawStockDialog.module.scss";
 
 interface WithdrawStockDialogProps {

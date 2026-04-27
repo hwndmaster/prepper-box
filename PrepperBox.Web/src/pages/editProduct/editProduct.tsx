@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { goTo } from "@hwndmaster/atom-react-core";
+import { inputDateToTicks } from "@hwndmaster/atom-web-core";
+import { toastService } from "@hwndmaster/atom-react-prime";
 import * as store from "@/store";
 import { productRef } from "@/models/types";
-import AppRoutes, { goTo } from "@/shared/routes";
-import { inputDateToTicks } from "@/shared/helper";
-import { toastService } from "@/shared/ui/toastService";
+import AppRoutes from "@/shared/routes";
 import { Button, confirmDialog } from "@/primereact";
 import { ProductForm } from "@/components/productForm";
 import type { ProductFormData } from "@/components/productForm";

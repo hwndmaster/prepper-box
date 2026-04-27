@@ -2,12 +2,18 @@ using Genius.PrepperBox.Dto.References;
 
 namespace Genius.PrepperBox.Db.Models;
 
-public sealed record Category : EntityBase<int, CategoryRef>
+public sealed record Category(
+    string Name,
+    string? Description,
+    string IconName
+) : EntityBase<int, CategoryRef>
 {
-    public string Name { get; init; }
-    public string? Description { get; init; }
-    public string IconName { get; init; }
+    public static Category Create(CategoryRef id, string name, string iconName, string? description = null)
+        => new(name, description, iconName)
+        {
+            Id = id
+        };
 
     // Relations:
-    public ICollection<Product> Products { get; init; }
+    public ICollection<Product> Products { get; init; } = [];
 }

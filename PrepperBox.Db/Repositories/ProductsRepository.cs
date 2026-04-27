@@ -30,18 +30,16 @@ internal sealed class ProductsRepository : BaseRepository<Product, int, ProductR
     protected override Expression<Func<Product, ProductDto>> ProjectToGetDto()
         => b => new ProductDto(b.Id, b.Name, b.Description, b.CategoryId, b.Manufacturer, b.BarCode, b.ImageUrl, b.ImageSmallUrl, b.UnitOfMeasure, b.MinimumStockLevel, b.TrackedProducts.Sum(tp => tp.Quantity), b.DateCreated, b.LastModified);
 
-    protected override Product MapCreateDto(CreateProductRequest dto) => new()
-    {
-        Name = dto.Name,
-        Description = dto.Description,
-        CategoryId = dto.CategoryId,
-        Manufacturer = dto.Manufacturer,
-        BarCode = dto.BarCode,
-        ImageUrl = dto.ImageUrl,
-        ImageSmallUrl = dto.ImageSmallUrl,
-        UnitOfMeasure = dto.UnitOfMeasure,
-        MinimumStockLevel = dto.MinimumStockLevel
-    };
+    protected override Product MapCreateDto(CreateProductRequest dto) => new(
+        dto.Name,
+        dto.Description,
+        dto.CategoryId,
+        dto.Manufacturer,
+        dto.BarCode,
+        dto.ImageUrl,
+        dto.ImageSmallUrl,
+        dto.UnitOfMeasure,
+        dto.MinimumStockLevel);
 
     protected override Product MapUpdateDto(UpdateProductRequest dto, Product existingEntity) =>
         existingEntity with

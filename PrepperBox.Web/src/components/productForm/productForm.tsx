@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toastService, FormInputText, FormInputNumber, FormDropdown, FormInputTextarea  } from "@hwndmaster/atom-react-prime";
 import { Button, Divider } from "@/primereact";
 import * as store from "@/store";
 import { categoryRef } from "@/models/types";
@@ -8,8 +9,7 @@ import Product from "@/models/product";
 import OpenFoodFactsProduct from "@/models/openFoodFactsProduct";
 import { UnitOfMeasure } from "@/models/unitOfMeasure";
 import { UnitOfMeasureOptions } from "@/shared/unitOfMeasureLabels";
-import { toastService } from "@/shared/ui/toastService";
-import { FormInputText, FormInputNumber, FormDropdown, FormInputTextarea } from "@/components/forms";
+
 import { TrackedProductFormFields, useTrackedProductForm } from "@/components/trackedProductForm";
 import type { TrackedProductFormData } from "@/components/trackedProductForm";
 import BarCodeSuggestions from "./BarCodeSuggestions";

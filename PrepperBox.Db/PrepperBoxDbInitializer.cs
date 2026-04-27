@@ -1,20 +1,21 @@
 using Genius.PrepperBox.Db.Models;
+using Genius.PrepperBox.Dto.References;
 
 namespace Genius.PrepperBox.Db;
 
 internal static class PrepperBoxDbInitializer
 {
-    internal const int CategoryFoodId = 1;
-    internal const int CategoryWaterId = 2;
-    internal const int CategoryMedicalSuppliesId = 3;
-    internal const int CategoryCookingId = 4;
-    internal const int CategoryCooperId = 5;
-    internal const int CategoryOtherId = 6;
+    internal static readonly CategoryRef CategoryFoodId = 1;
+    internal static readonly CategoryRef CategoryWaterId = 2;
+    internal static readonly CategoryRef CategoryMedicalSuppliesId = 3;
+    internal static readonly CategoryRef CategoryCookingId = 4;
+    internal static readonly CategoryRef CategoryCooperId = 5;
+    internal static readonly CategoryRef CategoryOtherId = 6;
 
-    internal const int StorageLocationBarnId = 1;
-    internal const int StorageLocationGarderobeId = 2;
-    internal const int StorageLocationAtticId = 3;
-    internal const int StorageLocationHarryPotterRoomId = 4;
+    internal static readonly StorageLocationRef StorageLocationBarnId = 1;
+    internal static readonly StorageLocationRef StorageLocationGarderobeId = 2;
+    internal static readonly StorageLocationRef StorageLocationAtticId = 3;
+    internal static readonly StorageLocationRef StorageLocationHarryPotterRoomId = 4;
 
     public static async Task SeedAsync(PrepperBoxDbContext context, bool isDevelopment)
     {
@@ -38,19 +39,19 @@ internal static class PrepperBoxDbInitializer
     private static async Task SeedMandatoryDataAsync(PrepperBoxDbContext context)
     {
         await context.Categories.AddRangeAsync(
-            new Category { Id = CategoryFoodId, Name = "Food", IconName = "food" },
-            new Category { Id = CategoryWaterId, Name = "Water", IconName = "water" },
-            new Category { Id = CategoryMedicalSuppliesId, Name = "Medical Supplies", IconName = "medical" },
-            new Category { Id = CategoryCookingId, Name = "Cooking", IconName = "cooking" },
-            new Category { Id = CategoryCooperId, Name = "Cooper", IconName = "cooper" },
-            new Category { Id = CategoryOtherId, Name = "Other", IconName = "other" }
+            Category.Create(CategoryFoodId, "Food", "food"),
+            Category.Create(CategoryWaterId, "Water", "water"),
+            Category.Create(CategoryMedicalSuppliesId, "Medical Supplies", "medical"),
+            Category.Create(CategoryCookingId, "Cooking", "cooking"),
+            Category.Create(CategoryCooperId, "Cooper", "cooper"),
+            Category.Create(CategoryOtherId, "Other", "other")
         );
 
         await context.StorageLocations.AddRangeAsync(
-            new StorageLocation { Id = StorageLocationBarnId, Name = "Barn" },
-            new StorageLocation { Id = StorageLocationGarderobeId, Name = "Garderobe" },
-            new StorageLocation { Id = StorageLocationAtticId, Name = "Attic" },
-            new StorageLocation { Id = StorageLocationHarryPotterRoomId, Name = "Harry Potter room" }
+            StorageLocation.Create(StorageLocationBarnId, "Barn"),
+            StorageLocation.Create(StorageLocationGarderobeId, "Garderobe"),
+            StorageLocation.Create(StorageLocationAtticId, "Attic"),
+            StorageLocation.Create(StorageLocationHarryPotterRoomId, "Harry Potter room")
         );
 
         await context.SaveChangesAsync();

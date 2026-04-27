@@ -3,12 +3,12 @@ FROM node:22-alpine AS build
 WORKDIR /app
 
 # Install dependencies
-COPY package*.json ./
-RUN npm install
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && pnpm install --frozen-lockfile
 
 # Copy source and build
 COPY . .
-RUN npm run build
+RUN pnpm run build
 
 # ---- Serve Stage ----
 FROM nginx:alpine AS runtime

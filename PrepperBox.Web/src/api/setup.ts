@@ -1,5 +1,5 @@
+import { AxiosInstanceFactory } from "@hwndmaster/atom-api-core";
 import { ApiUrl } from "@/shared/constants";
-import AxiosInstanceFactory from "./axiosInstanceFactory";
 import { setApiAxiosInstance } from "./apiAxios";
 
 /**

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FormInputText } from "@hwndmaster/atom-react-prime";
 import { Button, Dialog } from "@/primereact";
 import Category from "@/models/category";
 import { categoryRef } from "@/models/types";
-import { FormInputText } from "@/components/forms";
 import { editCategorySchema, EditCategoryFormData } from "./editCategory.schema";
 import styles from "./editCategory.module.scss";
 

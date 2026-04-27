@@ -30,12 +30,10 @@ internal sealed class CategoriesRepository : BaseRepository<Category, int, Categ
     protected override Expression<Func<Category, CategoryDto>> ProjectToGetDto()
         => b => new CategoryDto(b.Id, b.Name, b.Description, b.IconName, b.DateCreated, b.LastModified);
 
-    protected override Category MapCreateDto(CreateCategoryRequest dto) => new()
-    {
-        Name = dto.Name,
-        Description = dto.Description,
-        IconName = dto.IconName
-    };
+    protected override Category MapCreateDto(CreateCategoryRequest dto) => new(
+        dto.Name,
+        dto.Description,
+        dto.IconName);
 
     protected override Category MapUpdateDto(UpdateCategoryRequest dto, Category existingEntity) =>
         existingEntity with

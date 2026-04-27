@@ -7,8 +7,8 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-import { ApiClientBase } from "@/api/apiClientBase";
-import { ApiResponse } from "@/api/apiResponse";
+import { ApiClientBase } from "@hwndmaster/atom-api-core";
+import { ApiResponse } from "@hwndmaster/atom-api-core";
 import {
     CategoryRef,
     ConsumptionLogRef,

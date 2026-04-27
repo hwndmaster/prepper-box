@@ -1,7 +1,11 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { setNotificationService } from "@hwndmaster/atom-react-redux";
+import { toastService } from "@hwndmaster/atom-react-prime";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+
+setNotificationService(toastService);
 
 const root = createRoot(document.getElementById("root")!);
 root.render(

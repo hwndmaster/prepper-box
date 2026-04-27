@@ -1,4 +1,3 @@
-export * as Common from "./common";
 export * as Categories from "./categories";
 export * as ConsumptionLogs from "./consumptionLogs";
 export * as OpenFoodFacts from "./openFoodFacts";

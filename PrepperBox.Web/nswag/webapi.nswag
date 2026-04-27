@@ -70,7 +70,7 @@
       "inlineNamedDictionaries": false,
       "inlineNamedAny": false,
       "includeHttpContext": false,
-      "templateDirectory": "./",
+      "templateDirectory": "../node_modules/@hwndmaster/atom-api-nswag/templates",
       "serviceHost": null,
       "serviceSchemes": null,
       "output": "../src/api/api.generated.ts",

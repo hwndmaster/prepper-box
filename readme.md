@@ -4,6 +4,28 @@
 
 `dotnet ef migrations add InitialCreate --project PrepperBox.Db --startup-project PrepperBox.Db`
 
+## Web development (pnpm)
+
+Run all commands from the `PrepperBox.Web` folder.
+
+Install dependencies:
+
+```shell
+pnpm install
+```
+
+Available commands:
+
+```shell
+pnpm run start          # Start Vite dev server
+pnpm run build          # Build production assets
+pnpm run serve          # Serve built assets locally
+pnpm run lint           # Run ESLint
+pnpm run test           # Run Vitest
+pnpm run test:coverage  # Run Vitest with coverage
+pnpm run nswag          # Regenerate API client
+```
+
 ## Deploying docker containers
 
 ### Prerequisites

@@ -23,7 +23,7 @@
     },
     {
       "label": "build web",
-      "command": "npm",
+      "command": "pnpm",
       "type": "shell",
       "args": [
         "run",

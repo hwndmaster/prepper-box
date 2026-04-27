@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FormInputText } from "@hwndmaster/atom-react-prime";
 import { Button, Dialog } from "@/primereact";
 import StorageLocation from "@/models/storageLocation";
 import { storageLocationRef } from "@/models/types";
-import { FormInputText } from "@/components/forms";
 import { editStorageLocationSchema, EditStorageLocationFormData } from "./editStorageLocation.schema";
 import styles from "./editStorageLocation.module.scss";
 

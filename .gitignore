@@ -23,6 +23,7 @@ bld/
 build/
 
 # Web project artifacts
+package-lock.json
 PrepperBox.Web/node_modules
 PrepperBox.Web/build
 PrepperBox.Web/coverage

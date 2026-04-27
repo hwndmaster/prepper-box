@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import AppRoutes, { goTo } from "../shared/routes";
+import { goTo } from "@hwndmaster/atom-react-core";
+import AppRoutes from "../shared/routes";
 
 const NotFound: React.FC = () => {
     const navigate = useNavigate();

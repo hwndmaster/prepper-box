@@ -2,6 +2,8 @@
 
 Create a new **atom-web** GitHub repository as a pnpm monorepo containing 10 npm packages that extract shared TypeScript, React, Redux, ESLint, and NSwag code from prepper-box and buddy-kenteken. Packages are published to GitHub Packages under the `@hwndmaster` scope.
 
+NOTE: Repository is already created at https://github.com/hwndmaster/atom-web.
+
 ## Context & Findings
 
 - **15 files are 100% identical** between the two projects
@@ -50,7 +52,7 @@ The CLI is nearly identical to npm (`pnpm install`, `pnpm test`, `pnpm publish`)
 | # | Package | Key Exports |
 |---|---------|-------------|
 | 9 | `@hwndmaster/atom-react-redux` | `createAppStore()` factory, `createActionWithMeta()`, `withLoading()`, `withCallback()`, `errorFallback()`, common state slice |
-| 10 | `@hwndmaster/atom-testing-utils` | `renderWithProviders()`, `sagaRunner()`, `fakeStore()`, `fakeRouter()`, `fakeAxios()`, `fakeToast()` |
+| 10 | `@hwndmaster/atom-testing-utils` | `renderWithProviders()`, `sagaRunner()`, `fakeStore()`, `fakeRouter()`, `fakeAxios()` |
 
 > Note: `atom-eslint-*` packages have no runtime dependency on any framework — they only configure linting rules.
 
@@ -148,7 +150,7 @@ atom-eslint-common ← atom-eslint-react
 - Key design: `createAppStore()` accepts domain reducers map, persist config overrides, domain saga watchers array
 
 **Step 4.2 — `atom-testing-utils`**
-- Extract from prepper-box `__tests__/utils/`: `sagaRunner`, `renderWithProviders`, `fakeStore`, `fakeRouter`, `fakeLogger`, `fakeAxios`, `fakeToast`
+- Extract from prepper-box `__tests__/utils/`: `sagaRunner`, `renderWithProviders`, `fakeStore`, `fakeRouter`, `fakeLogger`, `fakeAxios`
 - Peer dependencies: `vitest`, `@testing-library/react`, `react-redux`, `react-router-dom`
 - Depends on `atom-react-redux`, `atom-react-core`
 

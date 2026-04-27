@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo } from "react";
+import { ticksToDate } from "@hwndmaster/atom-web-core";
+import { LoadingSpinner } from "@hwndmaster/atom-react-redux";
 import { Column, DataTable } from "@/primereact";
 import * as store from "@/store";
 import ConsumptionLog from "@/models/consumptionLog";
 import LoadingTargets from "@/shared/loadingTargets";
-import { ticksToDate } from "@/shared/helper";
-import { LoadingSpinner } from "@/components/loadingSpinner";
 
 const ConsumptionLogs: React.FC = () => {
     const dispatch = store.useAppDispatch();

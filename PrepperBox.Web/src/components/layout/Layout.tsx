@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { goTo } from "@hwndmaster/atom-react-core";
+import { LoadingSpinner } from "@hwndmaster/atom-react-redux";
 import { Menubar } from "@/primereact";
 import type { MenuItem } from "@/primereact";
-import AppRoutes, { getCurrentRoute, goTo } from "@/shared/routes";
+import AppRoutes, { getCurrentRoute } from "@/shared/routes";
 import LoadingTargets from "@/shared/loadingTargets";
-import { LoadingSpinner } from "../loadingSpinner";
 import "./layout.module.scss";
 
 const routeTitles = new Map([

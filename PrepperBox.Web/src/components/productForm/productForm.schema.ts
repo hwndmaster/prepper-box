@@ -1,12 +1,12 @@
 import { z } from "zod";
+import { requiredIntRef } from "@hwndmaster/atom-react-core";
 import { CategoryRef } from "@/models/types";
 import { UnitOfMeasure } from "@/models/unitOfMeasure";
-import { requiredRef } from "@/shared/validation/referenceSchema";
 
 export const productFormSchema = z.object({
     name: z.string().min(1, "Name is required"),
     description: z.string().optional(),
-    categoryId: requiredRef<CategoryRef>("Category is required"),
+    categoryId: requiredIntRef<CategoryRef>("Category is required"),
     manufacturer: z.string().optional(),
     barCode: z.string().optional(),
     imageUrl: z.string().optional(),

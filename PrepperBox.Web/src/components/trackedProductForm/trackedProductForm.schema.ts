@@ -1,10 +1,10 @@
 import { z } from "zod";
+import { requiredIntRef } from "@hwndmaster/atom-react-core";
 import { StorageLocationRef } from "@/models/types";
-import { requiredRef } from "@/shared/validation/referenceSchema";
 
 export const trackedProductFormSchema = z.object({
     quantity: z.number({ message: "Quantity is required" }).min(0.1, "Quantity must be at least 0.1"),
-    storageLocationId: requiredRef<StorageLocationRef>("Storage location is required"),
+    storageLocationId: requiredIntRef<StorageLocationRef>("Storage location is required"),
     expirationDate: z.string().optional(),
     notes: z.string().optional(),
 });

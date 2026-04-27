@@ -1,9 +1,10 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { goTo } from "@hwndmaster/atom-react-core";
+import { inputDateToTicks } from "@hwndmaster/atom-web-core";
+import { toastService } from "@hwndmaster/atom-react-prime";
 import * as store from "@/store";
-import AppRoutes, { goTo } from "@/shared/routes";
-import { inputDateToTicks } from "@/shared/helper";
-import { toastService } from "@/shared/ui/toastService";
+import AppRoutes from "@/shared/routes";
 import { ProductForm } from "@/components/productForm";
 import type { ProductFormData } from "@/components/productForm";
 import type { TrackedProductFormData } from "@/components/trackedProductForm";

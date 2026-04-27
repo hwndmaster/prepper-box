@@ -30,10 +30,8 @@ internal sealed class StorageLocationsRepository : BaseRepository<StorageLocatio
     protected override Expression<Func<StorageLocation, StorageLocationDto>> ProjectToGetDto()
         => b => new StorageLocationDto(b.Id, b.Name, b.DateCreated, b.LastModified);
 
-    protected override StorageLocation MapCreateDto(CreateStorageLocationRequest dto) => new()
-    {
-        Name = dto.Name,
-    };
+    protected override StorageLocation MapCreateDto(CreateStorageLocationRequest dto)
+        => new(dto.Name);
 
     protected override StorageLocation MapUpdateDto(UpdateStorageLocationRequest dto, StorageLocation existingEntity) =>
         existingEntity with

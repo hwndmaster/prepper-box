@@ -21,14 +21,12 @@ internal sealed class TrackedProductsRepository : BaseRepository<TrackedProduct,
     protected override Expression<Func<TrackedProduct, TrackedProductDto>> ProjectToGetDto()
         => b => new TrackedProductDto(b.Id, b.ProductId, b.StorageLocationId, b.ExpirationDate, b.Quantity, b.Notes, b.DateCreated, b.LastModified);
 
-    protected override TrackedProduct MapCreateDto(CreateTrackedProductRequest dto) => new()
-    {
-        ProductId = dto.ProductId,
-        StorageLocationId = dto.StorageLocationId,
-        ExpirationDate = dto.ExpirationDate,
-        Quantity = dto.Quantity,
-        Notes = dto.Notes
-    };
+    protected override TrackedProduct MapCreateDto(CreateTrackedProductRequest dto) => new(
+        dto.ProductId,
+        dto.StorageLocationId,
+        dto.ExpirationDate,
+        dto.Quantity,
+        dto.Notes);
 
     protected override TrackedProduct MapUpdateDto(UpdateTrackedProductRequest dto, TrackedProduct existingEntity) =>
         existingEntity with

@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
+import { createActionWithMeta } from "@hwndmaster/atom-react-redux";
 import Product from "@/models/product";
 import { ProductRef } from "@/models/types";
-import { createActionWithMeta } from "../actionExtensions";
 import { CreateProductRequest, UpdateProductRequest } from "./messages";
 
 export const fetchProducts = createAction<void>("products/fetch");

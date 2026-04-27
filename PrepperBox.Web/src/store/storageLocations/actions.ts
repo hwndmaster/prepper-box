@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
+import { createActionWithMeta } from "@hwndmaster/atom-react-redux";
 import { StorageLocationRef } from "@/models/types";
-import { createActionWithMeta } from "../actionExtensions";
 import { CreateStorageLocationRequest, UpdateStorageLocationRequest } from "./messages";
 
 export const fetchStorageLocations = createAction<void>("storageLocations/fetch");

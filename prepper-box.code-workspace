@@ -17,7 +17,7 @@
                     "Install": {
                         "command": "commands.runInTerminal",
                         "args": {
-                            "text": "npm install",
+                            "text": "pnpm install",
                             "cwd": "${workspaceFolder}/PrepperBox.Web",
                         },
                         "icon": "debug-restart",
@@ -26,7 +26,7 @@
                     "Build": {
                         "command": "commands.runInTerminal",
                         "args": {
-                            "text": "npm run build",
+                            "text": "pnpm run build",
                             "cwd": "${workspaceFolder}/PrepperBox.Web",
                         },
                         "icon": "runtime-extensions-editor-label-icon",
@@ -35,7 +35,7 @@
                     "Lint": {
                         "command": "commands.runInTerminal",
                         "args": {
-                            "text": "npm run lint",
+                            "text": "pnpm run lint",
                             "cwd": "${workspaceFolder}/PrepperBox.Web"
                         },
                         "icon": "diff-editor-toggle-whitespace",
@@ -44,7 +44,7 @@
                     "Lint Inspect config": {
                         "command": "commands.runInTerminal",
                         "args": {
-                            "text": "npx eslint --inspect-config",
+                            "text": "pnpm exec eslint --inspect-config",
                             "cwd": "${workspaceFolder}/PrepperBox.Web"
                         },
                         "icon": "diff-editor-toggle-whitespace",
@@ -53,7 +53,7 @@
                     "Run (Dev)": {
                         "command": "commands.runInTerminal",
                         "args": {
-                            "text": "npm run start",
+                            "text": "pnpm run start",
                             "cwd": "${workspaceFolder}/PrepperBox.Web"
                         },
                         "icon": "debug-start"
@@ -61,7 +61,7 @@
                     "Test": {
                         "command": "commands.runInTerminal",
                         "args": {
-                            "text": "npm run test",
+                            "text": "pnpm run test",
                             "cwd": "${workspaceFolder}/PrepperBox.Web"
                         },
                         "icon": "output",
@@ -70,7 +70,7 @@
                     "NSwag": {
                         "command": "commands.runInTerminal",
                         "args": {
-                            "text": "npm run nswag",
+                            "text": "pnpm run nswag",
                             "cwd": "${workspaceFolder}/PrepperBox.Web"
                         },
                         "icon": "file-code",
@@ -80,12 +80,14 @@
             }
         },
         "cSpell.words": [
+            "hwndmaster",
             "persistor",
             "primereact",
             "reduxjs",
         ],
         "cSpell.ignorePaths": [
             "package-lock.json",
+            "pnpm-lock.yaml",
             "node_modules",
             "vscode-extension",
             ".git",
@@ -115,14 +117,14 @@
         "chat.tools.terminal.autoApprove": {
             "dotnet test": true,
             "mkdir": true,
-            "npx tsc": true,
+            "pnpm exec tsc": true,
             "New-Item": true,
             "dotnet list": true,
-            "npx vitest": true,
-            "npm run build": true,
-            "npx eslint": true,
+            "pnpm vitest": true,
+            "pnpm run build": true,
+            "pnpm exec eslint": true,
             "dotnet run": true,
-            "npm run nswag": true
+            "pnpm run nswag": true
         }
     }
 }

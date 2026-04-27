@@ -27,15 +27,16 @@ applyTo: '**/*.ts, **/*.tsx'
 - The order of imports in a React component file should be:
   1. React and related libraries (e.g., `import React from "react";`)
   2. Third-party libraries (e.g., `import { useSelector } from "react-redux";`)
-  3. Application-wide imports (e.g., `import { RootState } from "@/store";`), with the following order:
+  3. Imports from `atom-web` packages (e.g., `import { callApi } from "@hwndmaster/atom-react-redux";`)
+  4. Application-wide imports (e.g., `import { RootState } from "@/store";`), with the following order:
      - Store imports (e.g., `import { RootState } from "@/store";`)
      - API imports (e.g., `import * as api from "@/api/api.generated";`)
      - Model imports (e.g., `import { ProductInfo } from "@/models/productInfo";`)
      - Utility imports (e.g., `import { formatDate } from "@/shared/dateUtils";`)
      - Component imports (e.g., `import { FormInputText } from "@/components/forms";`)
-  4. Components from upper folder (e.g., `import AnotherComponent from "../anotherComponent";`)
-  5. Local imports (e.g., `import AnotherComponent from "./anotherComponent";`)
-  6. Styles (e.g., `import "./myComponent.module.scss";`)
+  5. Components from upper folder (e.g., `import AnotherComponent from "../anotherComponent";`)
+  6. Local imports (e.g., `import AnotherComponent from "./anotherComponent";`)
+  7. Styles (e.g., `import "./myComponent.module.scss";`)
 - API cannot be used directly in a component. Instead, create an action in the store, bind it to a saga that calls the API, and then call that action from the component.
 
 ## Tests
@@ -45,7 +46,5 @@ Do NOT write comprehensive unit tests. Do exactly as asked by the developer and 
 - Test the main logic of a function
 - Test the standard business case scenarios
 - Test the most likely edge cases
-
-When testing for toasts, use the `fakeToast` utility from `src/utils/tests/fakeToast.ts` instead of mocking the toast functions directly. This ensures that your tests are consistent with how toasts are handled in the application.
 
 **ALWAYS** select your screen elements by their `data-test_id` attributes in your tests. If an elements is missing, just add it to the component. Always use the format `ComponentName__Element_Description`, e.g., `LoginButton__Submit_Button`. Avoid selecting elements by content text.

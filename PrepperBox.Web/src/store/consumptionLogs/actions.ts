@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
+import { createActionWithMeta } from "@hwndmaster/atom-react-redux";
 import { ConsumptionLogRef } from "@/models/types";
-import { createActionWithMeta } from "../actionExtensions";
 import { CreateConsumptionLogRequest } from "./messages";
 
 export const fetchConsumptionLogs = createAction<void>("consumptionLogs/fetch");

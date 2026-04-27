@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
+import { createActionWithMeta } from "@hwndmaster/atom-react-redux";
 import { CategoryRef } from "@/models/types";
-import { createActionWithMeta } from "../actionExtensions";
 import { CreateCategoryRequest, UpdateCategoryRequest } from "./messages";
 
 export const fetchCategories = createAction<void>("categories/fetch");

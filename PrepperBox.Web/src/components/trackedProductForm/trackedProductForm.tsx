@@ -1,9 +1,9 @@
 import React from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FormDropdown, FormInputNumber, FormInputText, FormInputTextarea } from "@hwndmaster/atom-react-prime";
 import * as store from "@/store";
 import { storageLocationRef } from "@/models/types";
-import { FormDropdown, FormInputNumber, FormInputText, FormInputTextarea } from "@/components/forms";
 import { trackedProductFormSchema, TrackedProductFormData } from "./trackedProductForm.schema";
 import styles from "./trackedProductForm.module.scss";
 

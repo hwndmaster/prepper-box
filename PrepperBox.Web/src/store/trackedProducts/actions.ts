@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
+import { createActionWithMeta } from "@hwndmaster/atom-react-redux";
 import { TrackedProductRef } from "@/models/types";
-import { createActionWithMeta } from "../actionExtensions";
 import { CreateTrackedProductRequest, UpdateTrackedProductRequest } from "./messages";
 
 export interface WithdrawTrackedProductPayload {

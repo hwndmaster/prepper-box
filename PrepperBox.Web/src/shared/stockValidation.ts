@@ -1,4 +1,4 @@
-import { ticksToDate } from "./helper";
+import { ticksToDate } from "@hwndmaster/atom-web-core";
 
 export enum StockValidationLevel {
     None = "none",

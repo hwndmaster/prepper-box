@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { LoadingSpinner } from "@hwndmaster/atom-react-redux";
 import { Button, Column, confirmDialog, DataTable } from "@/primereact";
 import * as store from "@/store";
 import Category from "@/models/category";
 import { categoryRef, CategoryRef } from "@/models/types";
 import LoadingTargets from "@/shared/loadingTargets";
 import { getCategoryIconClass } from "@/shared/categoryIcons";
-import { LoadingSpinner } from "@/components/loadingSpinner";
 import { EditCategory, EditCategoryFormData } from "@/components/editCategory";
 import styles from "./categories.module.scss";
 

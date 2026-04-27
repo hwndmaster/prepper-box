@@ -1,10 +1,8 @@
+import { toastService } from "@hwndmaster/atom-react-prime";
+import { callApi, type SagaGenerator, withCallback } from "@hwndmaster/atom-react-redux";
 import apiClient from "@/api/apiAxios";
 import { convertOpenFoodFactsApiToModel } from "@/api/converters/openFoodFactsConverters";
 import OpenFoodFactsProduct from "@/models/openFoodFactsProduct";
-import { toastService } from "@/shared/ui/toastService";
-import { callApi } from "../apiRequest";
-import { SagaGenerator } from "../types";
-import { withCallback } from "../utils";
 import * as actions from "./actions";
 
 /** Searches for products by their bar code */

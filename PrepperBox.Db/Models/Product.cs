@@ -3,21 +3,39 @@ using Genius.PrepperBox.Dto.References;
 
 namespace Genius.PrepperBox.Db.Models;
 
-public sealed record Product : EntityBase<int, ProductRef>
+public sealed record Product(
+    string Name,
+    string? Description,
+    CategoryRef CategoryId,
+    string? Manufacturer,
+    string? BarCode,
+    string? ImageUrl,
+    string? ImageSmallUrl,
+    UnitOfMeasure UnitOfMeasure,
+    int MinimumStockLevel
+) : EntityBase<int, ProductRef>
 {
-    public string Name { get; init; }
-    public string? Description { get; init; }
-    public CategoryRef CategoryId { get; init; }
-    public string? Manufacturer { get; init; }
-    public string? BarCode { get; init; }
-    public string? ImageUrl { get; init; }
-    public string? ImageSmallUrl { get; init; }
-    public UnitOfMeasure UnitOfMeasure { get; init; }
-    public int MinimumStockLevel { get; init; }
+    public static Product Create(
+        ProductRef id,
+        string name,
+        CategoryRef categoryId,
+        string? description = null,
+        string? manufacturer = null,
+        string? barCode = null,
+        string? imageUrl = null,
+        string? imageSmallUrl = null,
+        UnitOfMeasure unitOfMeasure = UnitOfMeasure.Piece,
+        int minimumStockLevel = 0)
+    {
+        return new(name, description, categoryId, manufacturer, barCode, imageUrl, imageSmallUrl, unitOfMeasure, minimumStockLevel)
+        {
+            Id = id
+        };
+    }
 
     // Relations:
     [ForeignKey(nameof(CategoryId))]
-    public Category Category { get; init; }
-    public ICollection<TrackedProduct> TrackedProducts { get; init; }
-    public ICollection<ConsumptionLog> ConsumptionLogs { get; init; }
+    public Category Category { get; init; } = null!;
+    public ICollection<TrackedProduct> TrackedProducts { get; init; } = [];
+    public ICollection<ConsumptionLog> ConsumptionLogs { get; init; } = [];
 }
