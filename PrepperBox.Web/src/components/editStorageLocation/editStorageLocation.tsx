@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAtomForm } from "@hwndmaster/atom-react-core";
 import { FormInputText } from "@hwndmaster/atom-react-prime";
 import { Button, Dialog } from "@/primereact";
 import StorageLocation from "@/models/storageLocation";
@@ -18,7 +18,7 @@ interface EditStorageLocationProps {
 const EditStorageLocation: React.FC<EditStorageLocationProps> = ({ storageLocation, visible, onSave, onHide }) => {
     const isNew = storageLocation == null || storageLocation.id === storageLocationRef.default();
 
-    const form = useForm<EditStorageLocationFormData>({
+    const form = useAtomForm<EditStorageLocationFormData>({
         resolver: zodResolver(editStorageLocationSchema),
         defaultValues: {
             name: "",

@@ -13,14 +13,14 @@ applyTo: '**/*.ts, **/*.tsx'
 ## TypeScript Conventions
 
 * Respect the ESLint rules defined in eslint.config.js.
-* Avoid conversion like `as unknown as Type` unless absolutely necessary. If you find yourself needing to do this, consider if there is a better way to structure your types or code to avoid it.
+* Avoid conversion like `as unknown as Type` or `as unknown as never` unless absolutely necessary. If you find yourself needing to do this, consider if there is a better way to structure your types or code to avoid it.
 
 ## Naming conventions
 
-* Respect the @typescript-eslint/naming-convention rules defined in eslint.config.js. In particular:
-  * Use PascalCase for type names (e.g., `type User = { ... }`).
-  * Use camelCase for variable and function names (e.g., `const userName = "John";`).
-  * Use PascalCase for constants (e.g., `const MaxUsers = 100;`).
+- Respect the @typescript-eslint/naming-convention rules defined in eslint.config.js. In particular:
+  - Use PascalCase for type names (e.g., `type User = { ... }`).
+  - Use camelCase for variable and function names (e.g., `const userName = "John";`).
+  - Use PascalCase for constants (e.g., `const MaxUsers = 100;`).
 
 ## React Component Conventions
 

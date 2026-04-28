@@ -21,25 +21,25 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.74.0(react@19.2.5))
       '@hwndmaster/atom-api-core':
-        specifier: link:../../atom-web/packages/atom-api-core
-        version: link:../../atom-web/packages/atom-api-core
+        specifier: ^0.1.0
+        version: 0.1.0(axios@1.15.2)
       '@hwndmaster/atom-react-core':
-        specifier: link:../../atom-web/packages/atom-react-core
-        version: link:../../atom-web/packages/atom-react-core
+        specifier: ^0.1.3
+        version: 0.1.3(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)
       '@hwndmaster/atom-react-prime':
-        specifier: link:../../atom-web/packages/atom-react-prime
-        version: link:../../atom-web/packages/atom-react-prime
+        specifier: ^0.1.2
+        version: 0.1.2(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(primereact@10.9.7(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)
       '@hwndmaster/atom-react-redux':
-        specifier: link:../../atom-web/packages/atom-react-redux
-        version: link:../../atom-web/packages/atom-react-redux
+        specifier: ^0.1.2
+        version: 0.1.2(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(axios@1.15.2)(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(redux-persist@6.0.0(react@19.2.5)(redux@5.0.1))(redux-saga@1.4.2)(redux@5.0.1)(zod@4.3.6)
       '@hwndmaster/atom-web-core':
-        specifier: link:../../atom-web/packages/atom-web-core
-        version: link:../../atom-web/packages/atom-web-core
+        specifier: ^0.1.0
+        version: 0.1.0
       '@reduxjs/toolkit':
         specifier: ^2.11.2
         version: 2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5)
       axios:
-        specifier: ^1.15.1
+        specifier: ^1.15.2
         version: 1.15.2
       flag-icons:
         specifier: ^7.5.0
@@ -63,20 +63,20 @@ importers:
         specifier: ^19.2.5
         version: 19.2.5(react@19.2.5)
       react-hook-form:
-        specifier: ^7.72.1
+        specifier: ^7.74.0
         version: 7.74.0(react@19.2.5)
       react-redux:
         specifier: ^9.2.0
         version: 9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1)
       react-router-dom:
-        specifier: ^7.14.1
+        specifier: ^7.14.2
         version: 7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       react-zxing:
         specifier: ^2.1.0
         version: 2.1.0(react@19.2.5)
       recharts:
         specifier: ^3.8.1
-        version: 3.8.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react-is@16.13.1)(react@19.2.5)(redux@5.0.1)
+        version: 3.8.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react-is@17.0.2)(react@19.2.5)(redux@5.0.1)
       redux:
         specifier: ^5.0.1
         version: 5.0.1
@@ -91,20 +91,20 @@ importers:
         version: 4.3.6
     devDependencies:
       '@hwndmaster/atom-api-nswag':
-        specifier: link:../../atom-web/packages/atom-api-nswag
-        version: link:../../atom-web/packages/atom-api-nswag
+        specifier: ^0.1.0
+        version: 0.1.0
       '@hwndmaster/atom-eslint-common':
-        specifier: link:../../atom-web/packages/atom-eslint-common
-        version: link:../../atom-web/packages/atom-eslint-common
+        specifier: ^0.1.1
+        version: 0.1.1(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)
       '@hwndmaster/atom-eslint-react':
-        specifier: link:../../atom-web/packages/atom-eslint-react
-        version: link:../../atom-web/packages/atom-eslint-react
+        specifier: ^0.1.1
+        version: 0.1.1(@typescript-eslint/eslint-plugin@8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)(vitest@4.1.5)
       '@hwndmaster/atom-eslint-stylistic':
-        specifier: link:../../atom-web/packages/atom-eslint-stylistic
-        version: link:../../atom-web/packages/atom-eslint-stylistic
+        specifier: ^0.1.1
+        version: 0.1.1(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)
       '@hwndmaster/atom-testing-utils':
-        specifier: link:../../atom-web/packages/atom-testing-utils
-        version: link:../../atom-web/packages/atom-testing-utils
+        specifier: ^0.1.1
+        version: 0.1.1(@hwndmaster/atom-web-core@0.1.0)(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(axios-mock-adapter@2.1.0(axios@1.15.2))(axios@1.15.2)(history@5.3.0)(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(redux-persist@6.0.0(react@19.2.5)(redux@5.0.1))(redux-saga@1.4.2)(redux@5.0.1)(vitest@4.1.5)(zod@4.3.6)
       '@redux-saga/testing-utils':
         specifier: ^1.2.1
         version: 1.2.1
@@ -130,20 +130,20 @@ importers:
         specifier: ^7.1.34
         version: 7.1.34
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.58.2
-        version: 8.59.0(@typescript-eslint/parser@8.59.0(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)
+        specifier: ^8.59.1
+        version: 8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)
       '@typescript-eslint/parser':
-        specifier: ^8.58.2
-        version: 8.59.0(eslint@10.2.1)(typescript@6.0.3)
+        specifier: ^8.59.1
+        version: 8.59.1(eslint@10.2.1)(typescript@6.0.3)
       '@vitejs/plugin-react':
         specifier: ^6.0.1
         version: 6.0.1(vite@8.0.10(@types/node@25.6.0)(sass@1.99.0))
       '@vitest/coverage-v8':
-        specifier: ^4.1.4
+        specifier: ^4.1.5
         version: 4.1.5(vitest@4.1.5)
       '@vitest/eslint-plugin':
         specifier: ^1.6.16
-        version: 1.6.16(@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)(vitest@4.1.5)
+        version: 1.6.16(@typescript-eslint/eslint-plugin@8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)(vitest@4.1.5)
       axios-mock-adapter:
         specifier: ^2.1.0
         version: 2.1.0(axios@1.15.2)
@@ -152,10 +152,10 @@ importers:
         version: 10.2.1
       eslint-import-resolver-typescript:
         specifier: ^4.4.4
-        version: 4.4.4(eslint-plugin-import-x@4.16.2(@typescript-eslint/utils@8.59.0(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1))(eslint@10.2.1)
+        version: 4.4.4(eslint-plugin-import-x@4.16.2(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1))(eslint@10.2.1)
       eslint-plugin-import-x:
         specifier: ^4.16.2
-        version: 4.16.2(@typescript-eslint/utils@8.59.0(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)
+        version: 4.16.2(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)
       eslint-plugin-jsdoc:
         specifier: ^62.9.0
         version: 62.9.0(eslint@10.2.1)
@@ -175,7 +175,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       jsdom:
-        specifier: ^29.0.2
+        specifier: ^29.1.0
         version: 29.1.0
       sass:
         specifier: ^1.99.0
@@ -187,13 +187,10 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       vite:
-        specifier: ^8.0.9
+        specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(sass@1.99.0)
-      vite-tsconfig-paths:
-        specifier: ^6.1.1
-        version: 6.1.1(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(sass@1.99.0))
       vitest:
-        specifier: ^4.1.4
+        specifier: ^4.1.5
         version: 4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(jsdom@29.1.0)(vite@8.0.10(@types/node@25.6.0)(sass@1.99.0))
 
 packages:
@@ -469,6 +466,101 @@ packages:
   '@humanwhocodes/retry@0.4.3':
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
+
+  '@hwndmaster/atom-api-core@0.1.0':
+    resolution: {integrity: sha512-HAca/6DmCoz4RymRIFSx2kAMttIV54om6XaQOt+A3I3QB7MwPCWxJC4rJcquZAIkOaks/756aM2gd/99LhfFog==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-api-core/0.1.0/fdc8cf03edd956529dedaf6cd9dd1a2522a40d79}
+    peerDependencies:
+      axios: '>=1.0.0'
+
+  '@hwndmaster/atom-api-nswag@0.1.0':
+    resolution: {integrity: sha512-REMziNfs0tcKzokNyLiOwG+M2F+Ou5djPvnPK/pWqXsCmMuOSp4k4h/IHfZPTbHC5uvHh5YJTSTaspzjuat88Q==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-api-nswag/0.1.0/cb6d4fd445e79ac87d89fee40ec1fa060f7d330a}
+
+  '@hwndmaster/atom-eslint-common@0.1.1':
+    resolution: {integrity: sha512-fPYGF+nR69ITGOixObYUzDbk3LkPh2TQSxOJSgFzHfFy2tKsSbtb9Va+A1gVsaljPwgsOerqAIsnkmVKI+tAjw==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-eslint-common/0.1.1/1212cede6f8d7c10ad1619d64c6ad71f383ea8fc}
+    peerDependencies:
+      eslint: '>=9.0.0'
+
+  '@hwndmaster/atom-eslint-react@0.1.1':
+    resolution: {integrity: sha512-R+jpr2DNABpPDdOS7J4tesmw53GwxGZ7oIBAVR4EqwwMdthAljDAaydr6olKJBzAZ+CdHnKrHpbK1g2Sq6oUZw==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-eslint-react/0.1.1/98dcc77ad513725231684bc466491122393f045c}
+    peerDependencies:
+      eslint: '>=9.0.0'
+
+  '@hwndmaster/atom-eslint-stylistic@0.1.1':
+    resolution: {integrity: sha512-ZrM1WeZAZDsYULqiuC9ZEBwsBa4YlnMWVss+Rgt1oekmeTPLIgi1rCsLw+88we6B/kdX7ssNSrCU02nu7ND+Aw==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-eslint-stylistic/0.1.1/773191346df0a6c5a43e73b7f36abe610719c727}
+    peerDependencies:
+      eslint: '>=9.0.0'
+
+  '@hwndmaster/atom-react-core@0.1.1':
+    resolution: {integrity: sha512-9U5e97MPF9ElIYqnzbdmvlCYhAOCxogKvZBP4SrOaV+vDF9p7o9j2Pfy/fv8SRQEeQrOBrsSGyR1cj7iFFq2wQ==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-core/0.1.1/b2e5314eb2ab7d75632ef831a5351c268101a5a2}
+    peerDependencies:
+      '@reduxjs/toolkit': '>=2.0.0'
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+      react-hook-form: '>=7.0.0'
+      react-redux: '>=8.0.0'
+      react-router-dom: '>=6.0.0'
+      zod: '>=3.0.0'
+
+  '@hwndmaster/atom-react-core@0.1.3':
+    resolution: {integrity: sha512-bccY/5FSkuXJM3YEhDUutFewyPw1+x1rulCjcvGi7kvbRN2OHCVHm0jbR6e1Z4pIMmU0/vrUpICGCjcifP6N+g==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-core/0.1.3/58743b477e8e49a208fc87459595f60a7358c22c}
+    peerDependencies:
+      '@reduxjs/toolkit': '>=2.0.0'
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+      react-hook-form: '>=7.0.0'
+      react-redux: '>=8.0.0'
+      react-router-dom: '>=6.0.0'
+      zod: '>=3.0.0'
+
+  '@hwndmaster/atom-react-prime@0.1.2':
+    resolution: {integrity: sha512-JNrGG2EEoPrfa0X9LHSDG27ZrlZF2OQR/fgsLxw6yO5UUeicg/G1c1CHP6VK6cXpTiC9kV3+eYl3a0EcxEvkNw==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-prime/0.1.2/9598db84ccd0f136bb126bcc8c2b483858b402e6}
+    peerDependencies:
+      primereact: '>=10.0.0'
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+      react-hook-form: '>=7.0.0'
+
+  '@hwndmaster/atom-react-redux@0.1.1':
+    resolution: {integrity: sha512-AQ9r2glJ9nVnCzjRinCtb8htTbae2hmcOxGMHYiqAWrlMTpGj9m/fGT2EjD0tHDIrMoiW2NWTmIGNaS9JpaZuw==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-redux/0.1.1/456d561fd7325e5df2dfe9b4c58727f703dbeacc}
+    peerDependencies:
+      '@reduxjs/toolkit': '>=2.0.0'
+      axios: '>=1.0.0'
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+      react-redux: '>=8.0.0'
+      redux: '>=5.0.0'
+      redux-persist: '>=6.0.0'
+      redux-saga: '>=1.0.0'
+
+  '@hwndmaster/atom-react-redux@0.1.2':
+    resolution: {integrity: sha512-Cd575MqupCb/qc0vqER0Q405hSYmYcTd1Am1eKcyIdoNo/ouc575WJuVsn0mpTwkg7N7Is9KIPtSXCLN49Oeqw==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-redux/0.1.2/93531e42c43e1a467169973f785b9b8375c75136}
+    peerDependencies:
+      '@reduxjs/toolkit': '>=2.0.0'
+      axios: '>=1.0.0'
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+      react-redux: '>=8.0.0'
+      redux: '>=5.0.0'
+      redux-persist: '>=6.0.0'
+      redux-saga: '>=1.0.0'
+
+  '@hwndmaster/atom-testing-utils@0.1.1':
+    resolution: {integrity: sha512-Lf/xxNjVqfJC9U83aEyeE+A0O/yaZwb6nnhI+G6Uj5/Bfec1L2iEKiYe4OrKrReqaWAPkkdGWPiEb2V1uXgitg==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-testing-utils/0.1.1/bd45ff561d089eb62e588bd9e4f483364e32c30b}
+    peerDependencies:
+      '@hwndmaster/atom-web-core': '*'
+      '@testing-library/react': '>=16.0.0'
+      axios: '>=1.0.0'
+      axios-mock-adapter: '>=1.0.0'
+      history: '>=5.0.0'
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+      react-redux: '>=8.0.0'
+      react-router-dom: '>=6.0.0'
+      redux-saga: '>=1.0.0'
+      vitest: '>=2.0.0'
+
+  '@hwndmaster/atom-web-core@0.1.0':
+    resolution: {integrity: sha512-Y6qwRaFYFgPjWBCixpytCLDGQ2ewtIr8pujqK7+oP6QIG7JcAUNYcEciFQq+f7kYgtQizFe41HZLJjhcgmkrLA==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-web-core/0.1.0/2e9480fda2e26124f67bd07c5cbf066b66d042e6}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -839,16 +931,16 @@ packages:
   '@types/use-sync-external-store@0.0.6':
     resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
 
-  '@typescript-eslint/eslint-plugin@8.59.0':
-    resolution: {integrity: sha512-HyAZtpdkgZwpq8Sz3FSUvCR4c+ScbuWa9AksK2Jweub7w4M3yTz4O11AqVJzLYjy/B9ZWPyc81I+mOdJU/bDQw==}
+  '@typescript-eslint/eslint-plugin@8.59.1':
+    resolution: {integrity: sha512-BOziFIfE+6osHO9FoJG4zjoHUcvI7fTNBSpdAwrNH0/TLvzjsk2oo8XSSOT2HhqUyhZPfHv4UOffoJ9oEEQ7Ag==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
-      '@typescript-eslint/parser': ^8.59.0
+      '@typescript-eslint/parser': ^8.59.1
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
       typescript: '>=4.8.4 <6.1.0'
 
-  '@typescript-eslint/parser@8.59.0':
-    resolution: {integrity: sha512-TI1XGwKbDpo9tRW8UDIXCOeLk55qe9ZFGs8MTKU6/M08HWTw52DD/IYhfQtOEhEdPhLMT26Ka/x7p70nd3dzDg==}
+  '@typescript-eslint/parser@8.59.1':
+    resolution: {integrity: sha512-HDQH9O/47Dxi1ceDhBXdaldtf/WV9yRYMjbjCuNk3qnaTD564qwv61Y7+gTxwxRKzSrgO5uhtw584igXVuuZkA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
@@ -860,8 +952,18 @@ packages:
     peerDependencies:
       typescript: '>=4.8.4 <6.1.0'
 
+  '@typescript-eslint/project-service@8.59.1':
+    resolution: {integrity: sha512-+MuHQlHiEr00Of/IQbE/MmEoi44znZHbR/Pz7Opq4HryUOlRi+/44dro9Ycy8Fyo+/024IWtw8m4JUMCGTYxDg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      typescript: '>=4.8.4 <6.1.0'
+
   '@typescript-eslint/scope-manager@8.59.0':
     resolution: {integrity: sha512-UzR16Ut8IpA3Mc4DbgAShlPPkVm8xXMWafXxB0BocaVRHs8ZGakAxGRskF7FId3sdk9lgGD73GSFaWmWFDE4dg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typescript-eslint/scope-manager@8.59.1':
+    resolution: {integrity: sha512-LwuHQI4pDOYVKvmH2dkaJo6YZCSgouVgnS/z7yBPKBMvgtBvyLqiLy9Z6b7+m/TRcX1NFYUqZetI5Y+aT4GEfg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@typescript-eslint/tsconfig-utils@8.59.0':
@@ -870,8 +972,14 @@ packages:
     peerDependencies:
       typescript: '>=4.8.4 <6.1.0'
 
-  '@typescript-eslint/type-utils@8.59.0':
-    resolution: {integrity: sha512-3TRiZaQSltGqGeNrJzzr1+8YcEobKH9rHnqIp/1psfKFmhRQDNMGP5hBufanYTGznwShzVLs3Mz+gDN7HkWfXg==}
+  '@typescript-eslint/tsconfig-utils@8.59.1':
+    resolution: {integrity: sha512-/0nEyPbX7gRsk0Uwfe4ALwwgxuA66d/l2mhRDNlAvaj4U3juhUtJNq0DsY8M2AYwwb9rEq2hrC3IcIcEt++iJA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      typescript: '>=4.8.4 <6.1.0'
+
+  '@typescript-eslint/type-utils@8.59.1':
+    resolution: {integrity: sha512-klWPBR2ciQHS3f++ug/mVnWKPjBUo7icEL3FAO1lhAR1Z1i5NQYZ1EannMSRYcq5qCv5wNALlXr6fksRHyYl7w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
@@ -881,8 +989,18 @@ packages:
     resolution: {integrity: sha512-nLzdsT1gdOgFxxxwrlNVUBzSNBEEHJ86bblmk4QAS6stfig7rcJzWKqCyxFy3YRRHXDWEkb2NralA1nOYkkm/A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@typescript-eslint/types@8.59.1':
+    resolution: {integrity: sha512-ZDCjgccSdYPw5Bxh+my4Z0lJU96ZDN7jbBzvmEn0FZx3RtU1C7VWl6NbDx94bwY3V5YsgwRzJPOgeY2Q/nLG8A==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
   '@typescript-eslint/typescript-estree@8.59.0':
     resolution: {integrity: sha512-O9Re9P1BmBLFJyikRbQpLku/QA3/AueZNO9WePLBwQrvkixTmDe8u76B6CYUAITRl/rHawggEqUGn5QIkVRLMw==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      typescript: '>=4.8.4 <6.1.0'
+
+  '@typescript-eslint/typescript-estree@8.59.1':
+    resolution: {integrity: sha512-OUd+vJS05sSkOip+BkZ/2NS8RMxrAAJemsC6vU3kmfLyeaJT0TftHkV9mcx2107MmsBVXXexhVu4F0TZXyMl4g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       typescript: '>=4.8.4 <6.1.0'
@@ -894,8 +1012,19 @@ packages:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
       typescript: '>=4.8.4 <6.1.0'
 
+  '@typescript-eslint/utils@8.59.1':
+    resolution: {integrity: sha512-3pIeoXhCeYH9FSCBI8P3iNwJlGuzPlYKkTlen2O9T1DSeeg8UG8jstq6BLk+Mda0qup7mgk4z4XL4OzRaxZ8LA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
+      typescript: '>=4.8.4 <6.1.0'
+
   '@typescript-eslint/visitor-keys@8.59.0':
     resolution: {integrity: sha512-/uejZt4dSere1bx12WLlPfv8GktzcaDtuJ7s42/HEZ5zGj9oxRaD4bj7qwSunXkf+pbAhFt2zjpHYUiT5lHf0Q==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typescript-eslint/visitor-keys@8.59.1':
+    resolution: {integrity: sha512-LdDNl6C5iJExcM0Yh0PwAIBb9PrSiCsWamF/JyEZawm3kFDnRoaq3LGE4bpyRao/fWeGKKyw7icx0YxrLFC5Cg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
@@ -1657,9 +1786,6 @@ packages:
   globalthis@1.0.4:
     resolution: {integrity: sha512-DpLKbNU4WylpxJykQujfCcwYWiV/Jhm50Goo0wrVILAv5jOr9d+H+UR3PhSCD2rCCEIg0uc+G+muBTwD54JhDQ==}
     engines: {node: '>= 0.4'}
-
-  globrex@0.1.2:
-    resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
 
   gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
@@ -2591,16 +2717,6 @@ packages:
     resolution: {integrity: sha512-5OX1tzOjxWEgsr/YEUWSuPrQ00deKLh6D7OTWcvNHm12/7QPyRh8SYpyWvA4IZv8H/+GQWQEh/kwo95Q9OVW1A==}
     engines: {node: '>=14.0.0'}
 
-  tsconfck@3.1.6:
-    resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
-    engines: {node: ^18 || >=20}
-    hasBin: true
-    peerDependencies:
-      typescript: ^5.0.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
@@ -2668,11 +2784,6 @@ packages:
 
   victory-vendor@37.3.6:
     resolution: {integrity: sha512-SbPDPdDBYp+5MJHhBCAyI7wKM3d5ivekigc2Dk2s7pgbZ9wIgIBYGVw4zGHBml/qTFbexrofXW6Gu4noGxrOwQ==}
-
-  vite-tsconfig-paths@6.1.1:
-    resolution: {integrity: sha512-2cihq7zliibCCZ8P9cKJrQBkfgdvcFkOOc3Y02o3GWUDLgqjWsZudaoiuOwO/gzTzy17cS5F7ZPo4bsnS4DGkg==}
-    peerDependencies:
-      vite: '*'
 
   vite@8.0.10:
     resolution: {integrity: sha512-rZuUu9j6J5uotLDs+cAA4O5H4K1SfPliUlQwqa6YEwSrWDZzP4rhm00oJR5snMewjxF5V/K3D4kctsUTsIU9Mw==}
@@ -3151,6 +3262,154 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
+  '@hwndmaster/atom-api-core@0.1.0(axios@1.15.2)':
+    dependencies:
+      '@hwndmaster/atom-web-core': 0.1.0
+      axios: 1.15.2
+
+  '@hwndmaster/atom-api-nswag@0.1.0': {}
+
+  '@hwndmaster/atom-eslint-common@0.1.1(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)':
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)
+      '@typescript-eslint/parser': 8.59.1(eslint@10.2.1)(typescript@6.0.3)
+      eslint: 10.2.1
+      eslint-import-resolver-typescript: 4.4.4(eslint-plugin-import-x@4.16.2(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1))(eslint@10.2.1)
+      eslint-plugin-import-x: 4.16.2(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)
+      eslint-plugin-jsdoc: 62.9.0(eslint@10.2.1)
+      eslint-plugin-testing-library: 7.16.2(eslint@10.2.1)(typescript@6.0.3)
+      globals: 17.5.0
+    transitivePeerDependencies:
+      - '@typescript-eslint/utils'
+      - eslint-import-resolver-node
+      - eslint-plugin-import
+      - supports-color
+      - typescript
+
+  '@hwndmaster/atom-eslint-react@0.1.1(@typescript-eslint/eslint-plugin@8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)(vitest@4.1.5)':
+    dependencies:
+      '@hwndmaster/atom-eslint-common': 0.1.1(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)
+      '@vitest/eslint-plugin': 1.6.16(@typescript-eslint/eslint-plugin@8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)(vitest@4.1.5)
+      eslint: 10.2.1
+      eslint-plugin-react: 7.37.5(eslint@10.2.1)
+      eslint-plugin-react-hooks: 7.1.1(eslint@10.2.1)
+      globals: 17.5.0
+    transitivePeerDependencies:
+      - '@typescript-eslint/eslint-plugin'
+      - '@typescript-eslint/utils'
+      - eslint-import-resolver-node
+      - eslint-plugin-import
+      - supports-color
+      - typescript
+      - vitest
+
+  '@hwndmaster/atom-eslint-stylistic@0.1.1(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)':
+    dependencies:
+      '@hwndmaster/atom-eslint-common': 0.1.1(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)
+      '@stylistic/eslint-plugin': 5.10.0(eslint@10.2.1)
+      eslint: 10.2.1
+    transitivePeerDependencies:
+      - '@typescript-eslint/utils'
+      - eslint-import-resolver-node
+      - eslint-plugin-import
+      - supports-color
+      - typescript
+
+  '@hwndmaster/atom-react-core@0.1.1(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)':
+    dependencies:
+      '@hwndmaster/atom-web-core': 0.1.0
+      '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+      react-hook-form: 7.74.0(react@19.2.5)
+      react-redux: 9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1)
+      react-router-dom: 7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      zod: 4.3.6
+
+  '@hwndmaster/atom-react-core@0.1.3(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)':
+    dependencies:
+      '@hwndmaster/atom-web-core': 0.1.0
+      '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+      react-hook-form: 7.74.0(react@19.2.5)
+      react-redux: 9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1)
+      react-router-dom: 7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      zod: 4.3.6
+
+  '@hwndmaster/atom-react-prime@0.1.2(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(primereact@10.9.7(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)':
+    dependencies:
+      '@hwndmaster/atom-react-core': 0.1.3(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)
+      '@hwndmaster/atom-web-core': 0.1.0
+      primereact: 10.9.7(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+      react-hook-form: 7.74.0(react@19.2.5)
+    transitivePeerDependencies:
+      - '@reduxjs/toolkit'
+      - react-redux
+      - react-router-dom
+      - zod
+
+  '@hwndmaster/atom-react-redux@0.1.1(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(axios@1.15.2)(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(redux-persist@6.0.0(react@19.2.5)(redux@5.0.1))(redux-saga@1.4.2)(redux@5.0.1)(zod@4.3.6)':
+    dependencies:
+      '@hwndmaster/atom-api-core': 0.1.0(axios@1.15.2)
+      '@hwndmaster/atom-react-core': 0.1.1(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)
+      '@hwndmaster/atom-web-core': 0.1.0
+      '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5)
+      axios: 1.15.2
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+      react-redux: 9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1)
+      redux: 5.0.1
+      redux-persist: 6.0.0(react@19.2.5)(redux@5.0.1)
+      redux-saga: 1.4.2
+    transitivePeerDependencies:
+      - react-hook-form
+      - react-router-dom
+      - zod
+
+  '@hwndmaster/atom-react-redux@0.1.2(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(axios@1.15.2)(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(redux-persist@6.0.0(react@19.2.5)(redux@5.0.1))(redux-saga@1.4.2)(redux@5.0.1)(zod@4.3.6)':
+    dependencies:
+      '@hwndmaster/atom-api-core': 0.1.0(axios@1.15.2)
+      '@hwndmaster/atom-react-core': 0.1.3(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)
+      '@hwndmaster/atom-web-core': 0.1.0
+      '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5)
+      axios: 1.15.2
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+      react-redux: 9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1)
+      redux: 5.0.1
+      redux-persist: 6.0.0(react@19.2.5)(redux@5.0.1)
+      redux-saga: 1.4.2
+    transitivePeerDependencies:
+      - react-hook-form
+      - react-router-dom
+      - zod
+
+  '@hwndmaster/atom-testing-utils@0.1.1(@hwndmaster/atom-web-core@0.1.0)(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(axios-mock-adapter@2.1.0(axios@1.15.2))(axios@1.15.2)(history@5.3.0)(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(redux-persist@6.0.0(react@19.2.5)(redux@5.0.1))(redux-saga@1.4.2)(redux@5.0.1)(vitest@4.1.5)(zod@4.3.6)':
+    dependencies:
+      '@hwndmaster/atom-react-redux': 0.1.1(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(axios@1.15.2)(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(redux-persist@6.0.0(react@19.2.5)(redux@5.0.1))(redux-saga@1.4.2)(redux@5.0.1)(zod@4.3.6)
+      '@hwndmaster/atom-web-core': 0.1.0
+      '@testing-library/react': 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      axios: 1.15.2
+      axios-mock-adapter: 2.1.0(axios@1.15.2)
+      history: 5.3.0
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+      react-redux: 9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1)
+      react-router-dom: 7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      redux-saga: 1.4.2
+      vitest: 4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(jsdom@29.1.0)(vite@8.0.10(@types/node@25.6.0)(sass@1.99.0))
+    transitivePeerDependencies:
+      - '@reduxjs/toolkit'
+      - react-hook-form
+      - redux
+      - redux-persist
+      - zod
+
+  '@hwndmaster/atom-web-core@0.1.0': {}
+
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -3466,14 +3725,14 @@ snapshots:
 
   '@types/use-sync-external-store@0.0.6': {}
 
-  '@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)':
+  '@typescript-eslint/eslint-plugin@8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.2
-      '@typescript-eslint/parser': 8.59.0(eslint@10.2.1)(typescript@6.0.3)
-      '@typescript-eslint/scope-manager': 8.59.0
-      '@typescript-eslint/type-utils': 8.59.0(eslint@10.2.1)(typescript@6.0.3)
-      '@typescript-eslint/utils': 8.59.0(eslint@10.2.1)(typescript@6.0.3)
-      '@typescript-eslint/visitor-keys': 8.59.0
+      '@typescript-eslint/parser': 8.59.1(eslint@10.2.1)(typescript@6.0.3)
+      '@typescript-eslint/scope-manager': 8.59.1
+      '@typescript-eslint/type-utils': 8.59.1(eslint@10.2.1)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.59.1(eslint@10.2.1)(typescript@6.0.3)
+      '@typescript-eslint/visitor-keys': 8.59.1
       eslint: 10.2.1
       ignore: 7.0.5
       natural-compare: 1.4.0
@@ -3482,12 +3741,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@8.59.0(eslint@10.2.1)(typescript@6.0.3)':
+  '@typescript-eslint/parser@8.59.1(eslint@10.2.1)(typescript@6.0.3)':
     dependencies:
-      '@typescript-eslint/scope-manager': 8.59.0
-      '@typescript-eslint/types': 8.59.0
-      '@typescript-eslint/typescript-estree': 8.59.0(typescript@6.0.3)
-      '@typescript-eslint/visitor-keys': 8.59.0
+      '@typescript-eslint/scope-manager': 8.59.1
+      '@typescript-eslint/types': 8.59.1
+      '@typescript-eslint/typescript-estree': 8.59.1(typescript@6.0.3)
+      '@typescript-eslint/visitor-keys': 8.59.1
       debug: 4.4.3
       eslint: 10.2.1
       typescript: 6.0.3
@@ -3503,20 +3762,38 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@typescript-eslint/project-service@8.59.1(typescript@6.0.3)':
+    dependencies:
+      '@typescript-eslint/tsconfig-utils': 8.59.1(typescript@6.0.3)
+      '@typescript-eslint/types': 8.59.1
+      debug: 4.4.3
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
   '@typescript-eslint/scope-manager@8.59.0':
     dependencies:
       '@typescript-eslint/types': 8.59.0
       '@typescript-eslint/visitor-keys': 8.59.0
 
+  '@typescript-eslint/scope-manager@8.59.1':
+    dependencies:
+      '@typescript-eslint/types': 8.59.1
+      '@typescript-eslint/visitor-keys': 8.59.1
+
   '@typescript-eslint/tsconfig-utils@8.59.0(typescript@6.0.3)':
     dependencies:
       typescript: 6.0.3
 
-  '@typescript-eslint/type-utils@8.59.0(eslint@10.2.1)(typescript@6.0.3)':
+  '@typescript-eslint/tsconfig-utils@8.59.1(typescript@6.0.3)':
     dependencies:
-      '@typescript-eslint/types': 8.59.0
-      '@typescript-eslint/typescript-estree': 8.59.0(typescript@6.0.3)
-      '@typescript-eslint/utils': 8.59.0(eslint@10.2.1)(typescript@6.0.3)
+      typescript: 6.0.3
+
+  '@typescript-eslint/type-utils@8.59.1(eslint@10.2.1)(typescript@6.0.3)':
+    dependencies:
+      '@typescript-eslint/types': 8.59.1
+      '@typescript-eslint/typescript-estree': 8.59.1(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.59.1(eslint@10.2.1)(typescript@6.0.3)
       debug: 4.4.3
       eslint: 10.2.1
       ts-api-utils: 2.5.0(typescript@6.0.3)
@@ -3526,12 +3803,29 @@ snapshots:
 
   '@typescript-eslint/types@8.59.0': {}
 
+  '@typescript-eslint/types@8.59.1': {}
+
   '@typescript-eslint/typescript-estree@8.59.0(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/project-service': 8.59.0(typescript@6.0.3)
       '@typescript-eslint/tsconfig-utils': 8.59.0(typescript@6.0.3)
       '@typescript-eslint/types': 8.59.0
       '@typescript-eslint/visitor-keys': 8.59.0
+      debug: 4.4.3
+      minimatch: 10.2.5
+      semver: 7.7.4
+      tinyglobby: 0.2.16
+      ts-api-utils: 2.5.0(typescript@6.0.3)
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@typescript-eslint/typescript-estree@8.59.1(typescript@6.0.3)':
+    dependencies:
+      '@typescript-eslint/project-service': 8.59.1(typescript@6.0.3)
+      '@typescript-eslint/tsconfig-utils': 8.59.1(typescript@6.0.3)
+      '@typescript-eslint/types': 8.59.1
+      '@typescript-eslint/visitor-keys': 8.59.1
       debug: 4.4.3
       minimatch: 10.2.5
       semver: 7.7.4
@@ -3552,9 +3846,25 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3)':
+    dependencies:
+      '@eslint-community/eslint-utils': 4.9.1(eslint@10.2.1)
+      '@typescript-eslint/scope-manager': 8.59.1
+      '@typescript-eslint/types': 8.59.1
+      '@typescript-eslint/typescript-estree': 8.59.1(typescript@6.0.3)
+      eslint: 10.2.1
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
   '@typescript-eslint/visitor-keys@8.59.0':
     dependencies:
       '@typescript-eslint/types': 8.59.0
+      eslint-visitor-keys: 5.0.1
+
+  '@typescript-eslint/visitor-keys@8.59.1':
+    dependencies:
+      '@typescript-eslint/types': 8.59.1
       eslint-visitor-keys: 5.0.1
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
@@ -3635,13 +3945,13 @@ snapshots:
       tinyrainbow: 3.1.0
       vitest: 4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(jsdom@29.1.0)(vite@8.0.10(@types/node@25.6.0)(sass@1.99.0))
 
-  '@vitest/eslint-plugin@1.6.16(@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)(vitest@4.1.5)':
+  '@vitest/eslint-plugin@1.6.16(@typescript-eslint/eslint-plugin@8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)(vitest@4.1.5)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.59.0
       '@typescript-eslint/utils': 8.59.0(eslint@10.2.1)(typescript@6.0.3)
       eslint: 10.2.1
     optionalDependencies:
-      '@typescript-eslint/eslint-plugin': 8.59.0(@typescript-eslint/parser@8.59.0(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)
+      '@typescript-eslint/eslint-plugin': 8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)(typescript@6.0.3)
       typescript: 6.0.3
       vitest: 4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(jsdom@29.1.0)(vite@8.0.10(@types/node@25.6.0)(sass@1.99.0))
     transitivePeerDependencies:
@@ -4142,7 +4452,7 @@ snapshots:
     optionalDependencies:
       unrs-resolver: 1.11.1
 
-  eslint-import-resolver-typescript@4.4.4(eslint-plugin-import-x@4.16.2(@typescript-eslint/utils@8.59.0(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1))(eslint@10.2.1):
+  eslint-import-resolver-typescript@4.4.4(eslint-plugin-import-x@4.16.2(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1))(eslint@10.2.1):
     dependencies:
       debug: 4.4.3
       eslint: 10.2.1
@@ -4153,11 +4463,11 @@ snapshots:
       tinyglobby: 0.2.16
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import-x: 4.16.2(@typescript-eslint/utils@8.59.0(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)
+      eslint-plugin-import-x: 4.16.2(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import-x@4.16.2(@typescript-eslint/utils@8.59.0(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1):
+  eslint-plugin-import-x@4.16.2(@typescript-eslint/utils@8.59.1(eslint@10.2.1)(typescript@6.0.3))(eslint@10.2.1):
     dependencies:
       '@package-json/types': 0.0.12
       '@typescript-eslint/types': 8.59.0
@@ -4171,7 +4481,7 @@ snapshots:
       stable-hash-x: 0.2.0
       unrs-resolver: 1.11.1
     optionalDependencies:
-      '@typescript-eslint/utils': 8.59.0(eslint@10.2.1)(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.59.1(eslint@10.2.1)(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -4419,8 +4729,6 @@ snapshots:
     dependencies:
       define-properties: 1.2.1
       gopd: 1.2.0
-
-  globrex@0.1.2: {}
 
   gopd@1.2.0: {}
 
@@ -5019,7 +5327,7 @@ snapshots:
 
   readdirp@4.1.2: {}
 
-  recharts@3.8.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react-is@16.13.1)(react@19.2.5)(redux@5.0.1):
+  recharts@3.8.1(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react-is@17.0.2)(react@19.2.5)(redux@5.0.1):
     dependencies:
       '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5)
       clsx: 2.1.1
@@ -5029,7 +5337,7 @@ snapshots:
       immer: 10.2.0
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
-      react-is: 16.13.1
+      react-is: 17.0.2
       react-redux: 9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1)
       reselect: 5.1.1
       tiny-invariant: 1.3.3
@@ -5354,10 +5662,6 @@ snapshots:
 
   ts-custom-error@3.3.1: {}
 
-  tsconfck@3.1.6(typescript@6.0.3):
-    optionalDependencies:
-      typescript: 6.0.3
-
   tslib@2.8.1:
     optional: true
 
@@ -5475,16 +5779,6 @@ snapshots:
       d3-shape: 3.2.0
       d3-time: 3.1.0
       d3-timer: 3.0.1
-
-  vite-tsconfig-paths@6.1.1(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(sass@1.99.0)):
-    dependencies:
-      debug: 4.4.3
-      globrex: 0.1.2
-      tsconfck: 3.1.6(typescript@6.0.3)
-      vite: 8.0.10(@types/node@25.6.0)(sass@1.99.0)
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
 
   vite@8.0.10(@types/node@25.6.0)(sass@1.99.0):
     dependencies:

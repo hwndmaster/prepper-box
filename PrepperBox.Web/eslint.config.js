@@ -13,7 +13,6 @@ export default [
             "vite.config.ts",
             "vitest.config.ts",
             "setupTests.ts",
-            "nswag/",
         ]
     },
     ...commonConfig,

@@ -117,14 +117,10 @@
         "chat.tools.terminal.autoApprove": {
             "dotnet test": true,
             "mkdir": true,
-            "pnpm exec tsc": true,
             "New-Item": true,
             "dotnet list": true,
-            "pnpm vitest": true,
-            "pnpm run build": true,
-            "pnpm exec eslint": true,
             "dotnet run": true,
-            "pnpm run nswag": true
+            "pnpm": true
         }
     }
 }

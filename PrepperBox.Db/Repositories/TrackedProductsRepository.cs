@@ -3,7 +3,6 @@ using Genius.PrepperBox.Db.Models;
 using Genius.PrepperBox.Dto;
 using Genius.PrepperBox.Dto.References;
 using Genius.PrepperBox.Dto.RequestMessages;
-using Microsoft.EntityFrameworkCore;
 
 namespace Genius.PrepperBox.Db.Repositories;
 
