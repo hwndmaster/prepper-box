@@ -20,6 +20,8 @@ services:
     build:
       context: ./PrepperBox.Web
       dockerfile: Dockerfile
+      args:
+        ATOM_PKG_ACCESS_TOKEN: ${ATOM_PKG_ACCESS_TOKEN:-}
     container_name: prepper-box-web
     ports:
       - "5096:8046"                         # Host port 5096 → container port 8046 (HTTP)

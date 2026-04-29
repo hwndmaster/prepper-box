@@ -5,7 +5,7 @@ import { toastService } from "@hwndmaster/atom-react-prime";
 import { LoadingSpinner } from "@hwndmaster/atom-react-redux";
 import { goTo } from "@hwndmaster/atom-react-core";
 import type { DataTableExpandedRows, MenuItem } from "@/primereact";
-import { Button, Chip, Column, DataTable, SplitButton, TabPanel, TabView, Tooltip } from "@/primereact";
+import { Button, Chip, Column, DataTable, IconField, InputIcon, InputText, SplitButton, TabPanel, TabView, Tooltip } from "@/primereact";
 import * as store from "@/store";
 import Product from "@/models/product";
 import TrackedProduct from "@/models/trackedProduct";
@@ -25,6 +25,7 @@ const Home: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const locationState = location.state as { selectedCategoryId?: number } | null;
+    const restoredCategoryId = locationState?.selectedCategoryId;
     const categories = store.useAppSelector((state) => state.categories.categories);
     const products = store.useAppSelector((state) => state.products.products);
     const storageLocations = store.useAppSelector((state) => state.storageLocations.storageLocations);
@@ -38,6 +39,7 @@ const Home: React.FC = () => {
     const [isScannerVisible, setIsScannerVisible] = useState(false);
     const [matchedProducts, setMatchedProducts] = useState<Product[]>([]);
     const [isProductSelectionVisible, setIsProductSelectionVisible] = useState(false);
+    const [globalFilterValue, setGlobalFilterValue] = useState("");
 
     useEffect(() => {
         dispatch(store.Categories.Actions.fetchCategories());
@@ -48,16 +50,32 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         if (selectedCategoryId == null && categories.length > 0) {
-            const restoredId = locationState?.selectedCategoryId;
-            const match = restoredId != null ? categories.find((c) => c.id === restoredId) : null;
+            const match = restoredCategoryId != null ? categories.find((c) => c.id === restoredCategoryId) : null;
             setSelectedCategoryId(match != null ? match.id : categories[0].id);
         }
-    }, [categories, selectedCategoryId]);
+    }, [categories, restoredCategoryId, selectedCategoryId]);
 
-    const filteredProducts = useMemo(
-        () => products.filter((p) => p.categoryId === selectedCategoryId),
-        [products, selectedCategoryId]
-    );
+    const filteredProducts = useMemo(() => {
+        const normalizedFilter = globalFilterValue.trim().toLowerCase();
+        return products.filter((p) => {
+            if (p.categoryId !== selectedCategoryId) {
+                return false;
+            }
+
+            if (normalizedFilter === "") {
+                return true;
+            }
+
+            const searchableContent = [
+                p.name,
+                p.manufacturer ?? "",
+                p.description ?? "",
+                p.barCode ?? "",
+            ].join(" ").toLowerCase();
+
+            return searchableContent.includes(normalizedFilter);
+        });
+    }, [products, selectedCategoryId, globalFilterValue]);
 
     const trackedProductsByProductId = useMemo(() => {
         const map = new Map<ProductRef, TrackedProduct[]>();
@@ -65,6 +83,14 @@ const Home: React.FC = () => {
             const list = map.get(tp.productId) ?? [];
             list.push(tp);
             map.set(tp.productId, list);
+        }
+        return map;
+    }, [trackedProducts]);
+
+    const trackedQuantityByProductId = useMemo(() => {
+        const map = new Map<ProductRef, number>();
+        for (const tp of trackedProducts) {
+            map.set(tp.productId, (map.get(tp.productId) ?? 0) + tp.quantity);
         }
         return map;
     }, [trackedProducts]);
@@ -123,6 +149,10 @@ const Home: React.FC = () => {
     const handleProductSelectionCancel = (): void => {
         setIsProductSelectionVisible(false);
         setMatchedProducts([]);
+    };
+
+    const onGlobalFilterChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        setGlobalFilterValue(event.target.value);
     };
 
     const addProductMenuItems: MenuItem[] = [
@@ -269,7 +299,7 @@ const Home: React.FC = () => {
     };
 
     const stockLevelTemplate = (product: Product): React.ReactNode => {
-        const count = product.trackedProductsCount;
+        const count = trackedQuantityByProductId.get(product.id) ?? product.trackedProductsCount;
         const min = product.minimumStockLevel;
         const productTPs = trackedProductsByProductId.get(product.id) ?? [];
         const validation = validateStockLevel(count, min, productTPs);
@@ -324,6 +354,22 @@ const Home: React.FC = () => {
         );
     };
 
+    const renderHeader = (): React.ReactNode => {
+        return (
+            <div className={styles.tableHeader}>
+                <IconField iconPosition="left" className={styles.searchField}>
+                    <InputIcon className="pi pi-search" />
+                    <InputText
+                        value={globalFilterValue}
+                        onChange={onGlobalFilterChange}
+                        placeholder="Search products"
+                        data-test_id="Home__Products_Search"
+                    />
+                </IconField>
+            </div>
+        );
+    };
+
     return (
         <LoadingSpinner target={LoadingTargets.ActiveView}>
             <div className={styles.header}>
@@ -356,6 +402,7 @@ const Home: React.FC = () => {
 
             <DataTable
                 value={filteredProducts}
+                header={renderHeader()}
                 expandedRows={expandedRows}
                 onRowToggle={(e) => setExpandedRows(e.data as DataTableExpandedRows)}
                 rowExpansionTemplate={rowExpansionTemplate}

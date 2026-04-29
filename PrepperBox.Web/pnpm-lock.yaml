@@ -27,8 +27,8 @@ importers:
         specifier: ^0.1.3
         version: 0.1.3(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)
       '@hwndmaster/atom-react-prime':
-        specifier: ^0.1.2
-        version: 0.1.2(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(primereact@10.9.7(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)
+        specifier: ^0.1.7
+        version: 0.1.7(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(primereact@10.9.7(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)
       '@hwndmaster/atom-react-redux':
         specifier: ^0.1.2
         version: 0.1.2(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(axios@1.15.2)(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(redux-persist@6.0.0(react@19.2.5)(redux@5.0.1))(redux-saga@1.4.2)(redux@5.0.1)(zod@4.3.6)
@@ -512,8 +512,8 @@ packages:
       react-router-dom: '>=6.0.0'
       zod: '>=3.0.0'
 
-  '@hwndmaster/atom-react-prime@0.1.2':
-    resolution: {integrity: sha512-JNrGG2EEoPrfa0X9LHSDG27ZrlZF2OQR/fgsLxw6yO5UUeicg/G1c1CHP6VK6cXpTiC9kV3+eYl3a0EcxEvkNw==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-prime/0.1.2/9598db84ccd0f136bb126bcc8c2b483858b402e6}
+  '@hwndmaster/atom-react-prime@0.1.7':
+    resolution: {integrity: sha512-ZPwaKMtPB4+ZtD5VlTXMNKstj0UbgYN2Za+2P0yusw+ankpYVlxzsbFdPZEIZyJ5fERvLTZJrRbcWhyydFAQAw==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-prime/0.1.7/bef181cde8df24e3bc044050835aef86e05b25ef}
     peerDependencies:
       primereact: '>=10.0.0'
       react: '>=18.0.0'
@@ -3337,7 +3337,7 @@ snapshots:
       react-router-dom: 7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       zod: 4.3.6
 
-  '@hwndmaster/atom-react-prime@0.1.2(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(primereact@10.9.7(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)':
+  '@hwndmaster/atom-react-prime@0.1.7(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(primereact@10.9.7(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)':
     dependencies:
       '@hwndmaster/atom-react-core': 0.1.3(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react-hook-form@7.74.0(react@19.2.5))(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.5)(redux@5.0.1))(react-router-dom@7.14.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)(zod@4.3.6)
       '@hwndmaster/atom-web-core': 0.1.0

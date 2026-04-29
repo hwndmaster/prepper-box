@@ -1,9 +1,11 @@
+using Genius.PrepperBox.Core.Configuration;
 using Genius.PrepperBox.Core.Services.Telegram;
 using Genius.PrepperBox.Db.Repositories;
 using Genius.PrepperBox.Dto;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Genius.PrepperBox.WebApi.BackgroundWorkers;
 
@@ -21,36 +23,110 @@ namespace Genius.PrepperBox.WebApi.BackgroundWorkers;
 /// </remarks>
 internal sealed class ExpirationCheckWorker : BackgroundService
 {
-    private static readonly TimeSpan CheckInterval = TimeSpan.FromDays(1);
+    private static readonly TimeSpan DefaultNotificationTime = TimeSpan.FromHours(9);
 
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<ExpirationCheckWorker> _logger;
+    private readonly TimeSpan _notificationTime;
+    private readonly TimeSpan _notificationWindow;
+
+    private DateOnly? _lastRunDate;
 
     public ExpirationCheckWorker(
         IServiceScopeFactory scopeFactory,
+        IOptions<ExpirationCheckSettings> expirationCheckSettings,
         ILogger<ExpirationCheckWorker> logger)
     {
         _scopeFactory = scopeFactory;
         _logger = logger;
+
+        var settings = expirationCheckSettings.Value;
+        var configuredNotificationTime = settings.NotificationTimeUtc ?? settings.NotificationTime;
+        _notificationTime = NormalizeNotificationTime(configuredNotificationTime);
+        _notificationWindow = TimeSpan.FromMinutes(Math.Clamp(settings.NotificationWindowMinutes, 0, 24 * 60));
+
+        if (settings.NotificationTimeUtc is not null)
+        {
+            _logger.LogWarning(
+                "ExpirationCheck:NotificationTimeUtc is deprecated. Use ExpirationCheck:NotificationTime (server-local time) instead.");
+        }
+
+        if (configuredNotificationTime != _notificationTime)
+        {
+            _logger.LogWarning(
+                "Invalid ExpirationCheck:NotificationTime value {ConfiguredTime}; using fallback {FallbackTime}.",
+                configuredNotificationTime,
+                _notificationTime);
+        }
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Expiration check worker started.");
+        _logger.LogInformation(
+            "Expiration check worker started. Daily check at {NotificationTime} (server local time) with a startup window of {WindowMinutes} minute(s).",
+            _notificationTime,
+            _notificationWindow.TotalMinutes);
 
         while (!stoppingToken.IsCancellationRequested)
         {
+            var now = DateTimeOffset.Now;
+            var nextRun = GetNextRun(now);
+            var delay = nextRun - now;
+
+            if (delay > TimeSpan.Zero)
+            {
+                _logger.LogDebug("Next expiration check is scheduled for {NextRun}.", nextRun);
+                await Task.Delay(delay, stoppingToken).ConfigureAwait(false);
+            }
+
             try
             {
                 await CheckExpirationsAsync(stoppingToken).ConfigureAwait(false);
+                _lastRunDate = DateOnly.FromDateTime(DateTime.Now);
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 _logger.LogError(ex, "Error during expiration check.");
             }
-
-            await Task.Delay(CheckInterval, stoppingToken).ConfigureAwait(false);
         }
+    }
+
+    private DateTimeOffset GetNextRun(DateTimeOffset now)
+    {
+        var today = DateOnly.FromDateTime(now.DateTime);
+        var todayRun = BuildRunDateTime(today);
+
+        if (_lastRunDate != today)
+        {
+            if (now < todayRun)
+            {
+                return todayRun;
+            }
+
+            if (now <= todayRun.Add(_notificationWindow))
+            {
+                // Run immediately when startup happens in the configured time window.
+                return now;
+            }
+        }
+
+        return BuildRunDateTime(today.AddDays(1));
+    }
+
+    private DateTimeOffset BuildRunDateTime(DateOnly date)
+    {
+        var dayStart = DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MinValue), DateTimeKind.Local);
+        return new DateTimeOffset(dayStart).Add(_notificationTime);
+    }
+
+    private static TimeSpan NormalizeNotificationTime(TimeSpan configuredTime)
+    {
+        if (configuredTime < TimeSpan.Zero || configuredTime >= TimeSpan.FromDays(1))
+        {
+            return DefaultNotificationTime;
+        }
+
+        return configuredTime;
     }
 
     private async Task CheckExpirationsAsync(CancellationToken cancellationToken)
@@ -64,7 +140,7 @@ internal sealed class ExpirationCheckWorker : BackgroundService
         var products = await productsRepo.GetAllAsync(cancellationToken).ConfigureAwait(false);
 
         var productLookup = products.ToDictionary(p => p.Id, p => p);
-        var today = DateTimeOffset.UtcNow.Date;
+        var today = DateTimeOffset.Now.Date;
         var twoMonthsFromNow = today.AddMonths(2);
         var oneMonthFromNow = today.AddMonths(1);
 

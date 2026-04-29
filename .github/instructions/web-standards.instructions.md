@@ -48,3 +48,11 @@ Do NOT write comprehensive unit tests. Do exactly as asked by the developer and 
 - Test the most likely edge cases
 
 **ALWAYS** select your screen elements by their `data-test_id` attributes in your tests. If an elements is missing, just add it to the component. Always use the format `ComponentName__Element_Description`, e.g., `LoginButton__Submit_Button`. Avoid selecting elements by content text.
+
+## On demand running
+* If you need NSwag to rerun, you can ask me to do so by saying "Please rerun NSwag". I'll do that for you and then you can continue with your work.
+
+## Atom-web packages
+
+* packages under "@hwndmaster" scope are called atom-web packages.
+* If you need to update the code of any of the atom-web packages, ask me first and then you can proceed with changes in atom-web packages. After you have made the changes, ask me to publish the new versions of the atom-web packages and then you can continue with your work. It could be that I may want to publish them later, so give me the freedom to decide when to publish the new versions of the atom-web packages. If I decide to publish later, then assume that the new versions of the atom-web packages will contain the changes you have made and you can continue with your work without waiting for the new versions of the atom-web packages to be published.

@@ -16,6 +16,8 @@ export { Divider } from "primereact/divider";
 export { Dropdown } from "primereact/dropdown";
 export type { DropdownProps } from "primereact/dropdown";
 export { FloatLabel } from "primereact/floatlabel";
+export { IconField } from "primereact/iconfield";
+export { InputIcon } from "primereact/inputicon";
 export { InputNumber } from "primereact/inputnumber";
 export { InputText } from "primereact/inputtext";
 export type { InputTextProps } from "primereact/inputtext";

@@ -2,9 +2,15 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 
+ARG ATOM_PKG_ACCESS_TOKEN
+
 # Install dependencies
-COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && pnpm install --frozen-lockfile
+COPY package.json pnpm-lock.yaml .npmrc ./
+RUN if [ -z "$$ATOM_PKG_ACCESS_TOKEN" ]; then \
+			echo "ATOM_PKG_ACCESS_TOKEN build arg is required for GitHub Packages auth." >&2; \
+			exit 1; \
+		fi && \
+		corepack enable && pnpm install --frozen-lockfile --prod=false
 
 # Copy source and build
 COPY . .

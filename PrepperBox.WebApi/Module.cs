@@ -22,6 +22,9 @@ namespace Genius.PrepperBox.WebApi
             services.Configure<TelegramSettings>(
                 configuration.GetSection(TelegramSettings.SectionName));
 
+            services.Configure<ExpirationCheckSettings>(
+                configuration.GetSection(ExpirationCheckSettings.SectionName));
+
             services.AddHostedService<ExpirationCheckWorker>();
         }
 

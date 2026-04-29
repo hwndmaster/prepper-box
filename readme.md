@@ -164,7 +164,8 @@ New-NetFirewallRule -DisplayName "PrepperBox Web HTTPS" -Direction Inbound -Prot
 Create a `.env` file at the repo root with your secrets (this file should not be committed):
 
 ```
-ATOM_PKG_ACCESS_TOKEN=ghp_TOKEN
+ATOM_PKG_ACCESS_TOKEN=ghp_TOKEN_FOR_PACKAGE_READ
+GITHUB_REGISTRY_TOKEN=ghp_TOKEN_FOR_GHCR
 TELEGRAM_BOT_TOKEN=123123:xxxxxxx
 TELEGRAM_CHAT_ID=-10099999999
 ```
@@ -176,6 +177,13 @@ docker compose build
 ```
 
 The `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` values are passed as runtime environment variables to the API container (see `docker-compose.yml`). They are mapped to `Telegram__BotToken` / `Telegram__ChatId`, which ASP.NET Core binds automatically to the `Telegram` config section.
+
+Token usage during Docker builds:
+
+* `ATOM_PKG_ACCESS_TOKEN`: used by `PrepperBox.WebApi/Dockerfile` and `PrepperBox.Web/Dockerfile` (via `PrepperBox.Web/.npmrc`) to restore/install private packages.
+* `GITHUB_REGISTRY_TOKEN`: used for `docker login ghcr.io` before push.
+
+If one token has both package read and GHCR push permissions, you can reuse the same value for both variables.
 
 ### Troubleshooting
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAtomForm } from "@hwndmaster/atom-react-core";
-import { toastService, FormInputText, FormInputNumber, FormDropdown, FormInputTextarea  } from "@hwndmaster/atom-react-prime";
+import { toastService, FormInputText, FormInputNumber, FormDropdown, FormInputTextarea } from "@hwndmaster/atom-react-prime";
 import { Button, Divider } from "@/primereact";
 import * as store from "@/store";
 import { categoryRef } from "@/models/types";

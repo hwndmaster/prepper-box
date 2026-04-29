@@ -17,6 +17,19 @@
     }
 }
 
+.tableHeader {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.searchField {
+    width: min(100%, 22rem);
+
+    :global(.p-inputtext) {
+        width: 100%;
+    }
+}
+
 .stockCell {
     display: flex;
     align-items: center;
@@ -70,6 +83,14 @@
         > :global(.p-splitbutton) > :global(.p-button) > :global(.p-button-label) {
             display: none;
         }
+    }
+
+    .tableHeader {
+        justify-content: stretch;
+    }
+
+    .searchField {
+        width: 100%;
     }
 }
 
