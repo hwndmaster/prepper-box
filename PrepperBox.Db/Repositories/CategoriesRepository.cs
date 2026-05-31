@@ -23,12 +23,12 @@ internal sealed class CategoriesRepository : BaseRepository<Category, int, Categ
     {
         return await GetContext().Set<Category>()
             .Where(c => c.Name == name)
-            .Select(ProjectToGetDto())
+            .Select(GetProjectionToGetDto())
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    protected override Expression<Func<Category, CategoryDto>> ProjectToGetDto()
-        => b => new CategoryDto(b.Id, b.Name, b.Description, b.IconName, b.DateCreated, b.LastModified);
+    protected override Expression<Func<Category, CategoryDto>> ProjectToGetDto { get; }
+        = b => new CategoryDto(b.Id, b.Name, b.Description, b.IconName, b.DateCreated, b.LastModified);
 
     protected override Category MapCreateDto(CreateCategoryRequest dto) => new(
         dto.Name,

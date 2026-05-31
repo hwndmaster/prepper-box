@@ -86,5 +86,11 @@ export default [
         rules: {
             "@typescript-eslint/prefer-literal-enum-member": "off",
         }
+    },
+    {
+        files: ["src/telemetry/setupOpenTelemetry.ts"],
+        rules: {
+            "import-x/no-unresolved": "off",
+        }
     }
 ];

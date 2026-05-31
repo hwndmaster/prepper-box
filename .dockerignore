@@ -1,0 +1,30 @@
+.git
+.github
+.vscode
+
+# Environment-specific files
+.env
+Data.Private/
+
+# Build and test artifacts
+**/bin/
+**/obj/
+**/TestResults/
+**/coverage/
+**/build/
+**/dist/
+**/.vite/
+**/*.lscache
+**/*.tsbuildinfo
+**/.eslintcache
+
+# Node artifacts
+**/node_modules/
+**/.pnpm-store/
+
+# Logs
+**/Logs/
+**/*.log
+
+# Test projects are not required for runtime image builds
+PrepperBox.Db.Tests/

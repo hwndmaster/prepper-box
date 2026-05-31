@@ -105,9 +105,13 @@ Ensure-DockerReady
 
 $apiImage = "$Registry/$DockerUser/prepper-box-api:latest"
 $webImage = "$Registry/$DockerUser/prepper-box-web:latest"
+$appHostImage = "$Registry/$DockerUser/prepper-box-apphost:latest"
 $previousAtomPkgAccessToken = $env:ATOM_PKG_ACCESS_TOKEN
 $hadPreviousAtomPkgAccessToken = $null -ne $previousAtomPkgAccessToken
+$previousComposeParallelLimit = $env:COMPOSE_PARALLEL_LIMIT
+$hadPreviousComposeParallelLimit = $null -ne $previousComposeParallelLimit
 $env:ATOM_PKG_ACCESS_TOKEN = $AtomPkgAccessToken
+$env:COMPOSE_PARALLEL_LIMIT = "1"
 
 Push-Location $PSScriptRoot
 try {
@@ -116,7 +120,9 @@ try {
     }
 
     Invoke-Step "Build Docker compose images" {
-        docker compose build
+        docker compose --progress=plain build prepper-box-apphost
+        docker compose --progress=plain build prepper-box-api
+        docker compose --progress=plain build prepper-box-web
     }
 
     Invoke-Step "Tag API image" {
@@ -127,12 +133,20 @@ try {
         docker tag prepper-box-prepper-box-web $webImage
     }
 
+    Invoke-Step "Tag AppHost image" {
+        docker tag prepper-box-prepper-box-apphost $appHostImage
+    }
+
     Invoke-Step "Push API image" {
         docker push $apiImage
     }
 
     Invoke-Step "Push Web image" {
         docker push $webImage
+    }
+
+    Invoke-Step "Push AppHost image" {
+        docker push $appHostImage
     }
 
     Write-Host ""
@@ -144,6 +158,13 @@ finally {
     }
     else {
         Remove-Item Env:\ATOM_PKG_ACCESS_TOKEN -ErrorAction SilentlyContinue
+    }
+
+    if ($hadPreviousComposeParallelLimit) {
+        $env:COMPOSE_PARALLEL_LIMIT = $previousComposeParallelLimit
+    }
+    else {
+        Remove-Item Env:\COMPOSE_PARALLEL_LIMIT -ErrorAction SilentlyContinue
     }
 
     Pop-Location

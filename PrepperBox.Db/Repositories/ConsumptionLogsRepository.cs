@@ -17,8 +17,8 @@ internal sealed class ConsumptionLogsRepository : BaseRepository<ConsumptionLog,
     {
     }
 
-    protected override Expression<Func<ConsumptionLog, ConsumptionLogDto>> ProjectToGetDto()
-        => b => new ConsumptionLogDto(b.Id, b.ProductId, b.Quantity, b.Reason, b.DateCreated, b.LastModified);
+    protected override Expression<Func<ConsumptionLog, ConsumptionLogDto>> ProjectToGetDto { get; }
+        = b => new ConsumptionLogDto(b.Id, b.ProductId, b.Quantity, b.Reason, b.DateCreated, b.LastModified);
 
     protected override ConsumptionLog MapCreateDto(CreateConsumptionLogRequest dto)
         => new(dto.ProductId, dto.Quantity, dto.Reason);

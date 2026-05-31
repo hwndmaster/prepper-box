@@ -2,12 +2,16 @@
   <Import Project="$(AtomBuildDirectory)/PackageVersions.props" />
 
   <ItemGroup>
+    <!-- Aspire -->
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.3.5" />
+    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.3.5" />
+
     <!-- Microsoft ASP.NET dependencies -->
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.8" />
 
     <!-- Serilog -->
     <PackageVersion Include="Serilog" Version="4.3.0" />
@@ -23,5 +27,9 @@
     <PackageVersion Include="Genius.Atom.Infrastructure" Version="$(AtomPackageVersion)" />
     <PackageVersion Include="Genius.Atom.Infrastructure.TestingUtil" Version="$(AtomPackageVersion)" />
     <PackageVersion Include="Genius.Atom.Web" Version="$(AtomPackageVersion)" />
+    <PackageVersion Include="Genius.Atom.Web.Telemetry" Version="$(AtomPackageVersion)" />
+
+    <!-- TODO: Temporary dependency to enforce compiler to use 5.3 as Atom does -->
+    <PackageVersion Include="Microsoft.Net.Compilers.Toolset" Version="5.3.0" />
   </ItemGroup>
 </Project>

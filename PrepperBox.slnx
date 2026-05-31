@@ -1,15 +1,18 @@
 <Solution>
+  <Folder Name="/PrepperBox.AppHost/">
+    <Project Path="PrepperBox.AppHost\PrepperBox.AppHost.csproj" />
+  </Folder>
   <Folder Name="/PrepperBox.Core/">
-    <Project Path="PrepperBox.Core\PrepperBox.Core.csproj" Type="C#" />
+    <Project Path="PrepperBox.Core\PrepperBox.Core.csproj" />
   </Folder>
   <Folder Name="/PrepperBox.Db/">
-    <Project Path="PrepperBox.Db\PrepperBox.Db.csproj" Type="C#" />
+    <Project Path="PrepperBox.Db\PrepperBox.Db.csproj" />
   </Folder>
   <Folder Name="/PrepperBox.Dto/">
-    <Project Path="PrepperBox.Dto\PrepperBox.Dto.csproj" Type="C#" />
+    <Project Path="PrepperBox.Dto\PrepperBox.Dto.csproj" />
   </Folder>
   <Folder Name="/PrepperBox.WebApi/">
-    <Project Path="PrepperBox.WebApi\PrepperBox.WebApi.csproj" Type="C#" />
+    <Project Path="PrepperBox.WebApi\PrepperBox.WebApi.csproj" />
   </Folder>
   <Project Path="PrepperBox.Db.Tests/PrepperBox.Db.Tests.csproj" />
   <Properties Name="Configuration">

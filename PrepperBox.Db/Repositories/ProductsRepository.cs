@@ -23,12 +23,12 @@ internal sealed class ProductsRepository : BaseRepository<Product, int, ProductR
     {
         return await GetContext().Set<Product>()
             .Where(p => p.BarCode == barCode)
-            .Select(ProjectToGetDto())
+            .Select(GetProjectionToGetDto())
             .ToArrayAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    protected override Expression<Func<Product, ProductDto>> ProjectToGetDto()
-        => b => new ProductDto(b.Id, b.Name, b.Description, b.CategoryId, b.Manufacturer, b.BarCode, b.ImageUrl, b.ImageSmallUrl, b.UnitOfMeasure, b.MinimumStockLevel, b.TrackedProducts.Sum(tp => tp.Quantity), b.DateCreated, b.LastModified);
+    protected override Expression<Func<Product, ProductDto>> ProjectToGetDto { get; }
+        = b => new ProductDto(b.Id, b.Name, b.Description, b.CategoryId, b.Manufacturer, b.BarCode, b.ImageUrl, b.ImageSmallUrl, b.UnitOfMeasure, b.MinimumStockLevel, b.TrackedProducts.Sum(tp => tp.Quantity), b.DateCreated, b.LastModified);
 
     protected override Product MapCreateDto(CreateProductRequest dto) => new(
         dto.Name,

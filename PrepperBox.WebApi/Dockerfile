@@ -6,45 +6,18 @@ WORKDIR /src
 COPY . .
 
 WORKDIR /src/PrepperBox.WebApi
+RUN --mount=type=secret,id=atom_pkg_access_token \
+	--mount=type=cache,id=prepper-box-api-nuget-packages,target=/root/.nuget/packages \
+	--mount=type=cache,id=prepper-box-api-nuget-v3,target=/root/.local/share/NuGet/v3-cache \
+	sh /src/scripts/docker-dotnet-restore.sh tool /src/PrepperBox.WebApi
+RUN --mount=type=secret,id=atom_pkg_access_token \
+	--mount=type=cache,id=prepper-box-api-nuget-packages,target=/root/.nuget/packages \
+	--mount=type=cache,id=prepper-box-api-nuget-v3,target=/root/.local/share/NuGet/v3-cache \
+	sh /src/scripts/docker-dotnet-restore.sh project /src/PrepperBox.WebApi linux-x64
 
-# Configure the GitHub NuGet source used by Genius.Atom.* packages.
-# Pass a GitHub PAT via: docker compose build --build-arg ATOM_PKG_ACCESS_TOKEN=<token>
-# or by setting ATOM_PKG_ACCESS_TOKEN in your environment before running docker compose.
-ARG ATOM_PKG_ACCESS_TOKEN
-RUN cat > /src/nuget.config << EOF
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-    <packageSources>
-        <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
-        <add key="github" value="https://nuget.pkg.github.com/hwndmaster/index.json" />
-    </packageSources>
-    <packageSourceMapping>
-        <packageSource key="github">
-            <package pattern="Genius.*" />
-        </packageSource>
-        <packageSource key="nuget.org">
-            <package pattern="*" />
-        </packageSource>
-    </packageSourceMapping>
-    <packageSourceCredentials>
-        <github>
-            <add key="Username" value="dummy" />
-            <add key="ClearTextPassword" value="$ATOM_PKG_ACCESS_TOKEN" />
-        </github>
-    </packageSourceCredentials>
-</configuration>
-EOF
-
-# Restore dotnet tools (declared in .config/dotnet-tools.json at the repo root).
-# This downloads Genius.Atom.Build into the NuGet package cache so that the
-# Directory.Build.props Import of its .props/.targets files resolves correctly.
-WORKDIR /src
-
-WORKDIR /src/PrepperBox.WebApi
-RUN dotnet tool restore
-RUN dotnet restore
-
-RUN dotnet publish -c Release --no-restore -o /app/publish
+RUN --mount=type=cache,id=prepper-box-api-nuget-packages,target=/root/.nuget/packages \
+	--mount=type=cache,id=prepper-box-api-nuget-v3,target=/root/.local/share/NuGet/v3-cache \
+	dotnet publish -c Release -r linux-x64 --self-contained false /p:UseAppHost=false /p:DebugType=None /p:DebugSymbols=false --no-restore -o /app/publish
 
 # ---- Runtime Stage ----
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime

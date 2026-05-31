@@ -23,6 +23,24 @@
       "stopAtEntry": false
     },
     {
+      "name": "Launch Aspire AppHost",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/PrepperBox.AppHost/bin/Debug/net10.0/Genius.PrepperBox.AppHost.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}/PrepperBox.AppHost",
+      "launchSettingsFilePath": "${workspaceFolder}/PrepperBox.AppHost/Properties/launchSettings.json",
+      "launchSettingsProfile": "http",
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+http://localhost:15191\\b",
+        "uriFormat": "http://localhost:15191/"
+      },
+      "console": "internalConsole",
+      "stopAtEntry": false
+    },
+    {
       "name": ".NET Core Attach",
       "type": "coreclr",
       "request": "attach",

@@ -12,7 +12,7 @@ applyTo: '**/*.ts, **/*.tsx'
 
 ## TypeScript Conventions
 
-* Respect the ESLint rules defined in eslint.config.js.
+* Respect the ESLint rules defined in eslint.config.js. After applying changes in the Web project, do `pnpm lint` to check if there are any linting errors and fix them.
 * Avoid conversion like `as unknown as Type` or `as unknown as never` unless absolutely necessary. If you find yourself needing to do this, consider if there is a better way to structure your types or code to avoid it.
 
 ## Naming conventions

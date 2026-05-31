@@ -3,7 +3,10 @@ import { createRoot } from "react-dom/client";
 import { setNotificationService } from "@hwndmaster/atom-react-redux";
 import { toastService } from "@hwndmaster/atom-react-prime";
 import App from "./App";
+import { setupOpenTelemetry } from "./telemetry/setupOpenTelemetry";
 import * as serviceWorker from "./serviceWorker";
+
+setupOpenTelemetry();
 
 setNotificationService(toastService);
 

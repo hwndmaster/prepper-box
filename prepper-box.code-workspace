@@ -75,7 +75,25 @@
                         },
                         "icon": "file-code",
                         "iconColor": "terminal.ansiYellow"
-                    }
+                    },
+					"Check outdated packages": {
+						"command": "commands.runInTerminal",
+						"args": {
+							"text": "pnpm outdated",
+                            "cwd": "${workspaceFolder}/PrepperBox.Web"
+						},
+						"icon": "versions",
+						"iconColor": "terminal.ansiYellow"
+					},
+					"Update outdated packages": {
+						"command": "commands.runInTerminal",
+						"args": {
+							"text": "pnpm update --interactive",
+                            "cwd": "${workspaceFolder}/PrepperBox.Web"
+						},
+						"icon": "arrow-up",
+						"iconColor": "terminal.ansiYellow"
+					}
                 }
             }
         },

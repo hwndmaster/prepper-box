@@ -10,7 +10,7 @@
     <RootNamespace>Genius.$(MSBuildProjectName)</RootNamespace>
     <AssemblyName>$(RootNamespace)</AssemblyName>
 
-    <AtomPackageVersion>0.1.6</AtomPackageVersion>
+    <AtomPackageVersion>0.2.3</AtomPackageVersion>
     <!-- Local development: use the Atom source checkout directly -->
     <AtomBuildDirectory Condition="Exists('C:\Dev\Src\atom\Atom.Build\build')">C:\Dev\Src\atom\Atom.Build\build</AtomBuildDirectory>
     <!-- CI/Docker fallback: use the restored NuGet package (Windows) -->
@@ -26,5 +26,10 @@
   <!-- Automated Testing components -->
   <ItemGroup Condition="$(IsTestProject) == 'True' Or $(MSBuildProjectName.EndsWith('.TestingUtil'))">
     <Using Include="AutoFixture.AutoFakeItEasy" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- TODO: Temporary dependency to enforce compiler to use 5.3 as Atom does -->
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" PrivateAssets="all" />
   </ItemGroup>
 </Project>

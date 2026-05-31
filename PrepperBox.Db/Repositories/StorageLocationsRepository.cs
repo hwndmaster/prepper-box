@@ -23,12 +23,12 @@ internal sealed class StorageLocationsRepository : BaseRepository<StorageLocatio
     {
         return await GetContext().Set<StorageLocation>()
             .Where(c => c.Name == name)
-            .Select(ProjectToGetDto())
+            .Select(GetProjectionToGetDto())
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    protected override Expression<Func<StorageLocation, StorageLocationDto>> ProjectToGetDto()
-        => b => new StorageLocationDto(b.Id, b.Name, b.DateCreated, b.LastModified);
+    protected override Expression<Func<StorageLocation, StorageLocationDto>> ProjectToGetDto { get; }
+        = b => new StorageLocationDto(b.Id, b.Name, b.DateCreated, b.LastModified);
 
     protected override StorageLocation MapCreateDto(CreateStorageLocationRequest dto)
         => new(dto.Name);

@@ -1,10 +1,31 @@
 services:
+  prepper-box-apphost:
+    build:
+      context: .
+      dockerfile: PrepperBox.AppHost/Dockerfile
+      secrets:
+        - atom_pkg_access_token
+    container_name: prepper-box-apphost
+    ports:
+      - "15191:15191"
+      - "21192:21192"
+      - "21193:21193"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      DOTNET_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:15191
+      ASPIRE_ALLOW_UNSECURED_TRANSPORT: "true"
+      ASPIRE_DASHBOARD_OTLP_ENDPOINT_URL: http://0.0.0.0:21192
+      ASPIRE_DASHBOARD_OTLP_HTTP_ENDPOINT_URL: http://0.0.0.0:21193
+      AppHost__Mode: dashboard
+    restart: unless-stopped
+
   prepper-box-api:
     build:
       context: .                          # Root, so all projects are in scope
       dockerfile: PrepperBox.WebApi/Dockerfile
-      args:
-        ATOM_PKG_ACCESS_TOKEN: ${ATOM_PKG_ACCESS_TOKEN:-}
+      secrets:
+        - atom_pkg_access_token
     container_name: prepper-box-api
     ports:
       - "5095:8045"                       # Host port 5095 → container port 8045
@@ -14,14 +35,19 @@ services:
     environment:
       - Telegram__BotToken=${TELEGRAM_BOT_TOKEN:-}
       - Telegram__ChatId=${TELEGRAM_CHAT_ID:-}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://prepper-box-apphost:21192
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_INSECURE=true
+    depends_on:
+      - prepper-box-apphost
     restart: unless-stopped
 
   prepper-box-web:
     build:
       context: ./PrepperBox.Web
       dockerfile: Dockerfile
-      args:
-        ATOM_PKG_ACCESS_TOKEN: ${ATOM_PKG_ACCESS_TOKEN:-}
+      secrets:
+        - atom_pkg_access_token
     container_name: prepper-box-web
     ports:
       - "5096:8046"                         # Host port 5096 → container port 8046 (HTTP)
@@ -31,3 +57,7 @@ services:
     depends_on:
       - prepper-box-api
     restart: unless-stopped
+
+secrets:
+  atom_pkg_access_token:
+    environment: ATOM_PKG_ACCESS_TOKEN
