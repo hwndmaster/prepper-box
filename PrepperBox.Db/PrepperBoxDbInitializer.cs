@@ -21,9 +21,6 @@ internal static class PrepperBoxDbInitializer
     {
         Guard.NotNull(context);
 
-        // Ensure database exists
-        await context.Database.EnsureCreatedAsync();
-
         // Check if data already exists
         if (context.Categories.Any())
         {

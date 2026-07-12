@@ -13,6 +13,21 @@ public sealed class PrepperBoxDbContext : DbContext
     {
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        Guard.NotNull(optionsBuilder);
+        base.OnConfiguring(optionsBuilder);
+
+        // The value-converted reference-type primary keys make SQLite serialize an AUTOINCREMENT annotation
+        // into the migrations snapshot that is absent from the runtime model, so EF always believes the model
+        // has pending changes. The difference is cosmetic (an INTEGER PRIMARY KEY auto-assigns row ids either
+        // way), so ignore the warning to allow MigrateAsync to run. Real schema changes are still captured by
+        // explicitly added migrations, and the InitialCreateMigration_ProducesSameSchemaAsEnsureCreated test
+        // guards against actual drift between the model and the migrations.
+        optionsBuilder.ConfigureWarnings(warnings =>
+            warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+    }
+
     override protected void OnModelCreating(ModelBuilder modelBuilder)
     {
         Guard.NotNull(modelBuilder);
