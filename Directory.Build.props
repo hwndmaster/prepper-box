@@ -28,8 +28,4 @@
     <Using Include="AutoFixture.AutoFakeItEasy" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- TODO: Temporary dependency to enforce compiler to use 5.3 as Atom does -->
-    <PackageReference Include="Microsoft.Net.Compilers.Toolset" PrivateAssets="all" />
-  </ItemGroup>
 </Project>

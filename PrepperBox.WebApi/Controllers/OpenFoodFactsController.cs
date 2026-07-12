@@ -1,12 +1,12 @@
+using Genius.Atom.Web.Controllers;
 using Genius.PrepperBox.Core.Services.OpenFoodFacts;
 using Genius.PrepperBox.Dto;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Genius.PrepperBox.WebApi.Controllers;
 
-[ApiController]
-[Route("api/v{version:apiVersion}/[controller]")]
-public sealed class OpenFoodFactsController : ControllerBase
+public sealed class OpenFoodFactsController : BaseController
 {
     private readonly IOpenFoodFactsClient _openFoodFactsClient;
 
@@ -16,7 +16,7 @@ public sealed class OpenFoodFactsController : ControllerBase
     }
 
     [HttpGet("by-barcode/{barCode}", Name = "SearchByBarCode")]
-    public async Task<ActionResult<IEnumerable<OpenFoodFactsProductDto>>> GetByBarCode(
+    public async Task<Results<Ok<OpenFoodFactsProductDto[]>, ProblemHttpResult>> GetByBarCode(
         [FromRoute] string barCode,
         CancellationToken cancellationToken)
     {
@@ -28,18 +28,19 @@ public sealed class OpenFoodFactsController : ControllerBase
         }
         catch (HttpRequestException ex)
         {
-            // Log the exception (not implemented here)
-            return StatusCode((int)(ex.StatusCode ?? System.Net.HttpStatusCode.InternalServerError), "An error occurred while fetching product information.");
+            return TypedResults.Problem(
+                "An error occurred while fetching product information.",
+                statusCode: (int)(ex.StatusCode ?? System.Net.HttpStatusCode.InternalServerError));
         }
 
         if (product is null)
         {
-            return Ok(Array.Empty<OpenFoodFactsProductDto>());
+            return TypedResults.Ok(Array.Empty<OpenFoodFactsProductDto>());
         }
 
         var quantity = _openFoodFactsClient.ExtractQuantity(product.Quantity);
 
-        return Ok(new[]
+        return TypedResults.Ok(new[]
         {
             new OpenFoodFactsProductDto(
                 Code: product.Code,

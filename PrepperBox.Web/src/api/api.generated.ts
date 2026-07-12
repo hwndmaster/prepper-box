@@ -40,6 +40,7 @@ export class CategoriesClient extends ApiClientBase {
         categoriesAll: "api/v1/Categories",
         categoriesPOST: "api/v1/Categories",
         categoriesPUT: "api/v1/Categories",
+        byIds: "api/v1/Categories/by-ids",
     }
 
     static operationParams = {
@@ -61,6 +62,10 @@ export class CategoriesClient extends ApiClientBase {
 
         categoriesPUT: {} as {
             body: Partial<UpdateCategoryRequest>;
+        },
+
+        byIds: {} as {
+            body: Partial<CategoryRef[]>;
         },
     }
 
@@ -112,6 +117,10 @@ export class CategoriesClient extends ApiClientBase {
             let resultData200  = _responseText;
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<CategoryDto>>(new ApiResponse<CategoryDto>(status, _headers, result200));
+
+        } else if (status === 404) {
+            const _responseText = response.data;
+            return throwException("Not Found", status, _responseText, _headers);
 
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
@@ -284,6 +293,13 @@ export class CategoriesClient extends ApiClientBase {
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndCategoryRef>>(new ApiResponse<CreatedEntityDtoOfintAndCategoryRef>(status, _headers, result200));
 
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
         }
@@ -344,6 +360,13 @@ export class CategoriesClient extends ApiClientBase {
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndCategoryRef>>(new ApiResponse<UpdatedEntityDtoOfintAndCategoryRef>(status, _headers, result200));
 
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
         }
@@ -352,6 +375,73 @@ export class CategoriesClient extends ApiClientBase {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndCategoryRef>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    byIds(body: CategoryRef[], cancelToken?: CancelToken): Promise<ApiResponse<CategoryDto[]>> {
+        let url_ = this.baseUrl + "/api/v1/Categories/by-ids";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCategories_byIds(_response);
+        });
+    }
+
+    protected processCategories_byIds(response: AxiosResponse): Promise<ApiResponse<CategoryDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<CategoryDto[]>>(new ApiResponse<CategoryDto[]>(status, _headers, result200));
+
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<CategoryDto[]>>(new ApiResponse(status, _headers, null as any));
     }
 }
 
@@ -377,6 +467,7 @@ export class ConsumptionLogsClient extends ApiClientBase {
         consumptionLogsAll: "api/v1/ConsumptionLogs",
         consumptionLogsPOST: "api/v1/ConsumptionLogs",
         consumptionLogsPUT: "api/v1/ConsumptionLogs",
+        byIds: "api/v1/ConsumptionLogs/by-ids",
     }
 
     static operationParams = {
@@ -398,6 +489,10 @@ export class ConsumptionLogsClient extends ApiClientBase {
 
         consumptionLogsPUT: {} as {
             body: Partial<UpdateConsumptionLogRequest>;
+        },
+
+        byIds: {} as {
+            body: Partial<ConsumptionLogRef[]>;
         },
     }
 
@@ -449,6 +544,10 @@ export class ConsumptionLogsClient extends ApiClientBase {
             let resultData200  = _responseText;
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<ConsumptionLogDto>>(new ApiResponse<ConsumptionLogDto>(status, _headers, result200));
+
+        } else if (status === 404) {
+            const _responseText = response.data;
+            return throwException("Not Found", status, _responseText, _headers);
 
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
@@ -621,6 +720,13 @@ export class ConsumptionLogsClient extends ApiClientBase {
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndConsumptionLogRef>>(new ApiResponse<CreatedEntityDtoOfintAndConsumptionLogRef>(status, _headers, result200));
 
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
         }
@@ -681,6 +787,13 @@ export class ConsumptionLogsClient extends ApiClientBase {
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndConsumptionLogRef>>(new ApiResponse<UpdatedEntityDtoOfintAndConsumptionLogRef>(status, _headers, result200));
 
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
         }
@@ -689,6 +802,73 @@ export class ConsumptionLogsClient extends ApiClientBase {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndConsumptionLogRef>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    byIds(body: ConsumptionLogRef[], cancelToken?: CancelToken): Promise<ApiResponse<ConsumptionLogDto[]>> {
+        let url_ = this.baseUrl + "/api/v1/ConsumptionLogs/by-ids";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processConsumptionLogs_byIds(_response);
+        });
+    }
+
+    protected processConsumptionLogs_byIds(response: AxiosResponse): Promise<ApiResponse<ConsumptionLogDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<ConsumptionLogDto[]>>(new ApiResponse<ConsumptionLogDto[]>(status, _headers, result200));
+
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<ConsumptionLogDto[]>>(new ApiResponse(status, _headers, null as any));
     }
 }
 
@@ -802,6 +982,7 @@ export class ProductsClient extends ApiClientBase {
         productsAll: "api/v1/Products",
         productsPOST: "api/v1/Products",
         productsPUT: "api/v1/Products",
+        byIds: "api/v1/Products/by-ids",
     }
 
     static operationParams = {
@@ -827,6 +1008,10 @@ export class ProductsClient extends ApiClientBase {
 
         productsPUT: {} as {
             body: Partial<UpdateProductRequest>;
+        },
+
+        byIds: {} as {
+            body: Partial<ProductRef[]>;
         },
     }
 
@@ -937,6 +1122,10 @@ export class ProductsClient extends ApiClientBase {
             let resultData200  = _responseText;
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<ProductDto>>(new ApiResponse<ProductDto>(status, _headers, result200));
+
+        } else if (status === 404) {
+            const _responseText = response.data;
+            return throwException("Not Found", status, _responseText, _headers);
 
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
@@ -1109,6 +1298,13 @@ export class ProductsClient extends ApiClientBase {
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndProductRef>>(new ApiResponse<CreatedEntityDtoOfintAndProductRef>(status, _headers, result200));
 
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
         }
@@ -1169,6 +1365,13 @@ export class ProductsClient extends ApiClientBase {
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndProductRef>>(new ApiResponse<UpdatedEntityDtoOfintAndProductRef>(status, _headers, result200));
 
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
         }
@@ -1177,6 +1380,73 @@ export class ProductsClient extends ApiClientBase {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndProductRef>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    byIds(body: ProductRef[], cancelToken?: CancelToken): Promise<ApiResponse<ProductDto[]>> {
+        let url_ = this.baseUrl + "/api/v1/Products/by-ids";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processProducts_byIds(_response);
+        });
+    }
+
+    protected processProducts_byIds(response: AxiosResponse): Promise<ApiResponse<ProductDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<ProductDto[]>>(new ApiResponse<ProductDto[]>(status, _headers, result200));
+
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<ProductDto[]>>(new ApiResponse(status, _headers, null as any));
     }
 }
 
@@ -1202,6 +1472,7 @@ export class StorageLocationsClient extends ApiClientBase {
         storageLocationsAll: "api/v1/StorageLocations",
         storageLocationsPOST: "api/v1/StorageLocations",
         storageLocationsPUT: "api/v1/StorageLocations",
+        byIds: "api/v1/StorageLocations/by-ids",
     }
 
     static operationParams = {
@@ -1223,6 +1494,10 @@ export class StorageLocationsClient extends ApiClientBase {
 
         storageLocationsPUT: {} as {
             body: Partial<UpdateStorageLocationRequest>;
+        },
+
+        byIds: {} as {
+            body: Partial<StorageLocationRef[]>;
         },
     }
 
@@ -1274,6 +1549,10 @@ export class StorageLocationsClient extends ApiClientBase {
             let resultData200  = _responseText;
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<StorageLocationDto>>(new ApiResponse<StorageLocationDto>(status, _headers, result200));
+
+        } else if (status === 404) {
+            const _responseText = response.data;
+            return throwException("Not Found", status, _responseText, _headers);
 
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
@@ -1446,6 +1725,13 @@ export class StorageLocationsClient extends ApiClientBase {
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndStorageLocationRef>>(new ApiResponse<CreatedEntityDtoOfintAndStorageLocationRef>(status, _headers, result200));
 
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
         }
@@ -1506,6 +1792,13 @@ export class StorageLocationsClient extends ApiClientBase {
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndStorageLocationRef>>(new ApiResponse<UpdatedEntityDtoOfintAndStorageLocationRef>(status, _headers, result200));
 
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
         }
@@ -1514,6 +1807,73 @@ export class StorageLocationsClient extends ApiClientBase {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndStorageLocationRef>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    byIds(body: StorageLocationRef[], cancelToken?: CancelToken): Promise<ApiResponse<StorageLocationDto[]>> {
+        let url_ = this.baseUrl + "/api/v1/StorageLocations/by-ids";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processStorageLocations_byIds(_response);
+        });
+    }
+
+    protected processStorageLocations_byIds(response: AxiosResponse): Promise<ApiResponse<StorageLocationDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<StorageLocationDto[]>>(new ApiResponse<StorageLocationDto[]>(status, _headers, result200));
+
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<StorageLocationDto[]>>(new ApiResponse(status, _headers, null as any));
     }
 }
 
@@ -1539,6 +1899,7 @@ export class TrackedProductsClient extends ApiClientBase {
         trackedProductsAll: "api/v1/TrackedProducts",
         trackedProductsPOST: "api/v1/TrackedProducts",
         trackedProductsPUT: "api/v1/TrackedProducts",
+        byIds: "api/v1/TrackedProducts/by-ids",
     }
 
     static operationParams = {
@@ -1560,6 +1921,10 @@ export class TrackedProductsClient extends ApiClientBase {
 
         trackedProductsPUT: {} as {
             body: Partial<UpdateTrackedProductRequest>;
+        },
+
+        byIds: {} as {
+            body: Partial<TrackedProductRef[]>;
         },
     }
 
@@ -1611,6 +1976,10 @@ export class TrackedProductsClient extends ApiClientBase {
             let resultData200  = _responseText;
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<TrackedProductDto>>(new ApiResponse<TrackedProductDto>(status, _headers, result200));
+
+        } else if (status === 404) {
+            const _responseText = response.data;
+            return throwException("Not Found", status, _responseText, _headers);
 
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
@@ -1783,6 +2152,13 @@ export class TrackedProductsClient extends ApiClientBase {
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndTrackedProductRef>>(new ApiResponse<CreatedEntityDtoOfintAndTrackedProductRef>(status, _headers, result200));
 
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
         }
@@ -1843,6 +2219,13 @@ export class TrackedProductsClient extends ApiClientBase {
             result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
             return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndTrackedProductRef>>(new ApiResponse<UpdatedEntityDtoOfintAndTrackedProductRef>(status, _headers, result200));
 
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
         } else if (status === 404) {
             return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
         }
@@ -1851,6 +2234,73 @@ export class TrackedProductsClient extends ApiClientBase {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndTrackedProductRef>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    byIds(body: TrackedProductRef[], cancelToken?: CancelToken): Promise<ApiResponse<TrackedProductDto[]>> {
+        let url_ = this.baseUrl + "/api/v1/TrackedProducts/by-ids";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processTrackedProducts_byIds(_response);
+        });
+    }
+
+    protected processTrackedProducts_byIds(response: AxiosResponse): Promise<ApiResponse<TrackedProductDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<TrackedProductDto[]>>(new ApiResponse<TrackedProductDto[]>(status, _headers, result200));
+
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<TrackedProductDto[]>>(new ApiResponse(status, _headers, null as any));
     }
 }
 
@@ -1933,11 +2383,19 @@ export interface CreateTrackedProductRequest {
     notes: string | undefined;
 }
 
+export interface HttpValidationProblemDetails {
+    type: string | undefined;
+    title: string | undefined;
+    status: number | undefined;
+    detail: string | undefined;
+    instance: string | undefined;
+    errors: { [key: string]: string[]; };
+}
+
 export interface OpenFoodFactsProductDto {
     code: string;
     productName: string | undefined;
     brands: string | undefined;
-    categories: string | undefined;
     quantity: number | undefined;
     unitOfMeasure: number | undefined;
     imageUrl: string | undefined;
