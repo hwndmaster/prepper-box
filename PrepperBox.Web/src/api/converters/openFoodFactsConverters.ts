@@ -11,7 +11,6 @@ export function convertOpenFoodFactsApiToModel(dto: api.OpenFoodFactsProductDto)
         barCode: dto.code,
         productName: dto.productName,
         brands: dto.brands,
-        categories: dto.categories,
         quantity: dto.quantity,
         unitOfMeasure: dto.unitOfMeasure,
         imageUrl: dto.imageUrl,

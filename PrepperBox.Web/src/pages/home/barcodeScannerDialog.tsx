@@ -12,7 +12,7 @@ interface BarcodeScannerDialogProps {
 const ScannerContent: React.FC<{ onScan: (barcode: string) => void }> = ({ onScan }) => {
     const { ref } = useZxing({
         onDecodeResult(result) {
-            onScan(result.getText());
+            onScan(result.rawValue);
         },
     });
 
