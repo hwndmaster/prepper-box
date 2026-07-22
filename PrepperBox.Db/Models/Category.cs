@@ -15,5 +15,5 @@ public sealed record Category(
         };
 
     // Relations:
-    public ICollection<Product> Products { get; init; } = [];
+    public ICollection<ProductFamily> ProductFamilies { get; init; } = [];
 }

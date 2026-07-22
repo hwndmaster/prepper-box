@@ -9,7 +9,7 @@ import { Button, Chip, Column, DataTable, IconField, InputIcon, InputText, Split
 import * as store from "@/store";
 import Product from "@/models/product";
 import TrackedProduct from "@/models/trackedProduct";
-import { CategoryRef, ProductRef, storageLocationRef } from "@/models/types";
+import { CategoryRef, storageLocationRef } from "@/models/types";
 import { getCategoryIconClass } from "@/shared/categoryIcons";
 import LoadingTargets from "@/shared/loadingTargets";
 import AppRoutes from "@/shared/routes";
@@ -27,9 +27,12 @@ const Home: React.FC = () => {
     const locationState = location.state as { selectedCategoryId?: number } | null;
     const restoredCategoryId = locationState?.selectedCategoryId;
     const categories = store.useAppSelector((state) => state.categories.categories);
+    const familyById = store.useAppSelector(store.ProductFamilies.Selectors.selectProductFamilyMap);
     const products = store.useAppSelector((state) => state.products.products);
     const storageLocations = store.useAppSelector((state) => state.storageLocations.storageLocations);
-    const trackedProducts = store.useAppSelector((state) => state.trackedProducts.trackedProducts);
+    const trackedProductsByProductId = store.useAppSelector(store.TrackedProducts.Selectors.selectTrackedProductsByProductId);
+    const trackedQuantityByProductId = store.useAppSelector(store.TrackedProducts.Selectors.selectTrackedQuantityByProductId);
+    const familyAggregates = store.useAppSelector(store.TrackedProducts.Selectors.selectStockAggregatesByFamilyId);
 
     const [selectedCategoryId, setSelectedCategoryId] = useState<CategoryRef | null>(null);
     const [expandedRows, setExpandedRows] = useState<DataTableExpandedRows>({});
@@ -43,6 +46,7 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         dispatch(store.Categories.Actions.fetchCategories());
+        dispatch(store.ProductFamilies.Actions.fetchProductFamilies());
         dispatch(store.Products.Actions.fetchProducts());
         dispatch(store.StorageLocations.Actions.fetchStorageLocations());
         dispatch(store.TrackedProducts.Actions.fetchTrackedProducts());
@@ -77,23 +81,15 @@ const Home: React.FC = () => {
         });
     }, [products, selectedCategoryId, globalFilterValue]);
 
-    const trackedProductsByProductId = useMemo(() => {
-        const map = new Map<ProductRef, TrackedProduct[]>();
-        for (const tp of trackedProducts) {
-            const list = map.get(tp.productId) ?? [];
-            list.push(tp);
-            map.set(tp.productId, list);
-        }
-        return map;
-    }, [trackedProducts]);
-
-    const trackedQuantityByProductId = useMemo(() => {
-        const map = new Map<ProductRef, number>();
-        for (const tp of trackedProducts) {
-            map.set(tp.productId, (map.get(tp.productId) ?? 0) + tp.quantity);
-        }
-        return map;
-    }, [trackedProducts]);
+    // Subheader grouping requires the rows to be contiguous per family.
+    const groupedProducts = useMemo(() => {
+        return [...filteredProducts].sort((a, b) => {
+            if (a.familyId !== b.familyId) {
+                return Number(a.familyId) - Number(b.familyId);
+            }
+            return a.name.localeCompare(b.name);
+        });
+    }, [filteredProducts]);
 
     const handleOpenWithdrawDialog = (tp: TrackedProduct): void => {
         setWithdrawTrackedProduct(tp);
@@ -183,6 +179,48 @@ const Home: React.FC = () => {
         );
     };
 
+    const familyHeaderTemplate = (product: Product): React.ReactNode => {
+        const family = familyById.get(product.familyId);
+        if (family == null) {
+            return null;
+        }
+        const aggregate = familyAggregates.get(family.id) ?? { count: 0, trackedProducts: [] };
+        const uomLabel = UnitOfMeasureLabels[family.unitOfMeasure];
+        const validation = validateStockLevel(aggregate.count, family.minimumStockLevel, aggregate.trackedProducts);
+        const tooltipId = `family-tooltip-${String(family.id)}`;
+
+        return (
+            <div className={styles.familyGroupHeader} data-test_id="Home__Family_Header">
+                <span className={styles.familyGroupName}>{family.name}</span>
+                <span className={styles.familyGroupMeta}>
+                    {family.minimumStockLevel > 0
+                        ? `${aggregate.count} of ${family.minimumStockLevel} ${uomLabel}`
+                        : `${aggregate.count} ${uomLabel}`}
+                </span>
+                {validation.level === StockValidationLevel.Danger && (
+                    <>
+                        <Chip label="❗" className={`${styles.stockChipDanger} ${tooltipId}`} data-test_id="Home__Family_Stock_Attention" />
+                        <Tooltip target={`.${tooltipId}`} position="top">
+                            <ul style={{ margin: 0, paddingLeft: "1rem" }}>
+                                {validation.reasons.map((reason, i) => <li key={i}>{reason}</li>)}
+                            </ul>
+                        </Tooltip>
+                    </>
+                )}
+                {validation.level === StockValidationLevel.Warning && (
+                    <>
+                        <Chip label="⚠️" className={`${styles.stockChipWarning} ${tooltipId}`} data-test_id="Home__Family_Stock_Warning" />
+                        <Tooltip target={`.${tooltipId}`} position="top">
+                            <ul style={{ margin: 0, paddingLeft: "1rem" }}>
+                                {validation.reasons.map((reason, i) => <li key={i}>{reason}</li>)}
+                            </ul>
+                        </Tooltip>
+                    </>
+                )}
+            </div>
+        );
+    };
+
     const rowExpansionTemplate = (product: Product): React.ReactNode => {
         const productTrackedProducts = [...(trackedProductsByProductId.get(product.id) ?? [])]
             .sort((a, b) => {
@@ -191,7 +229,8 @@ const Home: React.FC = () => {
                 if (b.expirationDate == null) return 1;
                 return a.expirationDate - b.expirationDate;
             });
-        const uomLabel = UnitOfMeasureLabels[product.unitOfMeasure];
+        const family = familyById.get(product.familyId);
+        const uomLabel = family != null ? UnitOfMeasureLabels[family.unitOfMeasure] : "";
 
         const quantityTemplate = (tp: TrackedProduct): React.ReactNode => {
             return <span>{tp.quantity} {uomLabel}</span>;
@@ -232,8 +271,6 @@ const Home: React.FC = () => {
                     {product.barCode != null && product.barCode !== "" && (
                         <div><strong>Bar Code:</strong> {product.barCode}</div>
                     )}
-                    <div><strong>Unit of Measure:</strong> {uomLabel}</div>
-                    <div><strong>Minimum Stock Level:</strong> {product.minimumStockLevel}</div>
                 </div>
                 <DataTable
                     value={productTrackedProducts}
@@ -300,45 +337,9 @@ const Home: React.FC = () => {
 
     const stockLevelTemplate = (product: Product): React.ReactNode => {
         const count = trackedQuantityByProductId.get(product.id) ?? product.trackedProductsCount;
-        const min = product.minimumStockLevel;
-        const productTPs = trackedProductsByProductId.get(product.id) ?? [];
-        const validation = validateStockLevel(count, min, productTPs);
-        const tooltipId = `stock-tooltip-${String(product.id)}`;
-
-        return (
-            <div className={styles.stockCell}>
-                {min > 0 && <span>{count} of {min}</span>}
-                {min === 0 && <span>{count}</span>}
-                {validation.level === StockValidationLevel.Danger && (
-                    <>
-                        <Chip
-                            label="❗"
-                            className={`${styles.stockChipDanger} ${tooltipId}`}
-                            data-test_id="Home__Stock_Attention"
-                        />
-                        <Tooltip target={`.${tooltipId}`} position="top">
-                            <ul style={{ margin: 0, paddingLeft: "1rem" }}>
-                                {validation.reasons.map((reason, i) => <li key={i}>{reason}</li>)}
-                            </ul>
-                        </Tooltip>
-                    </>
-                )}
-                {validation.level === StockValidationLevel.Warning && (
-                    <>
-                        <Chip
-                            label="⚠️"
-                            className={`${styles.stockChipWarning} ${tooltipId}`}
-                            data-test_id="Home__Stock_Warning"
-                        />
-                        <Tooltip target={`.${tooltipId}`} position="top">
-                            <ul style={{ margin: 0, paddingLeft: "1rem" }}>
-                                {validation.reasons.map((reason, i) => <li key={i}>{reason}</li>)}
-                            </ul>
-                        </Tooltip>
-                    </>
-                )}
-            </div>
-        );
+        const family = familyById.get(product.familyId);
+        const uomLabel = family != null ? UnitOfMeasureLabels[family.unitOfMeasure] : "";
+        return <span className={styles.stockCell}>{count} {uomLabel}</span>;
     };
 
     const editActionTemplate = (product: Product): React.ReactNode => {
@@ -401,11 +402,17 @@ const Home: React.FC = () => {
             </div>
 
             <DataTable
-                value={filteredProducts}
+                value={groupedProducts}
                 header={renderHeader()}
                 expandedRows={expandedRows}
                 onRowToggle={(e) => setExpandedRows(e.data as DataTableExpandedRows)}
                 rowExpansionTemplate={rowExpansionTemplate}
+                rowGroupMode="subheader"
+                groupRowsBy="familyId"
+                sortMode="single"
+                sortField="familyId"
+                sortOrder={1}
+                rowGroupHeaderTemplate={familyHeaderTemplate}
                 dataKey="id"
                 data-test_id="Home__Products_Table"
             >

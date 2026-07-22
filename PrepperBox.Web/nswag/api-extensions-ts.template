@@ -4,6 +4,7 @@ import {
     CategoryRef,
     ConsumptionLogRef,
     ProductRef,
+    ProductFamilyRef,
     StorageLocationRef,
     TrackedProductRef
 } from "@/models/types";

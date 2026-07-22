@@ -17,7 +17,8 @@ namespace Genius.PrepperBox.WebApi
             Guard.NotNull(configuration);
 
             services
-                .AddTransient<IRequestValidator<CreateCategoryRequest>, CreateCategoryRequestValidator>();
+                .AddTransient<IRequestValidator<CreateCategoryRequest>, CreateCategoryRequestValidator>()
+                .AddTransient<IRequestValidator<CreateProductFamilyRequest>, CreateProductFamilyRequestValidator>();
 
             services.Configure<TelegramSettings>(
                 configuration.GetSection(TelegramSettings.SectionName));

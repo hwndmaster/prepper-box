@@ -13,6 +13,7 @@ import {
     CategoryRef,
     ConsumptionLogRef,
     ProductRef,
+    ProductFamilyRef,
     StorageLocationRef,
     TrackedProductRef
 } from "@/models/types";import axios, { AxiosError } from 'axios';
@@ -956,6 +957,433 @@ export class OpenFoodFactsClient extends ApiClientBase {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<ApiResponse<OpenFoodFactsProductDto[]>>(new ApiResponse(status, _headers, null as any));
+    }
+}
+
+export class ProductFamiliesClient extends ApiClientBase {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        super();
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "http://localhost:5095/";
+
+    }
+
+    static operations = {
+
+        productFamiliesGET: "api/v1/ProductFamilies/{id}",
+        productFamiliesDELETE: "api/v1/ProductFamilies/{id}",
+        productFamiliesAll: "api/v1/ProductFamilies",
+        productFamiliesPOST: "api/v1/ProductFamilies",
+        productFamiliesPUT: "api/v1/ProductFamilies",
+        byIds: "api/v1/ProductFamilies/by-ids",
+    }
+
+    static operationParams = {
+
+        productFamiliesGET: {} as {
+            id: ProductFamilyRef;
+        },
+
+        productFamiliesDELETE: {} as {
+            id: ProductFamilyRef;
+        },
+
+        productFamiliesAll: {} as {
+        },
+
+        productFamiliesPOST: {} as {
+            body: Partial<CreateProductFamilyRequest>;
+        },
+
+        productFamiliesPUT: {} as {
+            body: Partial<UpdateProductFamilyRequest>;
+        },
+
+        byIds: {} as {
+            body: Partial<ProductFamilyRef[]>;
+        },
+    }
+
+    /**
+     * @return OK
+     */
+    productFamiliesGET(id: ProductFamilyRef, cancelToken?: CancelToken): Promise<ApiResponse<ProductFamilyDto>> {
+        let url_ = this.baseUrl + "/api/v1/ProductFamilies/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processProductFamiliesGET(_response);
+        });
+    }
+
+    protected processProductFamiliesGET(response: AxiosResponse): Promise<ApiResponse<ProductFamilyDto>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<ProductFamilyDto>>(new ApiResponse<ProductFamilyDto>(status, _headers, result200));
+
+        } else if (status === 404) {
+            const _responseText = response.data;
+            return throwException("Not Found", status, _responseText, _headers);
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<ProductFamilyDto>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    productFamiliesDELETE(id: ProductFamilyRef, cancelToken?: CancelToken): Promise<ApiResponse<void>> {
+        let url_ = this.baseUrl + "/api/v1/ProductFamilies/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace(/{id}/gi, encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "DELETE",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processProductFamiliesDELETE(_response);
+        });
+    }
+
+    protected processProductFamiliesDELETE(response: AxiosResponse): Promise<ApiResponse<void>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<ApiResponse<void>>(new ApiResponse<void>(status, _headers, null as any));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<void>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    productFamiliesAll( cancelToken?: CancelToken): Promise<ApiResponse<ProductFamilyDto[]>> {
+        let url_ = this.baseUrl + "/api/v1/ProductFamilies";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processProductFamiliesAll(_response);
+        });
+    }
+
+    protected processProductFamiliesAll(response: AxiosResponse): Promise<ApiResponse<ProductFamilyDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<ProductFamilyDto[]>>(new ApiResponse<ProductFamilyDto[]>(status, _headers, result200));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<ProductFamilyDto[]>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    productFamiliesPOST(body: CreateProductFamilyRequest, cancelToken?: CancelToken): Promise<ApiResponse<CreatedEntityDtoOfintAndProductFamilyRef>> {
+        let url_ = this.baseUrl + "/api/v1/ProductFamilies";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processProductFamiliesPOST(_response);
+        });
+    }
+
+    protected processProductFamiliesPOST(response: AxiosResponse): Promise<ApiResponse<CreatedEntityDtoOfintAndProductFamilyRef>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndProductFamilyRef>>(new ApiResponse<CreatedEntityDtoOfintAndProductFamilyRef>(status, _headers, result200));
+
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<CreatedEntityDtoOfintAndProductFamilyRef>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    productFamiliesPUT(body: UpdateProductFamilyRequest, cancelToken?: CancelToken): Promise<ApiResponse<UpdatedEntityDtoOfintAndProductFamilyRef>> {
+        let url_ = this.baseUrl + "/api/v1/ProductFamilies";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "PUT",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processProductFamiliesPUT(_response);
+        });
+    }
+
+    protected processProductFamiliesPUT(response: AxiosResponse): Promise<ApiResponse<UpdatedEntityDtoOfintAndProductFamilyRef>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndProductFamilyRef>>(new ApiResponse<UpdatedEntityDtoOfintAndProductFamilyRef>(status, _headers, result200));
+
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<UpdatedEntityDtoOfintAndProductFamilyRef>>(new ApiResponse(status, _headers, null as any));
+    }
+
+    /**
+     * @return OK
+     */
+    byIds(body: ProductFamilyRef[], cancelToken?: CancelToken): Promise<ApiResponse<ProductFamilyDto[]>> {
+        let url_ = this.baseUrl + "/api/v1/ProductFamilies/by-ids";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processProductFamilies_byIds(_response);
+        });
+    }
+
+    protected processProductFamilies_byIds(response: AxiosResponse): Promise<ApiResponse<ProductFamilyDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<ProductFamilyDto[]>>(new ApiResponse<ProductFamilyDto[]>(status, _headers, result200));
+
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = typeof(resultData400) === "object" ? resultData400 : JSON.parse(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<ProductFamilyDto[]>>(new ApiResponse(status, _headers, null as any));
     }
 }
 
@@ -2344,6 +2772,11 @@ export interface CreatedEntityDtoOfintAndConsumptionLogRef {
     lastModified: number;
 }
 
+export interface CreatedEntityDtoOfintAndProductFamilyRef {
+    entityId: ProductFamilyRef;
+    lastModified: number;
+}
+
 export interface CreatedEntityDtoOfintAndProductRef {
     entityId: ProductRef;
     lastModified: number;
@@ -2359,16 +2792,21 @@ export interface CreatedEntityDtoOfintAndTrackedProductRef {
     lastModified: number;
 }
 
+export interface CreateProductFamilyRequest {
+    categoryId: CategoryRef;
+    name: string;
+    unitOfMeasure: number;
+    minimumStockLevel: number;
+}
+
 export interface CreateProductRequest {
     name: string;
     description: string | undefined;
-    categoryId: CategoryRef;
+    familyId: ProductFamilyRef;
     manufacturer: string | undefined;
     barCode: string | undefined;
     imageUrl: string | undefined;
     imageSmallUrl: string | undefined;
-    unitOfMeasure: number;
-    minimumStockLevel: number;
 }
 
 export interface CreateStorageLocationRequest {
@@ -2406,14 +2844,24 @@ export interface ProductDto {
     id: ProductRef;
     name: string;
     description: string | undefined;
+    familyId: ProductFamilyRef;
     categoryId: CategoryRef;
     manufacturer: string | undefined;
     barCode: string | undefined;
     imageUrl: string | undefined;
     imageSmallUrl: string | undefined;
+    trackedProductsCount: number;
+    dateCreated: number;
+    lastModified: number;
+}
+
+export interface ProductFamilyDto {
+    id: ProductFamilyRef;
+    categoryId: CategoryRef;
+    name: string;
     unitOfMeasure: number;
     minimumStockLevel: number;
-    trackedProductsCount: number;
+    productsCount: number;
     dateCreated: number;
     lastModified: number;
 }
@@ -2462,6 +2910,11 @@ export interface UpdatedEntityDtoOfintAndConsumptionLogRef {
     lastModified: number;
 }
 
+export interface UpdatedEntityDtoOfintAndProductFamilyRef {
+    entityId: ProductFamilyRef;
+    lastModified: number;
+}
+
 export interface UpdatedEntityDtoOfintAndProductRef {
     entityId: ProductRef;
     lastModified: number;
@@ -2477,18 +2930,25 @@ export interface UpdatedEntityDtoOfintAndTrackedProductRef {
     lastModified: number;
 }
 
+export interface UpdateProductFamilyRequest {
+    id: ProductFamilyRef;
+    lastModified: number;
+    categoryId: CategoryRef;
+    name: string;
+    unitOfMeasure: number;
+    minimumStockLevel: number;
+}
+
 export interface UpdateProductRequest {
     id: ProductRef;
     lastModified: number;
     name: string;
     description: string | undefined;
-    categoryId: CategoryRef;
+    familyId: ProductFamilyRef;
     manufacturer: string | undefined;
     barCode: string | undefined;
     imageUrl: string | undefined;
     imageSmallUrl: string | undefined;
-    unitOfMeasure: number;
-    minimumStockLevel: number;
 }
 
 export interface UpdateStorageLocationRequest {

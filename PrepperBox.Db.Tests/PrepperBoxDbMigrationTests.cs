@@ -55,11 +55,15 @@ public sealed class PrepperBoxDbMigrationTests : IDisposable
     [Fact]
     public async Task MigrateWithBackupAsync_GivenLegacyEnsureCreatedDatabase_BaselinesWithoutRunningInitialCreate()
     {
-        // Arrange - simulate the production database: created via EnsureCreated (no migrations
-        // history table) and containing data.
+        // Arrange - simulate the production database: schema at the InitialCreate migration but with
+        // no migrations-history table (as if created via EnsureCreated before migrations existed) and
+        // containing data. EnsureCreated can no longer stand in for this because it now builds the
+        // current (post-AddProductFamily) schema, so bring the schema to InitialCreate explicitly and
+        // then drop the history table.
         await using (var context = new PrepperBoxDbContext(CreateOptions(_dbPath)))
         {
-            await context.Database.EnsureCreatedAsync(TestContext.Current.CancellationToken);
+            await context.Database.MigrateAsync("20260415184455_InitialCreate", TestContext.Current.CancellationToken);
+            await context.Database.ExecuteSqlRawAsync("DROP TABLE \"__EFMigrationsHistory\";", TestContext.Current.CancellationToken);
             await context.Categories.AddAsync(Category.Create(1, "Food", "food"), TestContext.Current.CancellationToken);
             await context.SaveChangesAsync(TestContext.Current.CancellationToken);
         }
@@ -101,8 +105,9 @@ public sealed class PrepperBoxDbMigrationTests : IDisposable
         // Assert - schema is usable and the migration is recorded
         await using (var context = new PrepperBoxDbContext(CreateOptions(_dbPath)))
         {
-            var applied = await context.Database.GetAppliedMigrationsAsync(TestContext.Current.CancellationToken);
-            Assert.Single(applied);
+            var applied = (await context.Database.GetAppliedMigrationsAsync(TestContext.Current.CancellationToken)).ToList();
+            Assert.Contains(applied, id => id.EndsWith("_InitialCreate", StringComparison.Ordinal));
+            Assert.Contains(applied, id => id.EndsWith("_AddProductFamily", StringComparison.Ordinal));
             await context.Categories.AddAsync(Category.Create(1, "Food", "food"), TestContext.Current.CancellationToken);
             await context.SaveChangesAsync(TestContext.Current.CancellationToken);
         }

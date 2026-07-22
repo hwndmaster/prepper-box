@@ -2,12 +2,14 @@
 import * as openFoodFactsSagas from "./openFoodFacts/sagas";
 import * as categoriesSagas from "./categories/sagas";
 import * as consumptionLogsSagas from "./consumptionLogs/sagas";
+import * as productFamiliesSagas from "./productFamilies/sagas";
 import * as productsSagas from "./products/sagas";
 import * as storageLocationsSagas from "./storageLocations/sagas";
 import * as trackedProductsSagas from "./trackedProducts/sagas";
 import * as openFoodFacts from "./openFoodFacts";
 import * as categories from "./categories";
 import * as consumptionLogs from "./consumptionLogs";
+import * as productFamilies from "./productFamilies";
 import * as products from "./products";
 import * as storageLocations from "./storageLocations";
 import * as trackedProducts from "./trackedProducts";
@@ -21,6 +23,13 @@ const categoriesWatchers: SagaWatcher[] = [
     { handlingType: SagaHandlingType.TakeLatest, action: categories.Actions.createCategory, saga: categoriesSagas.createCategorySaga },
     { handlingType: SagaHandlingType.TakeLatest, action: categories.Actions.updateCategory, saga: categoriesSagas.updateCategorySaga },
     { handlingType: SagaHandlingType.TakeLatest, action: categories.Actions.deleteCategory, saga: categoriesSagas.deleteCategorySaga },
+];
+
+const productFamiliesWatchers: SagaWatcher[] = [
+    { handlingType: SagaHandlingType.TakeLatest, action: productFamilies.Actions.fetchProductFamilies, saga: productFamiliesSagas.fetchProductFamiliesSaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: productFamilies.Actions.createProductFamily, saga: productFamiliesSagas.createProductFamilySaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: productFamilies.Actions.updateProductFamily, saga: productFamiliesSagas.updateProductFamilySaga },
+    { handlingType: SagaHandlingType.TakeLatest, action: productFamilies.Actions.deleteProductFamily, saga: productFamiliesSagas.deleteProductFamilySaga },
 ];
 
 const productsWatchers: SagaWatcher[] = [
@@ -56,6 +65,7 @@ export const domainWatchers: SagaWatcher[] = [
     ...categoriesWatchers,
     ...consumptionLogsWatchers,
     ...openFoodFactsWatchers,
+    ...productFamiliesWatchers,
     ...productsWatchers,
     ...storageLocationsWatchers,
     ...trackedProductsWatchers,

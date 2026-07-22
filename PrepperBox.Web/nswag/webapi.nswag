@@ -54,6 +54,7 @@
         "CategoryRef",
         "ConsumptionLogRef",
         "ProductRef",
+        "ProductFamilyRef",
         "StorageLocationRef",
         "TrackedProductRef",
       ],

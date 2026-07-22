@@ -173,3 +173,19 @@
     width: 4rem;
     text-align: center;
 }
+
+.familyGroupHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.familyGroupName {
+    font-weight: 600;
+}
+
+.familyGroupMeta {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+}

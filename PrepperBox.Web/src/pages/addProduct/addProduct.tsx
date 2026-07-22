@@ -26,13 +26,11 @@ const AddProduct: React.FC = () => {
             {
                 name: data.name,
                 description: data.description,
-                categoryId: data.categoryId,
+                familyId: data.familyId,
                 manufacturer: data.manufacturer,
                 barCode: data.barCode,
                 imageUrl: data.imageUrl,
-                imageSmallUrl: data.imageSmallUrl,
-                unitOfMeasure: data.unitOfMeasure,
-                minimumStockLevel: data.minimumStockLevel
+                imageSmallUrl: data.imageSmallUrl
             },
             (createdProductId) => {
                 if (createdProductId != null && pendingTrackedProducts.length > 0) {

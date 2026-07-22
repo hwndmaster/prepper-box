@@ -3,6 +3,7 @@ import AppState from "./appState";
 
 import categoriesReducer from "./categories/reducers";
 import consumptionLogsReducer from "./consumptionLogs/reducers";
+import productFamiliesReducer from "./productFamilies/reducers";
 import productsReducer from "./products/reducers";
 import storageLocationsReducer from "./storageLocations/reducers";
 import trackedProductsReducer from "./trackedProducts/reducers";
@@ -22,13 +23,14 @@ const {
     domainReducers: {
         categories: categoriesReducer,
         consumptionLogs: consumptionLogsReducer,
+        productFamilies: productFamiliesReducer,
         products: productsReducer,
         storageLocations: storageLocationsReducer,
         trackedProducts: trackedProductsReducer,
     },
     domainWatchers,
     persistKey: "root",
-    persistVersion: 2,
+    persistVersion: 3,
     persistBlacklist: ["common"],
 });
 

@@ -5,6 +5,7 @@ interface ApiClient {
     categories: api.CategoriesClient;
     consumptionLogs: api.ConsumptionLogsClient;
     openFoodFacts: api.OpenFoodFactsClient;
+    productFamilies: api.ProductFamiliesClient;
     products: api.ProductsClient;
     storageLocations: api.StorageLocationsClient;
     trackedProducts: api.TrackedProductsClient;
@@ -29,6 +30,7 @@ const apiClient = (): ApiClient => {
         categories: new api.CategoriesClient("", getApiAxiosInstance()),
         consumptionLogs: new api.ConsumptionLogsClient("", getApiAxiosInstance()),
         openFoodFacts: new api.OpenFoodFactsClient("", getApiAxiosInstance()),
+        productFamilies: new api.ProductFamiliesClient("", getApiAxiosInstance()),
         products: new api.ProductsClient("", getApiAxiosInstance()),
         storageLocations: new api.StorageLocationsClient("", getApiAxiosInstance()),
         trackedProducts: new api.TrackedProductsClient("", getApiAxiosInstance()),

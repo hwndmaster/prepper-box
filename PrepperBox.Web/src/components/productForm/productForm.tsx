@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAtomForm } from "@hwndmaster/atom-react-core";
-import { toastService, FormInputText, FormInputNumber, FormDropdown, FormInputTextarea } from "@hwndmaster/atom-react-prime";
+import { toastService, FormInputText, FormDropdown, FormInputTextarea } from "@hwndmaster/atom-react-prime";
 import { Button, Divider } from "@/primereact";
 import * as store from "@/store";
-import { categoryRef } from "@/models/types";
+import { categoryRef, productFamilyRef } from "@/models/types";
 import Product from "@/models/product";
 import OpenFoodFactsProduct from "@/models/openFoodFactsProduct";
-import { UnitOfMeasure } from "@/models/unitOfMeasure";
-import { UnitOfMeasureOptions } from "@/shared/unitOfMeasureLabels";
 
 import { TrackedProductFormFields, useTrackedProductForm } from "@/components/trackedProductForm";
 import type { TrackedProductFormData } from "@/components/trackedProductForm";
@@ -32,6 +30,7 @@ interface ProductFormProps {
 const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, submitLabel, onSubmit, onCancel }) => {
     const dispatch = store.useAppDispatch();
     const categories = store.useAppSelector((state) => state.categories.categories);
+    const productFamilies = store.useAppSelector((state) => state.productFamilies.productFamilies);
     const foodCategory = store.useAppSelector((state) => store.Categories.Selectors.selectCategoryByName(state, "Food"));
     const [pendingTrackedProducts, setPendingTrackedProducts] = useState<PendingTrackedProduct[]>([]);
     const [isShowingTrackedProductForm, setIsShowingTrackedProductForm] = useState(false);
@@ -43,6 +42,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
 
     useEffect(() => {
         dispatch(store.Categories.Actions.fetchCategories());
+        dispatch(store.ProductFamilies.Actions.fetchProductFamilies());
         dispatch(store.StorageLocations.Actions.fetchStorageLocations());
     }, [dispatch]);
 
@@ -52,14 +52,29 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
             name: product?.name ?? "",
             description: product?.description ?? undefined,
             categoryId: product?.categoryId ?? categoryRef.default(),
+            familyId: product?.familyId ?? productFamilyRef.default(),
             manufacturer: product?.manufacturer ?? undefined,
             barCode: product?.barCode ?? initialBarCode ?? undefined,
             imageUrl: product?.imageUrl ?? undefined,
             imageSmallUrl: product?.imageSmallUrl ?? undefined,
-            unitOfMeasure: product?.unitOfMeasure ?? UnitOfMeasure.Piece,
-            minimumStockLevel: product?.minimumStockLevel ?? 0,
         },
     });
+
+    const selectedCategoryId = form.watch("categoryId");
+    const selectedFamilyId = form.watch("familyId");
+
+    // Families belong to a category, so only offer those under the selected category.
+    const familyOptions = useMemo(
+        () => productFamilies.filter((family) => family.categoryId === selectedCategoryId),
+        [productFamilies, selectedCategoryId]
+    );
+
+    // Clear the selected family whenever it no longer belongs to the chosen category.
+    useEffect(() => {
+        if (selectedFamilyId !== productFamilyRef.default() && !familyOptions.some((family) => family.id === selectedFamilyId)) {
+            form.setValue("familyId", productFamilyRef.default());
+        }
+    }, [familyOptions, selectedFamilyId, form]);
 
     const fetchBarCodeSuggestions = (barCode: string): void => {
         if (barCode.trim() === "") {
@@ -93,11 +108,19 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
         if (suggestion.brands != null) {
             form.setValue("manufacturer", suggestion.brands);
         }
-        if (suggestion.unitOfMeasure != null) {
-            form.setValue("unitOfMeasure", suggestion.unitOfMeasure);
-        }
         if (foodCategory != null) {
             form.setValue("categoryId", foodCategory.id);
+            // Best-effort: pre-select a Food family whose unit matches the scanned quantity,
+            // preferring the catch-all "Misc (...)" family. The user can still change it.
+            if (suggestion.unitOfMeasure != null) {
+                const candidates = productFamilies.filter(
+                    (family) => family.categoryId === foodCategory.id && family.unitOfMeasure === suggestion.unitOfMeasure
+                );
+                const match = candidates.find((family) => family.name.startsWith("Misc")) ?? candidates[0];
+                if (match != null) {
+                    form.setValue("familyId", match.id, { shouldValidate: true });
+                }
+            }
         }
         form.setValue("imageUrl", suggestion.imageUrl);
         form.setValue("imageSmallUrl", suggestion.imageSmallUrl);
@@ -152,14 +175,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
                     optionLabel="name"
                     optionValue="id"
                 />
-                <FormInputNumber name="minimumStockLevel" form={form} label="Minimum Stock Level" />
                 <FormDropdown
-                    name="unitOfMeasure"
+                    name="familyId"
                     form={form}
-                    label="Unit of Measure"
-                    options={UnitOfMeasureOptions}
-                    optionLabel="label"
-                    optionValue="value"
+                    label="Family"
+                    options={familyOptions}
+                    optionLabel="name"
+                    optionValue="id"
                 />
             </div>
             <div className={styles.row}>

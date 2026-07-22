@@ -1,4 +1,3 @@
-using Genius.PrepperBox.Db.Models;
 using Genius.PrepperBox.Dto.References;
 
 namespace Genius.PrepperBox.Dto.RequestMessages;
@@ -6,11 +5,9 @@ namespace Genius.PrepperBox.Dto.RequestMessages;
 public sealed record CreateProductRequest(
     string Name,
     string? Description,
-    CategoryRef CategoryId,
+    ProductFamilyRef FamilyId,
     string? Manufacturer,
     string? BarCode,
     string? ImageUrl,
-    string? ImageSmallUrl,
-    UnitOfMeasure UnitOfMeasure,
-    int MinimumStockLevel
+    string? ImageSmallUrl
 );

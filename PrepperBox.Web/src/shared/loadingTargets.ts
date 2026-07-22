@@ -13,6 +13,7 @@ enum LoadingTargets {
     Products = 200,
     StorageLocations = 250,
     TrackedProducts = 300,
+    ProductFamilies = 350,
 }
 
 export default LoadingTargets;

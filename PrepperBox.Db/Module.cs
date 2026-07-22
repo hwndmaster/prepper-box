@@ -15,6 +15,7 @@ namespace Genius.PrepperBox.Db
 
             // Repositories
             services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            services.AddScoped<IProductFamiliesRepository, ProductFamiliesRepository>();
             services.AddScoped<IProductsRepository, ProductsRepository>();
             services.AddScoped<IStorageLocationsRepository, StorageLocationsRepository>();
             services.AddScoped<ITrackedProductsRepository, TrackedProductsRepository>();

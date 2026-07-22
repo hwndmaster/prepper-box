@@ -6,36 +6,32 @@ namespace Genius.PrepperBox.Db.Models;
 public sealed record Product(
     string Name,
     string? Description,
-    CategoryRef CategoryId,
+    ProductFamilyRef FamilyId,
     string? Manufacturer,
     string? BarCode,
     string? ImageUrl,
-    string? ImageSmallUrl,
-    UnitOfMeasure UnitOfMeasure,
-    int MinimumStockLevel
+    string? ImageSmallUrl
 ) : EntityBase<int, ProductRef>
 {
     public static Product Create(
         ProductRef id,
         string name,
-        CategoryRef categoryId,
+        ProductFamilyRef familyId,
         string? description = null,
         string? manufacturer = null,
         string? barCode = null,
         string? imageUrl = null,
-        string? imageSmallUrl = null,
-        UnitOfMeasure unitOfMeasure = UnitOfMeasure.Piece,
-        int minimumStockLevel = 0)
+        string? imageSmallUrl = null)
     {
-        return new(name, description, categoryId, manufacturer, barCode, imageUrl, imageSmallUrl, unitOfMeasure, minimumStockLevel)
+        return new(name, description, familyId, manufacturer, barCode, imageUrl, imageSmallUrl)
         {
             Id = id
         };
     }
 
     // Relations:
-    [ForeignKey(nameof(CategoryId))]
-    public Category Category { get; init; } = null!;
+    [ForeignKey(nameof(FamilyId))]
+    public ProductFamily ProductFamily { get; init; } = null!;
     public ICollection<TrackedProduct> TrackedProducts { get; init; } = [];
     public ICollection<ConsumptionLog> ConsumptionLogs { get; init; } = [];
 }

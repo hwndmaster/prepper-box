@@ -35,22 +35,37 @@ public sealed class PrepperBoxDbContext : DbContext
 
         // Configure reference type value conversions for entity IDs
         ConfigureReferenceId<Category, CategoryRef>(modelBuilder, id => new CategoryRef(id));
+        ConfigureReferenceId<ProductFamily, ProductFamilyRef>(modelBuilder, id => new ProductFamilyRef(id));
         ConfigureReferenceId<Product, ProductRef>(modelBuilder, id => new ProductRef(id));
         ConfigureReferenceId<StorageLocation, StorageLocationRef>(modelBuilder, id => new StorageLocationRef(id));
         ConfigureReferenceId<TrackedProduct, TrackedProductRef>(modelBuilder, id => new TrackedProductRef(id));
         ConfigureReferenceId<ConsumptionLog, ConsumptionLogRef>(modelBuilder, id => new ConsumptionLogRef(id));
 
         // Configure reference type value conversions for foreign key properties
-        ConfigureReferenceFk<Product, CategoryRef>(modelBuilder, nameof(Product.CategoryId), id => new CategoryRef(id));
+        ConfigureReferenceFk<ProductFamily, CategoryRef>(modelBuilder, nameof(ProductFamily.CategoryId), id => new CategoryRef(id));
+        ConfigureReferenceFk<Product, ProductFamilyRef>(modelBuilder, nameof(Product.FamilyId), id => new ProductFamilyRef(id));
         ConfigureReferenceFk<TrackedProduct, ProductRef>(modelBuilder, nameof(TrackedProduct.ProductId), id => new ProductRef(id));
         ConfigureReferenceFk<TrackedProduct, StorageLocationRef>(modelBuilder, nameof(TrackedProduct.StorageLocationId), id => new StorageLocationRef(id));
         ConfigureReferenceFk<ConsumptionLog, ProductRef>(modelBuilder, nameof(ConsumptionLog.ProductId), id => new ProductRef(id));
 
-        // Configure Product N:1 relationship with Category (FK constraint)
+        // Configure ProductFamily N:1 relationship with Category (FK constraint)
+        modelBuilder.Entity<ProductFamily>()
+            .HasOne(f => f.Category)
+            .WithMany(c => c.ProductFamilies)
+            .HasForeignKey(f => f.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Enforce a unique family name within a category
+        modelBuilder.Entity<ProductFamily>()
+            .HasIndex(nameof(ProductFamily.CategoryId), nameof(ProductFamily.Name))
+            .IsUnique();
+
+        // Configure Product N:1 relationship with ProductFamily (FK constraint)
         modelBuilder.Entity<Product>()
-            .HasOne(p => p.Category)
-            .WithMany(c => c.Products)
-            .HasForeignKey(p => p.CategoryId);
+            .HasOne(p => p.ProductFamily)
+            .WithMany(f => f.Products)
+            .HasForeignKey(p => p.FamilyId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Configure TrackedProduct N:1 relationship with Product (FK constraint)
         modelBuilder.Entity<TrackedProduct>()
@@ -115,6 +130,7 @@ public sealed class PrepperBoxDbContext : DbContext
     }
 
     public DbSet<Category> Categories { get; set; }
+    public DbSet<ProductFamily> ProductFamilies { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<StorageLocation> StorageLocations { get; set; }
     public DbSet<TrackedProduct> TrackedProducts { get; set; }

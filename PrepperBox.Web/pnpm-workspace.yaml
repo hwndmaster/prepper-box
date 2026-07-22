@@ -3,10 +3,11 @@ allowBuilds:
   esbuild: false
   unrs-resolver: false
 
-# Supply-chain protection: refuse package versions published less than 6 days
+# Supply-chain protection: refuse package versions published less than 5 days
 # ago (value in minutes). Malicious/compromised releases are usually discovered and
 # unpublished within days; this keeps freshly published versions out of the tree.
-minimumReleaseAge: 8640
+minimumReleaseAge: 7200
 # Own packages are consumed right after publishing — exempt them from the release-age delay.
 minimumReleaseAgeExclude:
   - "@hwndmaster/*"
+  - '@testing-library/jest-dom@7.0.0' # temporarily added

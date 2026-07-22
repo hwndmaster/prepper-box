@@ -6,8 +6,10 @@ import apiClient from "@/api/apiAxios";
 import { convertProductApiToModel } from "@/api/converters/productConverters";
 import LoadingTargets from "@/shared/loadingTargets";
 import Product from "@/models/product";
+import { categoryRef } from "@/models/types";
 import * as api from "@/api/api.generated";
 import { typedSelect } from "../utils";
+import { selectProductFamilyById } from "../productFamilies/selectors";
 import * as productsActions from "./actions";
 import * as productsActionsInternal from "./actionsInternal";
 import { selectProductById } from "./selectors";
@@ -33,13 +35,11 @@ export function* createProductSaga(action: ReturnType<typeof productsActions.cre
             const createRequest: api.CreateProductRequest = {
                 name: action.payload.name,
                 description: action.payload.description,
-                categoryId: action.payload.categoryId,
+                familyId: action.payload.familyId,
                 manufacturer: action.payload.manufacturer,
                 barCode: action.payload.barCode,
                 imageUrl: action.payload.imageUrl,
                 imageSmallUrl: action.payload.imageSmallUrl,
-                unitOfMeasure: action.payload.unitOfMeasure,
-                minimumStockLevel: action.payload.minimumStockLevel,
             };
             const result = yield* callApi(() => apiClient().products.productsPOST(createRequest))
                 .invoke();
@@ -48,9 +48,12 @@ export function* createProductSaga(action: ReturnType<typeof productsActions.cre
                 throw new Error("API did not return created product.");
             }
 
+            // Category, unit and minimum stock are derived from the family for display.
+            const family = yield* typedSelect(selectProductFamilyById, action.payload.familyId);
             const createdProduct: Product = {
                 ...action.payload,
                 id: result.entityId,
+                categoryId: family?.categoryId ?? categoryRef.default(),
                 lastModified: result.lastModified,
                 trackedProductsCount: 0,
                 dateCreated: dateToTicks(new Date()),
@@ -79,13 +82,11 @@ export function* updateProductSaga(action: ReturnType<typeof productsActions.upd
                 lastModified: action.payload.lastModified,
                 name: action.payload.name,
                 description: action.payload.description,
-                categoryId: action.payload.categoryId,
+                familyId: action.payload.familyId,
                 manufacturer: action.payload.manufacturer,
                 barCode: action.payload.barCode,
                 imageUrl: action.payload.imageUrl,
                 imageSmallUrl: action.payload.imageSmallUrl,
-                unitOfMeasure: action.payload.unitOfMeasure,
-                minimumStockLevel: action.payload.minimumStockLevel,
             };
             const result = yield* callApi(() => apiClient().products.productsPUT(updateRequest))
                 .invoke();
@@ -94,9 +95,12 @@ export function* updateProductSaga(action: ReturnType<typeof productsActions.upd
                 throw new Error("API did not return updated product.");
             }
 
+            // The family may have changed, so re-derive category, unit and minimum stock from it.
+            const family = yield* typedSelect(selectProductFamilyById, action.payload.familyId);
             const updatedProduct: Product = {
                 ...existing,
                 ...action.payload,
+                categoryId: family?.categoryId ?? existing.categoryId,
                 lastModified: result.lastModified,
             };
             yield put(productsActionsInternal.setProduct(updatedProduct));

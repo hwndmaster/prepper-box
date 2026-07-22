@@ -15,7 +15,7 @@ namespace Genius.PrepperBox.Db.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.9");
 
             modelBuilder.Entity("Genius.PrepperBox.Db.Models.Category", b =>
                 {
@@ -82,14 +82,14 @@ namespace Genius.PrepperBox.Db.Migrations
                     b.Property<string>("BarCode")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<long>("DateCreated")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("FamilyId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ImageSmallUrl")
                         .HasColumnType("TEXT");
@@ -103,6 +103,32 @@ namespace Genius.PrepperBox.Db.Migrations
                     b.Property<string>("Manufacturer")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Genius.PrepperBox.Db.Models.ProductFamily", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("DateCreated")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("MinimumStockLevel")
                         .HasColumnType("INTEGER");
 
@@ -115,9 +141,10 @@ namespace Genius.PrepperBox.Db.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CategoryId", "Name")
+                        .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("ProductFamilies");
                 });
 
             modelBuilder.Entity("Genius.PrepperBox.Db.Models.StorageLocation", b =>
@@ -190,10 +217,21 @@ namespace Genius.PrepperBox.Db.Migrations
 
             modelBuilder.Entity("Genius.PrepperBox.Db.Models.Product", b =>
                 {
-                    b.HasOne("Genius.PrepperBox.Db.Models.Category", "Category")
+                    b.HasOne("Genius.PrepperBox.Db.Models.ProductFamily", "ProductFamily")
                         .WithMany("Products")
+                        .HasForeignKey("FamilyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ProductFamily");
+                });
+
+            modelBuilder.Entity("Genius.PrepperBox.Db.Models.ProductFamily", b =>
+                {
+                    b.HasOne("Genius.PrepperBox.Db.Models.Category", "Category")
+                        .WithMany("ProductFamilies")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -220,7 +258,7 @@ namespace Genius.PrepperBox.Db.Migrations
 
             modelBuilder.Entity("Genius.PrepperBox.Db.Models.Category", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("ProductFamilies");
                 });
 
             modelBuilder.Entity("Genius.PrepperBox.Db.Models.Product", b =>
@@ -228,6 +266,11 @@ namespace Genius.PrepperBox.Db.Migrations
                     b.Navigation("ConsumptionLogs");
 
                     b.Navigation("TrackedProducts");
+                });
+
+            modelBuilder.Entity("Genius.PrepperBox.Db.Models.ProductFamily", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

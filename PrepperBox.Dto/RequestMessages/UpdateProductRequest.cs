@@ -1,4 +1,3 @@
-using Genius.PrepperBox.Db.Models;
 using Genius.PrepperBox.Dto.References;
 
 namespace Genius.PrepperBox.Dto.RequestMessages;
@@ -8,11 +7,9 @@ public sealed record UpdateProductRequest(
     DateTimeOffset LastModified,
     string Name,
     string? Description,
-    CategoryRef CategoryId,
+    ProductFamilyRef FamilyId,
     string? Manufacturer,
     string? BarCode,
     string? ImageUrl,
-    string? ImageSmallUrl,
-    UnitOfMeasure UnitOfMeasure,
-    int MinimumStockLevel
+    string? ImageSmallUrl
 ) : IPrimaryInt32Id<ProductRef>, ITimeStamped;
