@@ -2,7 +2,7 @@ import { z } from "zod";
 import { requiredIntRef } from "@hwndmaster/atom-react-core";
 import { CategoryRef, ProductFamilyRef } from "@/models/types";
 
-export const productFormSchema = z.object({
+export const productSchema = z.object({
     name: z.string().min(1, "Name is required"),
     description: z.string().optional(),
     categoryId: requiredIntRef<CategoryRef>("Category is required"),
@@ -13,4 +13,4 @@ export const productFormSchema = z.object({
     imageSmallUrl: z.string().optional(),
 });
 
-export type ProductFormData = z.infer<typeof productFormSchema>;
+export type ProductSchemaData = z.infer<typeof productSchema>;

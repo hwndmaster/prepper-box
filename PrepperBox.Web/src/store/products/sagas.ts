@@ -1,9 +1,10 @@
 import { put } from "redux-saga/effects";
 import { dateToTicks } from "@hwndmaster/atom-web-core";
-import { callApi, withCallback, withLoading } from "@hwndmaster/atom-react-redux";
+import { callApi, withCallback, withLoading, withValidatableCallback } from "@hwndmaster/atom-react-redux";
 import { type SagaGenerator } from "@hwndmaster/atom-react-redux";
 import apiClient from "@/api/apiAxios";
 import { convertProductApiToModel } from "@/api/converters/productConverters";
+import { mapProductValidationField } from "@/api/fieldMapping/productFieldMapping";
 import LoadingTargets from "@/shared/loadingTargets";
 import Product from "@/models/product";
 import { categoryRef } from "@/models/types";
@@ -31,7 +32,7 @@ export function* fetchProductsSaga(): Generator<unknown, void, unknown> {
  */
 export function* createProductSaga(action: ReturnType<typeof productsActions.createProduct>): SagaGenerator {
     yield* withLoading(LoadingTargets.ActiveView, function* () {
-        yield* withCallback(action.meta, function* () {
+        yield* withValidatableCallback(action.meta, { mapValidationField: mapProductValidationField }, function* () {
             const createRequest: api.CreateProductRequest = {
                 name: action.payload.name,
                 description: action.payload.description,
@@ -71,7 +72,7 @@ export function* createProductSaga(action: ReturnType<typeof productsActions.cre
  */
 export function* updateProductSaga(action: ReturnType<typeof productsActions.updateProduct>): SagaGenerator {
     yield* withLoading(LoadingTargets.ActiveView, function* () {
-        yield* withCallback(action.meta, function* () {
+        yield* withValidatableCallback(action.meta, { mapValidationField: mapProductValidationField }, function* () {
             const existing: Product | undefined = yield* typedSelect(selectProductById, action.payload.id);
             if (existing == null) {
                 throw new Error(`Cannot update product with ID ${action.payload.id} because it does not exist in the store.`);

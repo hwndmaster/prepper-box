@@ -1,10 +1,11 @@
 import { put } from "redux-saga/effects";
 import { dateToTicks } from "@hwndmaster/atom-web-core";
-import { callApi, withCallback, withLoading } from "@hwndmaster/atom-react-redux";
+import { callApi, withCallback, withLoading, withValidatableCallback } from "@hwndmaster/atom-react-redux";
 import { type SagaGenerator } from "@hwndmaster/atom-react-redux";
 import * as api from "@/api/api.generated";
 import apiClient from "@/api/apiAxios";
 import { convertStorageLocationApiToModel } from "@/api/converters/storageLocationConverters";
+import { mapStorageLocationValidationField } from "@/api/fieldMapping/storageLocationFieldMapping";
 import LoadingTargets from "@/shared/loadingTargets";
 import StorageLocation from "@/models/storageLocation";
 import { typedSelect } from "../utils";
@@ -28,7 +29,7 @@ export function* fetchStorageLocationsSaga(): SagaGenerator {
  */
 export function* createStorageLocationSaga(action: ReturnType<typeof storageLocationsActions.createStorageLocation>): SagaGenerator {
     yield* withLoading(LoadingTargets.ActiveView, function* () {
-        yield* withCallback(action.meta, function* () {
+        yield* withValidatableCallback(action.meta, { mapValidationField: mapStorageLocationValidationField }, function* () {
             const createRequest: api.CreateStorageLocationRequest = {
                 name: action.payload.name,
             };
@@ -57,7 +58,7 @@ export function* createStorageLocationSaga(action: ReturnType<typeof storageLoca
  */
 export function* updateStorageLocationSaga(action: ReturnType<typeof storageLocationsActions.updateStorageLocation>): SagaGenerator {
     yield* withLoading(LoadingTargets.ActiveView, function* () {
-        yield* withCallback(action.meta, function* () {
+        yield* withValidatableCallback(action.meta, { mapValidationField: mapStorageLocationValidationField }, function* () {
             const existingStorageLocation: StorageLocation | undefined = yield* typedSelect(selectStorageLocationById, action.payload.id);
             if (existingStorageLocation == null) {
                 throw new Error(`Cannot update storage location with ID ${action.payload.id} because it does not exist in the store.`);

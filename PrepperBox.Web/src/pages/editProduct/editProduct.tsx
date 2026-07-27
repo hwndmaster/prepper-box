@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { goTo } from "@hwndmaster/atom-react-core";
+import { goTo, FormValidationErrors } from "@hwndmaster/atom-react-core";
 import { inputDateToTicks } from "@hwndmaster/atom-web-core";
 import { toastService } from "@hwndmaster/atom-react-prime";
 import * as store from "@/store";
@@ -8,8 +8,8 @@ import { productRef } from "@/models/types";
 import AppRoutes from "@/shared/routes";
 import { Button, confirmDialog } from "@/primereact";
 import { ProductForm } from "@/components/productForm";
-import type { ProductFormData } from "@/components/productForm";
-import type { TrackedProductFormData } from "@/components/trackedProductForm";
+import type { ProductSchemaData } from "@/schemas/productSchema";
+import type { TrackedProductSchemaData } from "@/schemas/trackedProductSchema";
 import styles from "./editProduct.module.scss";
 
 const EditProduct: React.FC = () => {
@@ -25,7 +25,7 @@ const EditProduct: React.FC = () => {
         [products, productId]
     );
 
-    const handleSubmit = (data: ProductFormData, pendingTrackedProducts: TrackedProductFormData[]): void => {
+    const handleSubmit = (data: ProductSchemaData, pendingTrackedProducts: TrackedProductSchemaData[], translateErrors: (errors: FormValidationErrors<ProductSchemaData>) => void): void => {
         if (product == null) {
             return;
         }
@@ -41,6 +41,7 @@ const EditProduct: React.FC = () => {
                 imageUrl: data.imageUrl,
                 imageSmallUrl: data.imageSmallUrl,
             },
+            translateErrors,
             (savedProductId) => {
                 if (savedProductId != null && pendingTrackedProducts.length > 0) {
                     for (const tp of pendingTrackedProducts) {

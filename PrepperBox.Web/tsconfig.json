@@ -13,8 +13,7 @@
       "vitest/globals", "@testing-library/jest-dom"
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@testing/*": ["./src/__tests__/*"]
+      "@/*": ["./src/*"]
     }
   },
 }

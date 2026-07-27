@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { FormValidationErrors } from "@hwndmaster/atom-react-core";
 import { LoadingSpinner } from "@hwndmaster/atom-react-redux";
 import { Button, Column, confirmDialog, DataTable } from "@/primereact";
 import * as store from "@/store";
 import StorageLocation from "@/models/storageLocation";
 import { storageLocationRef, StorageLocationRef } from "@/models/types";
 import LoadingTargets from "@/shared/loadingTargets";
-import { EditStorageLocation, EditStorageLocationFormData } from "@/components/editStorageLocation";
+import { EditStorageLocation } from "@/components/editStorageLocation";
+import type { StorageLocationSchemaData } from "@/schemas/storageLocationSchema";
 import styles from "./storageLocations.module.scss";
 
 const EmptyStorageLocation: StorageLocation = {
@@ -35,18 +37,18 @@ const StorageLocations: React.FC = () => {
         setIsDialogVisible(true);
     };
 
-    const handleSave = (data: EditStorageLocationFormData): void => {
+    const handleSave = (data: StorageLocationSchemaData, translateErrors: (errors: FormValidationErrors<StorageLocationSchemaData>) => void): void => {
         const updated: StorageLocation = {
             ...editingLocation,
             name: data.name,
         };
 
         if (editingLocation.id === storageLocationRef.default()) {
-            dispatch(store.StorageLocations.Actions.createStorageLocation(updated, () => {
+            dispatch(store.StorageLocations.Actions.createStorageLocation(updated, translateErrors, () => {
                 setIsDialogVisible(false);
             }));
         } else {
-            dispatch(store.StorageLocations.Actions.updateStorageLocation(updated, () => {
+            dispatch(store.StorageLocations.Actions.updateStorageLocation(updated, translateErrors, () => {
                 setIsDialogVisible(false);
             }));
         }

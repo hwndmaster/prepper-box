@@ -1,9 +1,10 @@
 import { createAction } from "@reduxjs/toolkit";
-import { createActionWithMeta } from "@hwndmaster/atom-react-redux";
+import { createActionWithMeta, createActionWithMetaValidatable } from "@hwndmaster/atom-react-redux";
 import { ProductFamilyRef } from "@/models/types";
+import type { ProductFamilySchemaData } from "@/schemas/productFamilySchema";
 import { CreateProductFamilyRequest, UpdateProductFamilyRequest } from "./messages";
 
 export const fetchProductFamilies = createAction<void>("productFamilies/fetch");
-export const createProductFamily = createActionWithMeta<CreateProductFamilyRequest, ProductFamilyRef>("productFamilies/createProductFamily");
-export const updateProductFamily = createActionWithMeta<UpdateProductFamilyRequest, ProductFamilyRef>("productFamilies/updateProductFamily");
+export const createProductFamily = createActionWithMetaValidatable<CreateProductFamilyRequest, ProductFamilyRef, ProductFamilySchemaData>("productFamilies/createProductFamily");
+export const updateProductFamily = createActionWithMetaValidatable<UpdateProductFamilyRequest, ProductFamilyRef, ProductFamilySchemaData>("productFamilies/updateProductFamily");
 export const deleteProductFamily = createActionWithMeta<ProductFamilyRef>("productFamilies/deleteProductFamily");

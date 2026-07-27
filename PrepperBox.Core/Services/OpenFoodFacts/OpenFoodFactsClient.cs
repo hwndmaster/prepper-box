@@ -55,10 +55,10 @@ internal sealed class OpenFoodFactsClient : IOpenFoodFactsClient
         }
 
         // Strip parenthetical groups like "(42 x 15 g)" and trim
-        var cleaned = Regex.Replace(quantityString.Trim(), @"\(.*?\)", "").Trim();
+        var cleaned = Regex.Replace(quantityString.Trim(), @"\(.*?\)", "", RegexOptions.None, Constants.StandardRegexTimeout).Trim();
 
         // Match a leading number (int or decimal with . or ,) optionally separated by whitespace from a unit
-        var match = Regex.Match(cleaned, @"^(\d+(?:[.,]\d+)?)\s*([a-zA-Z]+)", RegexOptions.IgnoreCase);
+        var match = Regex.Match(cleaned, @"^(\d+(?:[.,]\d+)?)\s*([a-zA-Z]+)", RegexOptions.IgnoreCase, Constants.StandardRegexTimeout);
         if (!match.Success)
         {
             return null;

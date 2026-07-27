@@ -1,27 +1,27 @@
 import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAtomForm } from "@hwndmaster/atom-react-core";
+import { translateErrorsToForm, useAtomForm, FormValidationErrors } from "@hwndmaster/atom-react-core";
 import { FormInputText, FormInputNumber, FormDropdown } from "@hwndmaster/atom-react-prime";
 import { Button, Dialog } from "@/primereact";
 import ProductFamily from "@/models/productFamily";
 import { productFamilyRef } from "@/models/types";
 import { UnitOfMeasure } from "@/models/unitOfMeasure";
 import { UnitOfMeasureOptions } from "@/shared/unitOfMeasureLabels";
-import { editProductFamilySchema, EditProductFamilyFormData } from "./editProductFamily.schema";
+import { productFamilySchema, ProductFamilySchemaData } from "@/schemas/productFamilySchema";
 import styles from "./editProductFamily.module.scss";
 
 interface EditProductFamilyProps {
     family: ProductFamily | null;
     visible: boolean;
-    onSave: (data: EditProductFamilyFormData) => void;
+    onSave: (data: ProductFamilySchemaData, translateErrors: (errors: FormValidationErrors<ProductFamilySchemaData>) => void) => void;
     onHide: () => void;
 }
 
 const EditProductFamily: React.FC<EditProductFamilyProps> = ({ family, visible, onSave, onHide }) => {
     const isNew = family == null || family.id === productFamilyRef.default();
 
-    const form = useAtomForm<EditProductFamilyFormData>({
-        resolver: zodResolver(editProductFamilySchema),
+    const form = useAtomForm<ProductFamilySchemaData>({
+        resolver: zodResolver(productFamilySchema),
         defaultValues: {
             name: "",
             unitOfMeasure: UnitOfMeasure.Piece,
@@ -39,8 +39,9 @@ const EditProductFamily: React.FC<EditProductFamilyProps> = ({ family, visible, 
         }
     }, [visible, family, form]);
 
-    const handleSubmit = (data: EditProductFamilyFormData): void => {
-        onSave(data);
+    const handleSubmit = (data: ProductFamilySchemaData): void => {
+        form.clearErrors();
+        onSave(data, translateErrorsToForm(form));
     };
 
     return (

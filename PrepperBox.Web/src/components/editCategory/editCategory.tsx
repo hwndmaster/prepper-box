@@ -1,25 +1,25 @@
 import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAtomForm } from "@hwndmaster/atom-react-core";
+import { translateErrorsToForm, useAtomForm, FormValidationErrors } from "@hwndmaster/atom-react-core";
 import { FormInputText } from "@hwndmaster/atom-react-prime";
 import { Button, Dialog } from "@/primereact";
 import Category from "@/models/category";
 import { categoryRef } from "@/models/types";
-import { editCategorySchema, EditCategoryFormData } from "./editCategory.schema";
+import { categorySchema, CategorySchemaData } from "@/schemas/categorySchema";
 import styles from "./editCategory.module.scss";
 
 interface EditCategoryProps {
     category: Category | null;
     visible: boolean;
-    onSave: (data: EditCategoryFormData) => void;
+    onSave: (data: CategorySchemaData, translateErrors: (errors: FormValidationErrors<CategorySchemaData>) => void) => void;
     onHide: () => void;
 }
 
 const EditCategory: React.FC<EditCategoryProps> = ({ category, visible, onSave, onHide }) => {
     const isNew = category == null || category.id === categoryRef.default();
 
-    const form = useAtomForm<EditCategoryFormData>({
-        resolver: zodResolver(editCategorySchema),
+    const form = useAtomForm<CategorySchemaData>({
+        resolver: zodResolver(categorySchema),
         defaultValues: {
             name: "",
             description: "",
@@ -37,8 +37,9 @@ const EditCategory: React.FC<EditCategoryProps> = ({ category, visible, onSave, 
         }
     }, [visible, category, form]);
 
-    const handleSubmit = (data: EditCategoryFormData): void => {
-        onSave(data);
+    const handleSubmit = (data: CategorySchemaData): void => {
+        form.clearErrors();
+        onSave(data, translateErrorsToForm(form));
     };
 
     return (

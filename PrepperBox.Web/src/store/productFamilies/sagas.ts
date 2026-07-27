@@ -1,9 +1,10 @@
 import { put } from "redux-saga/effects";
 import { dateToTicks } from "@hwndmaster/atom-web-core";
-import { callApi, withCallback, withLoading } from "@hwndmaster/atom-react-redux";
+import { callApi, withCallback, withLoading, withValidatableCallback } from "@hwndmaster/atom-react-redux";
 import { type SagaGenerator } from "@hwndmaster/atom-react-redux";
 import apiClient from "@/api/apiAxios";
 import { convertProductFamilyApiToModel } from "@/api/converters/productFamilyConverters";
+import { mapProductFamilyValidationField } from "@/api/fieldMapping/productFamilyFieldMapping";
 import LoadingTargets from "@/shared/loadingTargets";
 import ProductFamily from "@/models/productFamily";
 import { UnitOfMeasure } from "@/models/unitOfMeasure";
@@ -30,7 +31,7 @@ export function* fetchProductFamiliesSaga(): Generator<unknown, void, unknown> {
  */
 export function* createProductFamilySaga(action: ReturnType<typeof productFamiliesActions.createProductFamily>): SagaGenerator {
     yield* withLoading(LoadingTargets.ActiveView, function* () {
-        yield* withCallback(action.meta, function* () {
+        yield* withValidatableCallback(action.meta, { mapValidationField: mapProductFamilyValidationField }, function* () {
             const createRequest: api.CreateProductFamilyRequest = {
                 categoryId: action.payload.categoryId,
                 name: action.payload.name,
@@ -67,7 +68,7 @@ export function* createProductFamilySaga(action: ReturnType<typeof productFamili
  */
 export function* updateProductFamilySaga(action: ReturnType<typeof productFamiliesActions.updateProductFamily>): SagaGenerator {
     yield* withLoading(LoadingTargets.ActiveView, function* () {
-        yield* withCallback(action.meta, function* () {
+        yield* withValidatableCallback(action.meta, { mapValidationField: mapProductFamilyValidationField }, function* () {
             const existing: ProductFamily | undefined = yield* typedSelect(selectProductFamilyById, action.payload.id);
             if (existing == null) {
                 throw new Error(`Cannot update product family with ID ${action.payload.id} because it does not exist in the store.`);

@@ -1,25 +1,25 @@
 import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAtomForm } from "@hwndmaster/atom-react-core";
+import { translateErrorsToForm, useAtomForm, FormValidationErrors } from "@hwndmaster/atom-react-core";
 import { FormInputText } from "@hwndmaster/atom-react-prime";
 import { Button, Dialog } from "@/primereact";
 import StorageLocation from "@/models/storageLocation";
 import { storageLocationRef } from "@/models/types";
-import { editStorageLocationSchema, EditStorageLocationFormData } from "./editStorageLocation.schema";
+import { storageLocationSchema, StorageLocationSchemaData } from "@/schemas/storageLocationSchema";
 import styles from "./editStorageLocation.module.scss";
 
 interface EditStorageLocationProps {
     storageLocation: StorageLocation | null;
     visible: boolean;
-    onSave: (data: EditStorageLocationFormData) => void;
+    onSave: (data: StorageLocationSchemaData, translateErrors: (errors: FormValidationErrors<StorageLocationSchemaData>) => void) => void;
     onHide: () => void;
 }
 
 const EditStorageLocation: React.FC<EditStorageLocationProps> = ({ storageLocation, visible, onSave, onHide }) => {
     const isNew = storageLocation == null || storageLocation.id === storageLocationRef.default();
 
-    const form = useAtomForm<EditStorageLocationFormData>({
-        resolver: zodResolver(editStorageLocationSchema),
+    const form = useAtomForm<StorageLocationSchemaData>({
+        resolver: zodResolver(storageLocationSchema),
         defaultValues: {
             name: "",
         },
@@ -33,8 +33,9 @@ const EditStorageLocation: React.FC<EditStorageLocationProps> = ({ storageLocati
         }
     }, [visible, storageLocation, form]);
 
-    const handleSubmit = (data: EditStorageLocationFormData): void => {
-        onSave(data);
+    const handleSubmit = (data: StorageLocationSchemaData): void => {
+        form.clearErrors();
+        onSave(data, translateErrorsToForm(form));
     };
 
     return (

@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { goTo, useAtomForm } from "@hwndmaster/atom-react-core";
+import { goTo, translateErrorsToForm, useAtomForm } from "@hwndmaster/atom-react-core";
 import { inputDateToTicks } from "@hwndmaster/atom-web-core";
 import { toastService } from "@hwndmaster/atom-react-prime";
 import { Button } from "@/primereact";
 import * as store from "@/store";
 import { productRef, storageLocationRef } from "@/models/types";
 import AppRoutes from "@/shared/routes";
-import { TrackedProductFormFields, trackedProductFormSchema } from "@/components/trackedProductForm";
-import type { TrackedProductFormData } from "@/components/trackedProductForm";
+import { TrackedProductFormFields } from "@/components/trackedProductForm";
+import { trackedProductSchema, TrackedProductSchemaData } from "@/schemas/trackedProductSchema";
 import styles from "./addTrackedProduct.module.scss";
 
 const AddTrackedProduct: React.FC = () => {
@@ -30,8 +30,8 @@ const AddTrackedProduct: React.FC = () => {
         dispatch(store.StorageLocations.Actions.fetchStorageLocations());
     }, [dispatch]);
 
-    const form = useAtomForm<TrackedProductFormData>({
-        resolver: zodResolver(trackedProductFormSchema),
+    const form = useAtomForm<TrackedProductSchemaData>({
+        resolver: zodResolver(trackedProductSchema),
         defaultValues: {
             quantity: 1,
             storageLocationId: storageLocationRef.default(),
@@ -40,7 +40,8 @@ const AddTrackedProduct: React.FC = () => {
         },
     });
 
-    const handleSubmit = (data: TrackedProductFormData): void => {
+    const handleSubmit = (data: TrackedProductSchemaData): void => {
+        form.clearErrors();
         dispatch(store.TrackedProducts.Actions.createTrackedProduct(
             {
                 productId: productRef(productIdValue),
@@ -49,6 +50,7 @@ const AddTrackedProduct: React.FC = () => {
                 expirationDate: inputDateToTicks(data.expirationDate),
                 notes: data.notes
             },
+            translateErrorsToForm(form),
             () => {
                 toastService.showSuccess("Tracked product added successfully.");
                 void goTo(navigate, AppRoutes.Default, undefined, { selectedCategoryId: locationState?.selectedCategoryId ?? 0 });

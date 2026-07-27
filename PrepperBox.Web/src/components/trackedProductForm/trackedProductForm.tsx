@@ -5,11 +5,11 @@ import { useAtomForm } from "@hwndmaster/atom-react-core";
 import { FormDropdown, FormInputNumber, FormInputText, FormInputTextarea } from "@hwndmaster/atom-react-prime";
 import * as store from "@/store";
 import { storageLocationRef } from "@/models/types";
-import { trackedProductFormSchema, TrackedProductFormData } from "./trackedProductForm.schema";
+import { trackedProductSchema, TrackedProductSchemaData } from "@/schemas/trackedProductSchema";
 import styles from "./trackedProductForm.module.scss";
 
 interface TrackedProductFormFieldsProps {
-    form: UseFormReturn<TrackedProductFormData>;
+    form: UseFormReturn<TrackedProductSchemaData>;
 }
 
 const TrackedProductFormFields: React.FC<TrackedProductFormFieldsProps> = ({ form }) => {
@@ -49,9 +49,9 @@ const TrackedProductFormFields: React.FC<TrackedProductFormFieldsProps> = ({ for
 /**
  * Custom hook to initialize the form for tracked products with default values and validation schema.
  */
-function useTrackedProductForm(): UseFormReturn<TrackedProductFormData> {
-    return useAtomForm<TrackedProductFormData>({
-        resolver: zodResolver(trackedProductFormSchema),
+function useTrackedProductForm(): UseFormReturn<TrackedProductSchemaData> {
+    return useAtomForm<TrackedProductSchemaData>({
+        resolver: zodResolver(trackedProductSchema),
         defaultValues: {
             quantity: 1,
             storageLocationId: storageLocationRef.default(),
@@ -61,6 +61,5 @@ function useTrackedProductForm(): UseFormReturn<TrackedProductFormData> {
     });
 }
 
-export type { TrackedProductFormData };
 export { TrackedProductFormFields, useTrackedProductForm };
 

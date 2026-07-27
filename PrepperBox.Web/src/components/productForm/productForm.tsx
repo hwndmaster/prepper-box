@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAtomForm } from "@hwndmaster/atom-react-core";
+import { translateErrorsToForm, useAtomForm, FormValidationErrors } from "@hwndmaster/atom-react-core";
 import { toastService, FormInputText, FormDropdown, FormInputTextarea } from "@hwndmaster/atom-react-prime";
 import { Button, Divider } from "@/primereact";
 import * as store from "@/store";
@@ -9,21 +9,21 @@ import Product from "@/models/product";
 import OpenFoodFactsProduct from "@/models/openFoodFactsProduct";
 
 import { TrackedProductFormFields, useTrackedProductForm } from "@/components/trackedProductForm";
-import type { TrackedProductFormData } from "@/components/trackedProductForm";
+import { productSchema, ProductSchemaData } from "@/schemas/productSchema";
+import type { TrackedProductSchemaData } from "@/schemas/trackedProductSchema";
 import BarCodeSuggestions from "./BarCodeSuggestions";
-import { productFormSchema, ProductFormData } from "./productForm.schema";
 import styles from "./productForm.module.scss";
 
 interface PendingTrackedProduct {
     key: number;
-    data: TrackedProductFormData;
+    data: TrackedProductSchemaData;
 }
 
 interface ProductFormProps {
     product?: Product;
     initialBarCode?: string;
     submitLabel: string;
-    onSubmit: (data: ProductFormData, pendingTrackedProducts: TrackedProductFormData[]) => void;
+    onSubmit: (data: ProductSchemaData, pendingTrackedProducts: TrackedProductSchemaData[], translateErrors: (errors: FormValidationErrors<ProductSchemaData>) => void) => void;
     onCancel: () => void;
 }
 
@@ -46,8 +46,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
         dispatch(store.StorageLocations.Actions.fetchStorageLocations());
     }, [dispatch]);
 
-    const form = useAtomForm<ProductFormData>({
-        resolver: zodResolver(productFormSchema),
+    const form = useAtomForm<ProductSchemaData>({
+        resolver: zodResolver(productSchema),
         defaultValues: {
             name: product?.name ?? "",
             description: product?.description ?? undefined,
@@ -131,7 +131,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
         setBarCodeSuggestions([]);
     };
 
-    const handleAddTrackedProduct = (data: TrackedProductFormData): void => {
+    const handleAddTrackedProduct = (data: TrackedProductSchemaData): void => {
         setPendingTrackedProducts((prev) => [...prev, { key: nextKey, data }]);
         setNextKey((k) => k + 1);
         setIsShowingTrackedProductForm(false);
@@ -147,7 +147,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
             toastService.showWarn("Please confirm or cancel the pending tracked product before submitting.");
             return;
         }
-        onSubmit(data, pendingTrackedProducts.map((tp) => tp.data));
+        form.clearErrors();
+        onSubmit(data, pendingTrackedProducts.map((tp) => tp.data), translateErrorsToForm(form));
     });
 
     return (
@@ -266,5 +267,5 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
     );
 };
 
-export type { ProductFormData, ProductFormProps };
+export type { ProductFormProps };
 export default ProductForm;

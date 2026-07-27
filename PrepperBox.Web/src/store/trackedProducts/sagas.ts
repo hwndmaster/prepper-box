@@ -1,9 +1,10 @@
 import { put } from "redux-saga/effects";
 import { dateToTicks } from "@hwndmaster/atom-web-core";
-import { callApi, withCallback, withLoading } from "@hwndmaster/atom-react-redux";
+import { callApi, withCallback, withLoading, withValidatableCallback } from "@hwndmaster/atom-react-redux";
 import { type SagaGenerator } from "@hwndmaster/atom-react-redux";
 import apiClient from "@/api/apiAxios";
 import { convertTrackedProductApiToModel } from "@/api/converters/trackedProductConverters";
+import { mapTrackedProductValidationField } from "@/api/fieldMapping/trackedProductFieldMapping";
 import LoadingTargets from "@/shared/loadingTargets";
 import TrackedProduct from "@/models/trackedProduct";
 import * as api from "@/api/api.generated";
@@ -29,7 +30,7 @@ export function* fetchTrackedProductsSaga(): Generator<unknown, void, unknown> {
  */
 export function* createTrackedProductSaga(action: ReturnType<typeof trackedProductsActions.createTrackedProduct>): SagaGenerator {
     yield* withLoading(LoadingTargets.ActiveView, function* () {
-        yield* withCallback(action.meta, function* () {
+        yield* withValidatableCallback(action.meta, { mapValidationField: mapTrackedProductValidationField }, function* () {
             const createRequest: api.CreateTrackedProductRequest = {
                 productId: action.payload.productId,
                 storageLocationId: action.payload.storageLocationId,
@@ -63,7 +64,7 @@ export function* createTrackedProductSaga(action: ReturnType<typeof trackedProdu
  */
 export function* updateTrackedProductSaga(action: ReturnType<typeof trackedProductsActions.updateTrackedProduct>): SagaGenerator {
     yield* withLoading(LoadingTargets.ActiveView, function* () {
-        yield* withCallback(action.meta, function* () {
+        yield* withValidatableCallback(action.meta, { mapValidationField: mapTrackedProductValidationField }, function* () {
             const existing: TrackedProduct | undefined = yield* typedSelect(selectTrackedProductById, action.payload.id);
             if (existing == null) {
                 throw new Error(`Cannot update product with ID ${action.payload.id} because it does not exist in the store.`);

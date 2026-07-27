@@ -1,9 +1,10 @@
 import { put } from "redux-saga/effects";
 import { dateToTicks } from "@hwndmaster/atom-web-core";
-import { callApi, withCallback, withLoading } from "@hwndmaster/atom-react-redux";
+import { callApi, withCallback, withLoading, withValidatableCallback } from "@hwndmaster/atom-react-redux";
 import { type SagaGenerator } from "@hwndmaster/atom-react-redux";
 import apiClient from "@/api/apiAxios";
 import { convertCategoryApiToModel } from "@/api/converters/categoryConverters";
+import { mapCategoryValidationField } from "@/api/fieldMapping/categoryFieldMapping";
 import LoadingTargets from "@/shared/loadingTargets";
 import Category from "@/models/category";
 import * as api from "@/api/api.generated";
@@ -31,7 +32,7 @@ export function* fetchCategoriesSaga(): Generator<unknown, void, unknown> {
  */
 export function* createCategorySaga(action: ReturnType<typeof categoriesActions.createCategory>): SagaGenerator {
     yield* withLoading(LoadingTargets.ActiveView, function* () {
-        yield* withCallback(action.meta, function* () {
+        yield* withValidatableCallback(action.meta, { mapValidationField: mapCategoryValidationField }, function* () {
             const createRequest: api.CreateCategoryRequest = {
                 name: action.payload.name,
                 description: action.payload.description,
@@ -64,7 +65,7 @@ export function* createCategorySaga(action: ReturnType<typeof categoriesActions.
  */
 export function* updateCategorySaga(action: ReturnType<typeof categoriesActions.updateCategory>): SagaGenerator {
     yield* withLoading(LoadingTargets.ActiveView, function* () {
-        yield* withCallback(action.meta, function* () {
+        yield* withValidatableCallback(action.meta, { mapValidationField: mapCategoryValidationField }, function* () {
             const existing: Category | undefined = yield* typedSelect(selectCategoryById, action.payload.id);
             if (existing == null) {
                 throw new Error(`Cannot update category with ID ${action.payload.id} because it does not exist in the store.`);

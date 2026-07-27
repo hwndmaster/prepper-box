@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { FormValidationErrors } from "@hwndmaster/atom-react-core";
 import { LoadingSpinner } from "@hwndmaster/atom-react-redux";
 import { Button, Column, confirmDialog, DataTable, type DataTableExpandedRows } from "@/primereact";
 import * as store from "@/store";
@@ -8,8 +9,10 @@ import { categoryRef, CategoryRef } from "@/models/types";
 import LoadingTargets from "@/shared/loadingTargets";
 import { getCategoryIconClass } from "@/shared/categoryIcons";
 import { UnitOfMeasureLabels } from "@/shared/unitOfMeasureLabels";
-import { EditCategory, EditCategoryFormData } from "@/components/editCategory";
-import { EditProductFamily, EditProductFamilyFormData } from "@/components/editProductFamily";
+import { EditCategory } from "@/components/editCategory";
+import { EditProductFamily } from "@/components/editProductFamily";
+import type { CategorySchemaData } from "@/schemas/categorySchema";
+import type { ProductFamilySchemaData } from "@/schemas/productFamilySchema";
 import styles from "./categories.module.scss";
 
 const EmptyCategory: Category = {
@@ -47,7 +50,7 @@ const Categories: React.FC = () => {
         setIsDialogVisible(true);
     };
 
-    const handleSave = (data: EditCategoryFormData): void => {
+    const handleSave = (data: CategorySchemaData, translateErrors: (errors: FormValidationErrors<CategorySchemaData>) => void): void => {
         const updated: Category = {
             ...editingCategory,
             name: data.name,
@@ -56,11 +59,11 @@ const Categories: React.FC = () => {
         };
 
         if (editingCategory.id === categoryRef.default()) {
-            dispatch(store.Categories.Actions.createCategory(updated, () => {
+            dispatch(store.Categories.Actions.createCategory(updated, translateErrors, () => {
                 setIsDialogVisible(false);
             }));
         } else {
-            dispatch(store.Categories.Actions.updateCategory(updated, () => {
+            dispatch(store.Categories.Actions.updateCategory(updated, translateErrors, () => {
                 setIsDialogVisible(false);
             }));
         }
@@ -90,14 +93,14 @@ const Categories: React.FC = () => {
         setIsFamilyDialogVisible(true);
     };
 
-    const handleSaveFamily = (data: EditProductFamilyFormData): void => {
+    const handleSaveFamily = (data: ProductFamilySchemaData, translateErrors: (errors: FormValidationErrors<ProductFamilySchemaData>) => void): void => {
         if (editingFamily == null) {
             dispatch(store.ProductFamilies.Actions.createProductFamily({
                 categoryId: familyCategoryId,
                 name: data.name,
                 unitOfMeasure: data.unitOfMeasure,
                 minimumStockLevel: data.minimumStockLevel,
-            }, () => {
+            }, translateErrors, () => {
                 setIsFamilyDialogVisible(false);
             }));
         } else {
@@ -108,7 +111,7 @@ const Categories: React.FC = () => {
                 name: data.name,
                 unitOfMeasure: data.unitOfMeasure,
                 minimumStockLevel: data.minimumStockLevel,
-            }, () => {
+            }, translateErrors, () => {
                 setIsFamilyDialogVisible(false);
             }));
         }
