@@ -11,4 +11,4 @@ public sealed record TrackedProductDto(
     string? Notes,
     DateTimeOffset DateCreated,
     DateTimeOffset LastModified
-);
+) : IEntity<int, TrackedProductRef>;

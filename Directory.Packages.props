@@ -10,6 +10,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
     <!-- Kept in lockstep with Atom's FrameworkPackageVersion — the locally built Atom.Web references this exact version. -->
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(FrameworkPackageVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="$(FrameworkPackageVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.8" />
@@ -21,9 +22,13 @@
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
 
+    <!-- Test coverage -->
+    <PackageVersion Include="coverlet.msbuild" Version="10.0.1" />
+
     <!-- Atom Framework -->
     <PackageVersion Include="Genius.Atom.Data" Version="$(AtomPackageVersion)" />
     <PackageVersion Include="Genius.Atom.Data.Ef" Version="$(AtomPackageVersion)" />
+    <PackageVersion Include="Genius.Atom.Data.Ef.TestingUtil" Version="$(AtomPackageVersion)" />
     <PackageVersion Include="Genius.Atom.Data.Generators" Version="$(AtomPackageVersion)" />
     <PackageVersion Include="Genius.Atom.Infrastructure" Version="$(AtomPackageVersion)" />
     <PackageVersion Include="Genius.Atom.Infrastructure.TestingUtil" Version="$(AtomPackageVersion)" />

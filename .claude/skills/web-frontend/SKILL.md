@@ -19,7 +19,7 @@ React 19 + TypeScript SPA. State via Redux Toolkit + redux-saga (+ redux-persist
 | Build                 | `pnpm build`                                |
 | Lint                  | `pnpm lint` (eslint, cached)                |
 | Test (watch/run)      | `pnpm test`                                 |
-| Test + coverage       | `pnpm test:coverage`                        |
+| Test + coverage       | `pnpm test:coverage` → `coverage/lcov.info` |
 | Regenerate API client | `pnpm nswag` (WebApi must be running on port 5095 — it reads `http://localhost:5095/openapi/v1.json`) |
 
 After any change, run **`pnpm lint`** and **`pnpm test`** before considering it done. The build also typechecks.
@@ -90,12 +90,26 @@ So: UI (`components/`, `pages/`) dispatches **public** actions and reads state v
 
 - Vitest with `globals: true` (no need to import `describe`/`it`/`expect`), `jsdom` environment, `setupTests.ts` setup file.
 - Tests are colocated as `*.test.ts(x)` next to their target source file (e.g. `src/shared/loadingTargets.test.ts`, `src/api/fieldMapping/helpers.test.ts`). Shared test fakes live in `src/utils/tests/`: `fakeAxios.ts` (mock HTTP via `@hwndmaster/atom-testing-utils`) and `fakeStore.ts`.
+- Coverage uses the `v8` provider (`@vitest/coverage-v8`) and emits `text` + `lcov` into `coverage/` — `coverage/lcov.info` is the machine-readable report. `coverage/` is git-ignored. Config lives in `vitest.config.ts`; `*.test.ts(x)` and `src/**/tests/**` are excluded from the measured sources.
 - Use the `@/` path alias for `src/` imports.
 - Follow the **Arrange / Act / Assert** comment structure.
 - **ALWAYS** select screen elements by their `data-test_id` attributes in tests. If an element is missing one, add it to the component. Format: `ComponentName__Element_Description`, e.g. `ProductForm__Submit_Button`. Avoid selecting by content text.
 - Use the reference-type factories from `models/types.ts` (e.g. `categoryRef(1)`) instead of primitives when creating test data.
 - When testing a specific function (reducer/action/etc.), name the test `functionName: description of the test case`.
 - Do NOT write exhaustive test suites — cover rendering, main logic, standard business scenarios, and the most likely edge cases.
+
+### Saga tests
+
+Each slice has a colocated `sagas.test.ts`. The pattern:
+
+- Drive the saga with `SagaRunner` from `@hwndmaster/atom-testing-utils`, typed as `new SagaRunner<AppState>()`, and run it with `await sagaRunner.runSaga(mySaga, action)`.
+- Mock HTTP with the shared `fakeAxios` from `@/utils/tests/fakeAxios` — `fakeAxios.setupGet(api.CategoriesClient, "categoriesAll").reply(200, [...])`, plus `setupPost` / `setupPut` / `setupDelete`. The operation name is the generated client method; route parameters must be supplied (`setupDelete(api.CategoriesClient, "categoriesDELETE", { id: categoryRef(4) })`) or the URL will not match. Passing `{ body: request }` additionally asserts the request payload.
+- **Reset both in `beforeEach`**: `fakeAxios.reset()` and `sagaRunner.reset()`. `reset()` does *not* clear the initial state, so also re-seed it with `sagaRunner.setInitialState(...)`.
+- Sagas reading the store via `typedSelect` need `sagaRunner.setInitialState({ categories: { categories: [existing] } })` — only the slices the saga selects from.
+- Assert store updates with `sagaRunner.findDispatchedAction(actionsInternal.setCategory)`, which returns the payload.
+- Assert `withLoading` via `expect(sagaRunner.dispatched).toContainEqual({ type: Common.Actions.showLoader.type, payload: LoadingTargets.Categories })`. Do **not** pass `Common.Actions.showLoader` to `findDispatchedAction` — its prepared payload type does not match and it fails to typecheck.
+- Cover `withCallback` / `withValidatableCallback` outcomes by passing the meta callbacks straight into the action creator and spying on them: `actions.createCategory(request, validationReject, resolve, reject)` and `actions.deleteCategory(id, resolve, reject)`. Use `vi.fn<(reason?: string) => void>()` so the mock stays typed.
+- Saga tests may import from `api/` — the ESLint `no-restricted-paths` zone explicitly exempts `sagas.test`.
 
 ## Conventions
 

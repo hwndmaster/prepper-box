@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ReferenceAtomData>true</ReferenceAtomData>
+    <ReferenceAtomDataEf>true</ReferenceAtomDataEf>
+    <ReferenceAtomInfrastructure>true</ReferenceAtomInfrastructure>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PrepperBox.WebApi\PrepperBox.WebApi.csproj" />
+  </ItemGroup>
+</Project>

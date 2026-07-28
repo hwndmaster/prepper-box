@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { translateErrorsToForm, useAtomForm, FormValidationErrors } from "@hwndmaster/atom-react-core";
+import { translateErrorsToForm, FormValidationErrors } from "@hwndmaster/atom-react-core";
 import { FormInputText } from "@hwndmaster/atom-react-prime";
 import { Button, Dialog } from "@/primereact";
 import Category from "@/models/category";
@@ -18,7 +19,7 @@ interface EditCategoryProps {
 const EditCategory: React.FC<EditCategoryProps> = ({ category, visible, onSave, onHide }) => {
     const isNew = category == null || category.id === categoryRef.default();
 
-    const form = useAtomForm<CategorySchemaData>({
+    const form = useForm<CategorySchemaData>({
         resolver: zodResolver(categorySchema),
         defaultValues: {
             name: "",

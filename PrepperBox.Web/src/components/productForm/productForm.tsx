@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { translateErrorsToForm, useAtomForm, FormValidationErrors } from "@hwndmaster/atom-react-core";
+import { translateErrorsToForm, FormValidationErrors } from "@hwndmaster/atom-react-core";
 import { toastService, FormInputText, FormDropdown, FormInputTextarea } from "@hwndmaster/atom-react-prime";
 import { Button, Divider } from "@/primereact";
 import * as store from "@/store";
@@ -46,7 +47,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
         dispatch(store.StorageLocations.Actions.fetchStorageLocations());
     }, [dispatch]);
 
-    const form = useAtomForm<ProductSchemaData>({
+    const form = useForm<ProductSchemaData>({
         resolver: zodResolver(productSchema),
         defaultValues: {
             name: product?.name ?? "",

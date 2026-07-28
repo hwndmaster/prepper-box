@@ -15,6 +15,8 @@
     <Project Path="PrepperBox.WebApi\PrepperBox.WebApi.csproj" />
   </Folder>
   <Project Path="PrepperBox.Db.Tests/PrepperBox.Db.Tests.csproj" />
+  <Project Path="PrepperBox.WebApi.IntegrationTests/PrepperBox.WebApi.IntegrationTests.csproj" />
+  <Project Path="PrepperBox.WebApi.Tests/PrepperBox.WebApi.Tests.csproj" />
   <Properties Name="Configuration">
     <Property Name="Debug|AnyCPU" />
     <Property Name="Release|AnyCPU" />

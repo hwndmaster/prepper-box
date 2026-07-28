@@ -23,6 +23,14 @@ export default defineConfig((env) => {
       },
       coverage: {
         provider: "v8",
+        reportsDirectory: "./coverage",
+        reporter: ["text", "lcov"],
+        include: ["src/**/*.{ts,tsx}"],
+        exclude: [
+          "src/**/*.d.ts",
+          "src/**/*.test.{ts,tsx}",
+          "src/**/tests/**",
+        ],
       }
     },
   }));

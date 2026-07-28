@@ -22,6 +22,11 @@ bld/
 [Ll]ogs/
 build/
 
+# .NET project artifacts
+*.lscache
+**/coverage/
+[Tt]est[Rr]esults/
+
 # Web project artifacts
 package-lock.json
 PrepperBox.Web/node_modules

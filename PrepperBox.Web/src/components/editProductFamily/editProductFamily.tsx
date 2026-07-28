@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { translateErrorsToForm, useAtomForm, FormValidationErrors } from "@hwndmaster/atom-react-core";
+import { translateErrorsToForm, FormValidationErrors } from "@hwndmaster/atom-react-core";
 import { FormInputText, FormInputNumber, FormDropdown } from "@hwndmaster/atom-react-prime";
 import { Button, Dialog } from "@/primereact";
 import ProductFamily from "@/models/productFamily";
@@ -20,7 +21,7 @@ interface EditProductFamilyProps {
 const EditProductFamily: React.FC<EditProductFamilyProps> = ({ family, visible, onSave, onHide }) => {
     const isNew = family == null || family.id === productFamilyRef.default();
 
-    const form = useAtomForm<ProductFamilySchemaData>({
+    const form = useForm<ProductFamilySchemaData>({
         resolver: zodResolver(productFamilySchema),
         defaultValues: {
             name: "",

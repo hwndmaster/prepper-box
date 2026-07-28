@@ -26,4 +26,8 @@
     <ProjectReference Include="../PrepperBox.Dto/PrepperBox.Dto.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Genius.PrepperBox.WebApi.IntegrationTests" />
+  </ItemGroup>
+
 </Project>

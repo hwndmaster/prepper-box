@@ -1,7 +1,6 @@
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UseFormReturn } from "react-hook-form";
-import { useAtomForm } from "@hwndmaster/atom-react-core";
+import { UseFormReturn, useForm } from "react-hook-form";
 import { FormDropdown, FormInputNumber, FormInputText, FormInputTextarea } from "@hwndmaster/atom-react-prime";
 import * as store from "@/store";
 import { storageLocationRef } from "@/models/types";
@@ -50,7 +49,7 @@ const TrackedProductFormFields: React.FC<TrackedProductFormFieldsProps> = ({ for
  * Custom hook to initialize the form for tracked products with default values and validation schema.
  */
 function useTrackedProductForm(): UseFormReturn<TrackedProductSchemaData> {
-    return useAtomForm<TrackedProductSchemaData>({
+    return useForm<TrackedProductSchemaData>({
         resolver: zodResolver(trackedProductSchema),
         defaultValues: {
             quantity: 1,

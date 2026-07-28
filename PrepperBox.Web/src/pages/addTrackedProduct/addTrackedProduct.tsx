@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { goTo, translateErrorsToForm, useAtomForm } from "@hwndmaster/atom-react-core";
+import { useForm } from "react-hook-form";
+import { goTo, translateErrorsToForm } from "@hwndmaster/atom-react-core";
 import { inputDateToTicks } from "@hwndmaster/atom-web-core";
 import { toastService } from "@hwndmaster/atom-react-prime";
 import { Button } from "@/primereact";
@@ -30,7 +31,7 @@ const AddTrackedProduct: React.FC = () => {
         dispatch(store.StorageLocations.Actions.fetchStorageLocations());
     }, [dispatch]);
 
-    const form = useAtomForm<TrackedProductSchemaData>({
+    const form = useForm<TrackedProductSchemaData>({
         resolver: zodResolver(trackedProductSchema),
         defaultValues: {
             quantity: 1,

@@ -28,4 +28,17 @@
     <Using Include="AutoFixture.AutoFakeItEasy" />
   </ItemGroup>
 
+  <ItemGroup Condition="$(IsTestProject) == 'True'">
+    <PackageReference Include="coverlet.msbuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <PropertyGroup Condition="$(IsTestProject) == 'True'">
+    <CoverletOutputFormat>lcov</CoverletOutputFormat>
+    <CoverletOutput>$(MSBuildProjectDirectory)/coverage/</CoverletOutput>
+    <RunSettingsFilePath>$(MSBuildThisFileDirectory)CodeCoverage.runsettings</RunSettingsFilePath>
+  </PropertyGroup>
+
 </Project>

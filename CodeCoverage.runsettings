@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+        <Configuration>
+          <IncludeTestAssembly>false</IncludeTestAssembly>
+          <CodeCoverage>
+            <ModulePaths>
+              <Exclude>
+                <ModulePath>.*\\PrepperBox\.Db\.Tests\.dll$</ModulePath>
+                <ModulePath>.*\\PrepperBox\.WebApi\.Tests\.dll$</ModulePath>
+                <ModulePath>.*\\PrepperBox\.WebApi\.IntegrationTests\.dll$</ModulePath>
+              </Exclude>
+            </ModulePaths>
+            <Sources>
+              <Exclude>
+                <Source>.*\\PrepperBox\.Db\\Migrations\\.*</Source>
+                <Source>.*\\PrepperBox\.Db\.Tests\\.*</Source>
+                <Source>.*\\PrepperBox\.WebApi\.Tests\\.*</Source>
+                <Source>.*\\PrepperBox\.WebApi\.IntegrationTests\\.*</Source>
+              </Exclude>
+            </Sources>
+            <Attributes>
+              <Exclude>
+                <Attribute>^System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverageAttribute$</Attribute>
+              </Exclude>
+            </Attributes>
+          </CodeCoverage>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

@@ -7,4 +7,4 @@ public sealed record StorageLocationDto(
     string Name,
     DateTimeOffset DateCreated,
     DateTimeOffset LastModified
-);
+) : IEntity<int, StorageLocationRef>;

@@ -9,4 +9,4 @@ public sealed record ConsumptionLogDto(
     string? Reason,
     DateTimeOffset DateCreated,
     DateTimeOffset LastModified
-);
+) : IEntity<int, ConsumptionLogRef>;

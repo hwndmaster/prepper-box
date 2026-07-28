@@ -154,7 +154,7 @@ internal sealed class ExpirationCheckWorker : BackgroundService
             var expirationDate = tp.ExpirationDate.Value.Date;
             var productName = productLookup.TryGetValue(tp.ProductId, out var product)
                 ? product.Name
-                : $"Product #{tp.ProductId}";
+                : $"Product #{tp.ProductId.Id}";
 
             if (expirationDate == today)
             {

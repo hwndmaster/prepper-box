@@ -3,5 +3,5 @@
   "compilerOptions": {
     "composite": true,
   },
-  "exclude": ["**/*.test.ts", "**/*.test.tsx"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/**/tests/**"],
 }

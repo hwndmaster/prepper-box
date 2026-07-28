@@ -15,4 +15,4 @@ public sealed record ProductDto(
     decimal TrackedProductsCount,
     DateTimeOffset DateCreated,
     DateTimeOffset LastModified
-);
+) : IEntity<int, ProductRef>;

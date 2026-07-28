@@ -31,6 +31,7 @@ internal sealed class TrackedProductsRepository : BaseRepository<TrackedProduct,
         existingEntity with
         {
             ProductId = dto.ProductId,
+            StorageLocationId = dto.StorageLocationId,
             ExpirationDate = dto.ExpirationDate,
             Quantity = dto.Quantity,
             Notes = dto.Notes
