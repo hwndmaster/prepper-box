@@ -24,14 +24,14 @@ importers:
         specifier: ^0.1.6
         version: 0.1.6(axios@1.18.1)
       '@hwndmaster/atom-react-core':
-        specifier: ^0.1.10
-        version: 0.1.10(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)
+        specifier: ^0.3.0
+        version: 0.3.0(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)
       '@hwndmaster/atom-react-prime':
-        specifier: ^0.1.15
-        version: 0.1.15(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(primereact@10.9.8(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)
+        specifier: ^0.1.18
+        version: 0.1.18(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(primereact@10.9.8(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)
       '@hwndmaster/atom-react-redux':
-        specifier: ^0.1.11
-        version: 0.1.11(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(axios@1.18.1)(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(redux-persist@6.0.0(react@19.2.7)(redux@5.0.1))(redux-saga@1.5.0)(redux@5.0.1)(zod@4.4.3)
+        specifier: ^0.1.14
+        version: 0.1.14(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(axios@1.18.1)(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(redux-persist@6.0.0(react@19.2.7)(redux@5.0.1))(redux-saga@1.5.0)(redux@5.0.1)(zod@4.4.3)
       '@hwndmaster/atom-web-core':
         specifier: ^0.1.6
         version: 0.1.6
@@ -133,8 +133,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(@typescript-eslint/utils@8.64.0(eslint@10.7.0)(typescript@6.0.3))(eslint@10.7.0)(typescript@6.0.3)
       '@hwndmaster/atom-testing-utils':
-        specifier: ^0.1.12
-        version: 0.1.12(@hwndmaster/atom-web-core@0.1.6)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(axios-mock-adapter@2.1.0(axios@1.18.1))(axios@1.18.1)(history@5.3.0)(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(redux-persist@6.0.0(react@19.2.7)(redux@5.0.1))(redux-saga@1.5.0)(redux@5.0.1)(vitest@4.1.10)(zod@4.4.3)
+        specifier: ^0.2.0
+        version: 0.2.0(@hwndmaster/atom-web-core@0.1.6)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(axios-mock-adapter@2.1.0(axios@1.18.1))(axios@1.18.1)(history@5.3.0)(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(redux-persist@6.0.0(react@19.2.7)(redux@5.0.1))(redux-saga@1.5.0)(redux@5.0.1)(vitest@4.1.10)(zod@4.4.3)
       '@redux-saga/testing-utils':
         specifier: ^1.2.3
         version: 1.2.3
@@ -442,6 +442,12 @@ packages:
     resolution: {integrity: sha512-Q9hjxWI5xBM+qW2enxfe8wDKdFWMfd0Z29k5ZJnuBqD/CasY5Zryj09aCA6owbGATWz+39p5uIdaHXpopOcG8g==}
     engines: {node: '>=10'}
 
+  '@eslint-community/eslint-utils@4.10.1':
+    resolution: {integrity: sha512-cuadcxVFE8sDK6iWJbs8Sn0av2Nrh2QSGQhVlBW9AaAHqHwjWsZHT8LJ4hFGPh7ASBV2deFdM7H/DPjulmh8rg==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
+
   '@eslint-community/eslint-utils@4.9.1':
     resolution: {integrity: sha512-phrYmNiYppR7znFEdqgfWHXR6NCkZEK7hwWDHZUjit/2/U0r6XvkDl0SYnoM51Hq7FhCGdLDT6zxCCOY1hexsQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -533,27 +539,27 @@ packages:
     peerDependencies:
       eslint: '>=9.0.0'
 
-  '@hwndmaster/atom-react-core@0.1.10':
-    resolution: {integrity: sha512-PcpRdTYSEb33fAju2Bun9aXAFAG3aDBHKjM31kOK45jVhtY/y45l+NSL9XlGCeMx6nvp+XU5cGFUxMu+LTHV2w==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-core/0.1.10/cb88327fdd15e4d2ff5a707cad195f1827f052c0}
+  '@hwndmaster/atom-react-core@0.3.0':
+    resolution: {integrity: sha512-f8/qUq4R05ENXyO++mvMAkDpYIR2uPyqzMhhd+JnQFZfDB9vo9Nc5bvYXdOFawY9L9zOkRcZ0uEu2ZjkJhK/hw==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-core/0.3.0/5e40156d1d9a386dcd83c60ab57d89d688973754}
     peerDependencies:
       '@reduxjs/toolkit': '>=2.0.0'
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
       react-hook-form: '>=7.0.0'
       react-redux: '>=8.0.0'
-      react-router-dom: '>=6.0.0'
+      react-router: '>=8.0.0'
       zod: '>=3.0.0'
 
-  '@hwndmaster/atom-react-prime@0.1.15':
-    resolution: {integrity: sha512-Z3CiuCRBH/xo2uct1nUltAoNEoDEwBeXAC1ri1wvgaWxw8q4LliEBcyj4iZ9hwpWdhlxvsWqm8oLMCQ6Td8/jw==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-prime/0.1.15/5e7fb69ce8b40f19580f8d8a10e4a45f17d617ed}
+  '@hwndmaster/atom-react-prime@0.1.18':
+    resolution: {integrity: sha512-TKv10INAXpw1OP0Z1RAupy08yXazvhDVsl6EC5tMCnCt/o8wl6Roah0O6J66a/yA7R0z5kpCy+kVfmmJ7pntXg==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-prime/0.1.18/b6dd61eaa392ed753decca1eab4ff571f50f5029}
     peerDependencies:
       primereact: '>=10.0.0'
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
       react-hook-form: '>=7.0.0'
 
-  '@hwndmaster/atom-react-redux@0.1.11':
-    resolution: {integrity: sha512-TAEsWWp+kBZi9ySzXEKVW9RWgEe3jYt5MQ+QBHnDHeeJKf2iyt5n4OpKqniCAR7rlD8uFq1YNOU7eHEDfyidHw==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-redux/0.1.11/ca47a495a2365aa553f7ebb1c8e62ed74020fab2}
+  '@hwndmaster/atom-react-redux@0.1.14':
+    resolution: {integrity: sha512-YJ4a3DHSECWU4L06XNb9EKhYT+K2NiiYFy8zbaEfuiKWQDAvxdmM5zMu//F4qlsCYE2V+M5jAA7VnG4ixrrpug==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-react-redux/0.1.14/077a89bad71762d23f541316d9d9cc56e374ce81}
     peerDependencies:
       '@reduxjs/toolkit': '>=2.0.0'
       axios: '>=1.0.0'
@@ -564,8 +570,8 @@ packages:
       redux-persist: '>=6.0.0'
       redux-saga: '>=1.0.0'
 
-  '@hwndmaster/atom-testing-utils@0.1.12':
-    resolution: {integrity: sha512-7YntDUGZIFOIYn8qPbBsgem7RnDcZ7V61VhHLIuUm3ldRhEpJGfkxt26Ar6V1d3dtGd9/FpGTsBDSjCiBL/11g==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-testing-utils/0.1.12/cfabdcd5a76f2e489f37d1270f3b59688d3d14f4}
+  '@hwndmaster/atom-testing-utils@0.2.0':
+    resolution: {integrity: sha512-ppimNimCxjOpIn3TqRr4J99XgY+7vX+5NH+2OhEew0PJq//APY739myWjW53cejolVYIFA/HR4RvvRX7ymUkwg==, tarball: https://npm.pkg.github.com/download/@hwndmaster/atom-testing-utils/0.2.0/e37eb04f763df68d8a0a87354fb90a6f1edcc867}
     peerDependencies:
       '@hwndmaster/atom-web-core': '*'
       '@testing-library/react': '>=16.0.0'
@@ -575,7 +581,7 @@ packages:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
       react-redux: '>=8.0.0'
-      react-router-dom: '>=6.0.0'
+      react-router: '>=8.0.0'
       redux-persist: '>=6.0.0'
       redux-saga: '>=1.0.0'
       vitest: '>=2.0.0'
@@ -1116,6 +1122,10 @@ packages:
     resolution: {integrity: sha512-qjhfuTfLXjA4IOzXvz0rTjT01BqEiIgPoUeMwiEjnaHKJMTNo8rH5pYW1a2L/0Dnux2fPC85AeyJoWaGa8WxTA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@typescript-eslint/types@8.65.0':
+    resolution: {integrity: sha512-JSSwWNy+H0E/01jJEM+hrX6N0OFDzFzeIhHFSAS01tlVaevpG8cFyYRPhS5yjGOvBUx3sqQHVMjCL1CAZZMxBg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
   '@typescript-eslint/typescript-estree@8.63.0':
     resolution: {integrity: sha512-ygBkU+B7ex5UI/gKhaqexWev79uISfIv7XQCRNYO/jmD8rGLPyWLAb3KMRT6nd8Gt9bmUBi9+iX6tBdYfOY81Q==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -1518,10 +1528,6 @@ packages:
 
   cookie-es@3.1.1:
     resolution: {integrity: sha512-UaXxwISYJPTr9hwQxMFYZ7kNhSXboMXP+Z3TRX6f1/NyaGPfuNUZOWP1pUEb75B2HjfklIYLVRfWiFZJyC6Npg==}
-
-  cookie@1.1.1:
-    resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
-    engines: {node: '>=18'}
 
   cosmiconfig@7.1.0:
     resolution: {integrity: sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==}
@@ -2564,23 +2570,6 @@ packages:
       redux:
         optional: true
 
-  react-router-dom@7.18.1:
-    resolution: {integrity: sha512-KaZh+X/6UtEp28x51AUYZDMg9NGoz2ja3dNHa+ta/tk40vCzKhQ/RypCWBMLbmDr6//E24Vv5uPsrqXFozdkAg==}
-    engines: {node: '>=20.0.0'}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
-
-  react-router@7.18.1:
-    resolution: {integrity: sha512-GDLgg3i3uM0aeJO3Fm+TCS+sDQ7gu12T6x0qdTEzcwqEfleci7JwugVNIF3U//0FWKnJT7ptG+20B2jfDqnZAg==}
-    engines: {node: '>=20.0.0'}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-
   react-router@8.3.0:
     resolution: {integrity: sha512-qyPMvW83jGIct3yiieisxdk9M745anqhpIMKN5m1t6yBMfgVPpt77aHOqs5fUlEJRMCGffg9BaQLH9oPVOL7xQ==}
     engines: {node: '>=22.22.0'}
@@ -2740,9 +2729,6 @@ packages:
     resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
     hasBin: true
-
-  set-cookie-parser@2.7.2:
-    resolution: {integrity: sha512-oeM1lpU/UvhTxw+g3cIfxXHyJRc/uidd3yK1P242gzHds0udQBYzs3y8j4gCCW+ZJ7ad0yctld8RYO+bdurlvw==}
 
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
@@ -3397,7 +3383,7 @@ snapshots:
   '@es-joy/jsdoccomment@0.86.0':
     dependencies:
       '@types/estree': 1.0.9
-      '@typescript-eslint/types': 8.64.0
+      '@typescript-eslint/types': 8.65.0
       comment-parser: 1.4.6
       esquery: 1.7.0
       jsdoc-type-pratt-parser: 7.2.0
@@ -3411,6 +3397,11 @@ snapshots:
       jsdoc-type-pratt-parser: 7.2.0
 
   '@es-joy/resolve.exports@1.2.0': {}
+
+  '@eslint-community/eslint-utils@4.10.1(eslint@10.7.0)':
+    dependencies:
+      eslint: 10.7.0
+      eslint-visitor-keys: 3.4.3
 
   '@eslint-community/eslint-utils@4.9.1(eslint@10.7.0)':
     dependencies:
@@ -3522,7 +3513,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@hwndmaster/atom-react-core@0.1.10(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)':
+  '@hwndmaster/atom-react-core@0.3.0(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)':
     dependencies:
       '@hwndmaster/atom-web-core': 0.1.6
       '@reduxjs/toolkit': 2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7)
@@ -3530,12 +3521,12 @@ snapshots:
       react-dom: 19.2.7(react@19.2.7)
       react-hook-form: 7.81.0(react@19.2.7)
       react-redux: 9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1)
-      react-router-dom: 7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react-router: 8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       zod: 4.4.3
 
-  '@hwndmaster/atom-react-prime@0.1.15(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(primereact@10.9.8(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)':
+  '@hwndmaster/atom-react-prime@0.1.18(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(primereact@10.9.8(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)':
     dependencies:
-      '@hwndmaster/atom-react-core': 0.1.10(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)
+      '@hwndmaster/atom-react-core': 0.3.0(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)
       '@hwndmaster/atom-web-core': 0.1.6
       primereact: 10.9.8(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react: 19.2.7
@@ -3544,13 +3535,13 @@ snapshots:
     transitivePeerDependencies:
       - '@reduxjs/toolkit'
       - react-redux
-      - react-router-dom
+      - react-router
       - zod
 
-  '@hwndmaster/atom-react-redux@0.1.11(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(axios@1.18.1)(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(redux-persist@6.0.0(react@19.2.7)(redux@5.0.1))(redux-saga@1.5.0)(redux@5.0.1)(zod@4.4.3)':
+  '@hwndmaster/atom-react-redux@0.1.14(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(axios@1.18.1)(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(redux-persist@6.0.0(react@19.2.7)(redux@5.0.1))(redux-saga@1.5.0)(redux@5.0.1)(zod@4.4.3)':
     dependencies:
       '@hwndmaster/atom-api-core': 0.1.6(axios@1.18.1)
-      '@hwndmaster/atom-react-core': 0.1.10(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)
+      '@hwndmaster/atom-react-core': 0.3.0(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(zod@4.4.3)
       '@hwndmaster/atom-web-core': 0.1.6
       '@reduxjs/toolkit': 2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7)
       axios: 1.18.1
@@ -3562,12 +3553,12 @@ snapshots:
       redux-saga: 1.5.0
     transitivePeerDependencies:
       - react-hook-form
-      - react-router-dom
+      - react-router
       - zod
 
-  '@hwndmaster/atom-testing-utils@0.1.12(@hwndmaster/atom-web-core@0.1.6)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(axios-mock-adapter@2.1.0(axios@1.18.1))(axios@1.18.1)(history@5.3.0)(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(redux-persist@6.0.0(react@19.2.7)(redux@5.0.1))(redux-saga@1.5.0)(redux@5.0.1)(vitest@4.1.10)(zod@4.4.3)':
+  '@hwndmaster/atom-testing-utils@0.2.0(@hwndmaster/atom-web-core@0.1.6)(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(axios-mock-adapter@2.1.0(axios@1.18.1))(axios@1.18.1)(history@5.3.0)(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(redux-persist@6.0.0(react@19.2.7)(redux@5.0.1))(redux-saga@1.5.0)(redux@5.0.1)(vitest@4.1.10)(zod@4.4.3)':
     dependencies:
-      '@hwndmaster/atom-react-redux': 0.1.11(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(axios@1.18.1)(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(redux-persist@6.0.0(react@19.2.7)(redux@5.0.1))(redux-saga@1.5.0)(redux@5.0.1)(zod@4.4.3)
+      '@hwndmaster/atom-react-redux': 0.1.14(@reduxjs/toolkit@2.12.0(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react@19.2.7))(axios@1.18.1)(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.81.0(react@19.2.7))(react-redux@9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1))(react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)(redux-persist@6.0.0(react@19.2.7)(redux@5.0.1))(redux-saga@1.5.0)(redux@5.0.1)(zod@4.4.3)
       '@hwndmaster/atom-web-core': 0.1.6
       '@testing-library/react': 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       axios: 1.18.1
@@ -3576,7 +3567,7 @@ snapshots:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       react-redux: 9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1)
-      react-router-dom: 7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react-router: 8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       redux-persist: 6.0.0(react@19.2.7)(redux@5.0.1)
       redux-saga: 1.5.0
       vitest: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@26.1.1)(@vitest/coverage-v8@4.1.10)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.1.5(@types/node@26.1.1)(sass@1.101.0))
@@ -4111,6 +4102,8 @@ snapshots:
 
   '@typescript-eslint/types@8.64.0': {}
 
+  '@typescript-eslint/types@8.65.0': {}
+
   '@typescript-eslint/typescript-estree@8.63.0(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/project-service': 8.63.0(typescript@6.0.3)
@@ -4154,7 +4147,7 @@ snapshots:
 
   '@typescript-eslint/utils@8.64.0(eslint@10.7.0)(typescript@6.0.3)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.9.1(eslint@10.7.0)
+      '@eslint-community/eslint-utils': 4.10.1(eslint@10.7.0)
       '@typescript-eslint/scope-manager': 8.64.0
       '@typescript-eslint/types': 8.64.0
       '@typescript-eslint/typescript-estree': 8.64.0(typescript@6.0.3)
@@ -4520,8 +4513,6 @@ snapshots:
   convert-source-map@2.0.0: {}
 
   cookie-es@3.1.1: {}
-
-  cookie@1.1.1: {}
 
   cosmiconfig@7.1.0:
     dependencies:
@@ -5670,20 +5661,6 @@ snapshots:
       '@types/react': 19.2.17
       redux: 5.0.1
 
-  react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
-    dependencies:
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-      react-router: 7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-
-  react-router@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
-    dependencies:
-      cookie: 1.1.1
-      react: 19.2.7
-      set-cookie-parser: 2.7.2
-    optionalDependencies:
-      react-dom: 19.2.7(react@19.2.7)
-
   react-router@8.3.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
       cookie-es: 3.1.1
@@ -5871,8 +5848,6 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.8.5: {}
-
-  set-cookie-parser@2.7.2: {}
 
   set-function-length@1.2.2:
     dependencies:
