@@ -4,8 +4,9 @@ import { ticksToDate } from "@hwndmaster/atom-web-core";
 import { toastService } from "@hwndmaster/atom-react-prime";
 import { LoadingSpinner } from "@hwndmaster/atom-react-redux";
 import { goTo } from "@hwndmaster/atom-react-core";
-import type { DataTableExpandedRows, MenuItem } from "@/primereact";
+import type { MenuItem } from "@/primereact";
 import { Button, Chip, Column, DataTable, IconField, InputIcon, InputText, SplitButton, TabPanel, TabView, Tooltip } from "@/primereact";
+import { useRowExpansion } from "@/hooks/useRowExpansion";
 import * as store from "@/store";
 import Product from "@/models/product";
 import TrackedProduct from "@/models/trackedProduct";
@@ -19,6 +20,8 @@ import BarcodeScannerDialog from "./barcodeScannerDialog";
 import ProductSelectionDialog from "./productSelectionDialog";
 import WithdrawStockDialog from "./withdrawStockDialog";
 import styles from "./home.module.scss";
+
+const getProductKey = (product: Product): number => product.id;
 
 const Home: React.FC = () => {
     const dispatch = store.useAppDispatch();
@@ -35,7 +38,7 @@ const Home: React.FC = () => {
     const familyAggregates = store.useAppSelector(store.TrackedProducts.Selectors.selectStockAggregatesByFamilyId);
 
     const [selectedCategoryId, setSelectedCategoryId] = useState<CategoryRef | null>(null);
-    const [expandedRows, setExpandedRows] = useState<DataTableExpandedRows>({});
+    const productExpansion = useRowExpansion<Product>(getProductKey);
     const [expandedTrackedRows, setExpandedTrackedRows] = useState<TrackedProduct[]>([]);
     const [isWithdrawDialogVisible, setIsWithdrawDialogVisible] = useState(false);
     const [withdrawTrackedProduct, setWithdrawTrackedProduct] = useState<TrackedProduct | null>(null);
@@ -300,19 +303,6 @@ const Home: React.FC = () => {
         );
     };
 
-    const toggleRowExpansion = (product: Product): void => {
-        setExpandedRows(prev => {
-            const key = String(product.id);
-            const next = { ...prev };
-            if (next[key]) {
-                delete next[key];
-            } else {
-                next[key] = true;
-            }
-            return next;
-        });
-    };
-
     const nameTemplate = (product: Product): React.ReactNode => {
         const label = product.manufacturer != null && product.manufacturer !== ""
             ? `${product.name}, ${product.manufacturer}`
@@ -327,7 +317,7 @@ const Home: React.FC = () => {
                 <span
                     className={styles.clickableName}
                     data-test_id="Home__Product_Name"
-                    onClick={() => toggleRowExpansion(product)}
+                    onClick={() => productExpansion.toggleRow(product)}
                 >
                     {label}
                 </span>
@@ -404,8 +394,7 @@ const Home: React.FC = () => {
             <DataTable
                 value={groupedProducts}
                 header={renderHeader()}
-                expandedRows={expandedRows}
-                onRowToggle={(e) => setExpandedRows(e.data as DataTableExpandedRows)}
+                expandedRows={productExpansion.expandedRows}
                 rowExpansionTemplate={rowExpansionTemplate}
                 rowGroupMode="subheader"
                 groupRowsBy="familyId"
@@ -416,7 +405,7 @@ const Home: React.FC = () => {
                 dataKey="id"
                 data-test_id="Home__Products_Table"
             >
-                <Column expander className={styles.expanderColumn} />
+                <Column body={productExpansion.expanderTemplate} className={styles.expanderColumn} />
                 <Column field="name" header="Name" body={nameTemplate} />
                 <Column field="trackedProductsCount" header="Stock" body={stockLevelTemplate} />
                 <Column header="" body={editActionTemplate} className={styles.actionColumn} />

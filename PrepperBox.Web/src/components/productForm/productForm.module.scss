@@ -4,6 +4,33 @@
     position: relative;
 }
 
+// Bar Code / Category / Family keep two thirds; the product image takes the remaining third.
+// The nested .row is still an auto-fit grid, so those three fields sit side by side on wide
+// screens and stack once their column drops below the 200px-per-field threshold.
+.fieldsWithImage {
+    display: grid;
+    grid-template-columns: 2fr minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+
+    // Below this the two-thirds column would fall under the nested grid's 200px-per-field
+    // floor and overflow, so drop the image underneath the fields instead.
+    @media (max-width: 360px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.productImage {
+    padding-top: 0.3rem;
+
+    // Bounded on both axes so the aspect ratio is preserved without distortion or letterboxing.
+    img {
+        display: block;
+        max-width: 100%;
+        max-height: 14rem;
+    }
+}
+
 .trackedProductList {
     list-style: none;
     padding: 0;

@@ -10,6 +10,7 @@ import Product from "@/models/product";
 import OpenFoodFactsProduct from "@/models/openFoodFactsProduct";
 
 import { TrackedProductFormFields, useTrackedProductForm } from "@/components/trackedProductForm";
+import { selectProductImageUrl } from "@/shared/productImage";
 import { productSchema, ProductSchemaData } from "@/schemas/productSchema";
 import type { TrackedProductSchemaData } from "@/schemas/trackedProductSchema";
 import BarCodeSuggestions from "./BarCodeSuggestions";
@@ -63,6 +64,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
 
     const selectedCategoryId = form.watch("categoryId");
     const selectedFamilyId = form.watch("familyId");
+
+    // Watched so the preview follows the URLs a picked bar code suggestion writes into the form.
+    const productImageUrl = selectProductImageUrl({
+        imageUrl: form.watch("imageUrl"),
+        imageSmallUrl: form.watch("imageSmallUrl"),
+    });
 
     // Families belong to a category, so only offer those under the selected category.
     const familyOptions = useMemo(
@@ -160,31 +167,42 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
             <div className={styles.row}>
                 <FormInputText name="manufacturer" form={form} label="Manufacturer" />
             </div>
-            <div className={styles.row}>
-                <div className={styles.barCodeWrapper}>
-                    <FormInputText name="barCode" form={form} label="Bar Code" onBlur={handleBarCodeBlur} />
-                    <BarCodeSuggestions
-                        suggestions={barCodeSuggestions}
-                        isLoading={isLoadingBarCodeSuggestions}
-                        onSelect={handleSelectSuggestion}
+            <div className={productImageUrl != null ? styles.fieldsWithImage : undefined}>
+                <div className={styles.row}>
+                    <div className={styles.barCodeWrapper}>
+                        <FormInputText name="barCode" form={form} label="Bar Code" onBlur={handleBarCodeBlur} />
+                        <BarCodeSuggestions
+                            suggestions={barCodeSuggestions}
+                            isLoading={isLoadingBarCodeSuggestions}
+                            onSelect={handleSelectSuggestion}
+                        />
+                    </div>
+                    <FormDropdown
+                        name="categoryId"
+                        form={form}
+                        label="Category"
+                        options={categories}
+                        optionLabel="name"
+                        optionValue="id"
+                    />
+                    <FormDropdown
+                        name="familyId"
+                        form={form}
+                        label="Family"
+                        options={familyOptions}
+                        optionLabel="name"
+                        optionValue="id"
                     />
                 </div>
-                <FormDropdown
-                    name="categoryId"
-                    form={form}
-                    label="Category"
-                    options={categories}
-                    optionLabel="name"
-                    optionValue="id"
-                />
-                <FormDropdown
-                    name="familyId"
-                    form={form}
-                    label="Family"
-                    options={familyOptions}
-                    optionLabel="name"
-                    optionValue="id"
-                />
+                {productImageUrl != null && (
+                    <div className={styles.productImage}>
+                        <img
+                            src={productImageUrl}
+                            alt={product?.name ?? "Product image"}
+                            data-test_id="ProductForm__Product_Image"
+                        />
+                    </div>
+                )}
             </div>
             <div className={styles.row}>
                 <FormInputTextarea name="description" form={form} label="Description" inputProps={{ rows: 5 }} />
