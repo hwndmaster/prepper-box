@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import { goTo } from "@hwndmaster/atom-react-core";
 import { LoadingSpinner } from "@hwndmaster/atom-react-redux";
 import { Menubar } from "@/primereact";

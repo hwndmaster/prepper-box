@@ -1,4 +1,4 @@
-import { Location as ReactLocation } from "react-router-dom";
+import { Location as ReactLocation } from "react-router";
 import { getCurrentRoute as getCurrentRouteBase, type RouteDefinition } from "@hwndmaster/atom-react-core";
 import { productRef } from "@/models/types";
 

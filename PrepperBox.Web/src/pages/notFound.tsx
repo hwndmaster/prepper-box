@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { goTo } from "@hwndmaster/atom-react-core";
 import AppRoutes from "../shared/routes";
 

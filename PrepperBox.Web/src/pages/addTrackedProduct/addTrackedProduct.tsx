@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { goTo, translateErrorsToForm } from "@hwndmaster/atom-react-core";

@@ -7,7 +7,7 @@ description: Conventions and commands for working on the PrepperBox.Web frontend
 
 React 19 + TypeScript SPA. State via Redux Toolkit + redux-saga (+ redux-persist). UI with PrimeReact (theme `viva-dark`). Bundled by Vite. Tested with Vitest. Shared building blocks come from the private `@hwndmaster/atom-*` packages.
 
-**Package manager is `pnpm`** (pinned `pnpm@10.33.0`). Never use `npm` or `yarn`. All commands run from `PrepperBox.Web/`.
+**Package manager is `pnpm`** (pinned via the `packageManager` field in `PrepperBox.Web/package.json` — currently `pnpm@11.9.0`; CI reads that field, so bump it there and nothing drifts). Never use `npm` or `yarn`. All commands run from `PrepperBox.Web/`.
 
 ## Commands
 

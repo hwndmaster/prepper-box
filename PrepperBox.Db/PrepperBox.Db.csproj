@@ -4,6 +4,8 @@
     <ReferenceAtomData>true</ReferenceAtomData>
     <ReferenceAtomDataEf>true</ReferenceAtomDataEf>
     <ReferenceAtomInfrastructure>true</ReferenceAtomInfrastructure>
+    <HasPrivateSampleDataInitializer Condition="Exists('PrepperBoxSampleDataInitializer.Private.cs')">true</HasPrivateSampleDataInitializer>
+    <DefineConstants Condition="'$(HasPrivateSampleDataInitializer)' == 'true'">$(DefineConstants);HAS_PRIVATE_SAMPLE_DATA_INITIALIZER</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
