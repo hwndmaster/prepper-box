@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { ticksToDate } from "@hwndmaster/atom-web-core";
 import { toastService } from "@hwndmaster/atom-react-prime";
 import { LoadingSpinner } from "@hwndmaster/atom-react-redux";
 import { goTo } from "@hwndmaster/atom-react-core";
@@ -12,6 +11,7 @@ import Product from "@/models/product";
 import TrackedProduct from "@/models/trackedProduct";
 import { CategoryRef, storageLocationRef } from "@/models/types";
 import { getCategoryIconClass } from "@/shared/categoryIcons";
+import { formatTicksAsDate } from "@/shared/dateFormat";
 import LoadingTargets from "@/shared/loadingTargets";
 import AppRoutes from "@/shared/routes";
 import { StockValidationLevel, validateStockLevel } from "@/shared/stockValidation";
@@ -166,7 +166,7 @@ const Home: React.FC = () => {
         if (tp.expirationDate == null) {
             return <span>—</span>;
         }
-        return <span>{ticksToDate(tp.expirationDate).toLocaleDateString()}</span>;
+        return <span>{formatTicksAsDate(tp.expirationDate)}</span>;
     };
 
     const withdrawActionTemplate = (tp: TrackedProduct): React.ReactNode => {

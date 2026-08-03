@@ -10,6 +10,7 @@ import Product from "@/models/product";
 import OpenFoodFactsProduct from "@/models/openFoodFactsProduct";
 
 import { TrackedProductFormFields, useTrackedProductForm } from "@/components/trackedProductForm";
+import { formatDate } from "@/shared/dateFormat";
 import { selectProductImageUrl } from "@/shared/productImage";
 import { productSchema, ProductSchemaData } from "@/schemas/productSchema";
 import type { TrackedProductSchemaData } from "@/schemas/trackedProductSchema";
@@ -71,9 +72,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
         imageSmallUrl: form.watch("imageSmallUrl"),
     });
 
-    // Families belong to a category, so only offer those under the selected category.
+    // Families belong to a category, so only offer those under the selected category, listed by name.
     const familyOptions = useMemo(
-        () => productFamilies.filter((family) => family.categoryId === selectedCategoryId),
+        () => productFamilies
+            .filter((family) => family.categoryId === selectedCategoryId)
+            .sort((a, b) => a.name.localeCompare(b.name)),
         [productFamilies, selectedCategoryId]
     );
 
@@ -217,7 +220,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
                         <li key={tp.key} className={styles.trackedProductItem}>
                             <span>
                                 Qty: {tp.data.quantity}
-                                {tp.data.expirationDate != null && tp.data.expirationDate !== "" ? `, Exp: ${new Date(tp.data.expirationDate).toDateString()}` : ""}
+                                {tp.data.expirationDate != null && tp.data.expirationDate !== "" ? `, Exp: ${formatDate(new Date(tp.data.expirationDate))}` : ""}
                                 {tp.data.notes != null && tp.data.notes !== "" ? `, Notes: ${tp.data.notes}` : ""}
                             </span>
                             <Button

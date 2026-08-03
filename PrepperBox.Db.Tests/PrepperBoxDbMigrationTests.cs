@@ -1,6 +1,7 @@
 using Genius.Atom.Data.Ef.Backup;
 using Genius.Atom.Infrastructure.TestingUtil;
 using Genius.PrepperBox.Db.Models;
+using Genius.PrepperBox.Dto.References;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -108,8 +109,51 @@ public sealed class PrepperBoxDbMigrationTests : IDisposable
             var applied = (await context.Database.GetAppliedMigrationsAsync(TestContext.Current.CancellationToken)).ToList();
             Assert.Contains(applied, id => id.EndsWith("_InitialCreate", StringComparison.Ordinal));
             Assert.Contains(applied, id => id.EndsWith("_AddProductFamily", StringComparison.Ordinal));
+            Assert.Contains(applied, id => id.EndsWith("_ProductFamilyDecimalMinimumStockLevel", StringComparison.Ordinal));
             await context.Categories.AddAsync(Category.Create(1, "Food", "food"), TestContext.Current.CancellationToken);
             await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+        }
+    }
+
+    [Fact]
+    public async Task ProductFamilyDecimalMinimumStockLevelMigration_PreservesExistingLevelsAndAcceptsFractions()
+    {
+        // Arrange - a database at the previous migration, where MinimumStockLevel is still an integer
+        // column, holding a family with a whole-number level.
+        await using (var context = new PrepperBoxDbContext(CreateOptions(_dbPath)))
+        {
+            await context.Database.MigrateAsync("20260720171029_AddProductFamily", TestContext.Current.CancellationToken);
+            await context.Database.ExecuteSqlRawAsync("""
+                INSERT INTO "Categories" ("Id", "Name", "Description", "IconName", "DateCreated", "LastModified")
+                VALUES (1, 'Food', NULL, 'food', 0, 0);
+                INSERT INTO "ProductFamilies" ("Id", "CategoryId", "Name", "UnitOfMeasure", "MinimumStockLevel", "DateCreated", "LastModified")
+                VALUES (100, 1, 'Canned fish', 2, 6, 0, 0);
+                """, TestContext.Current.CancellationToken);
+        }
+
+        // Act
+        await using (var context = new PrepperBoxDbContext(CreateOptions(_dbPath)))
+        {
+            await context.Database.MigrateAsync(TestContext.Current.CancellationToken);
+        }
+
+        // Assert - the existing level survived and a fractional level can now be stored
+        await using (var context = new PrepperBoxDbContext(CreateOptions(_dbPath)))
+        {
+            var migrated = await context.ProductFamilies.SingleAsync(TestContext.Current.CancellationToken);
+            Assert.Equal(6m, migrated.MinimumStockLevel);
+
+            await context.ProductFamilies.AddAsync(
+                ProductFamily.Create(new ProductFamilyRef(101), new CategoryRef(1), "Rice", UnitOfMeasure.Kilogram, 0.5m),
+                TestContext.Current.CancellationToken);
+            await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+        }
+
+        await using (var context = new PrepperBoxDbContext(CreateOptions(_dbPath)))
+        {
+            var fractional = await context.ProductFamilies
+                .SingleAsync(f => f.Name == "Rice", TestContext.Current.CancellationToken);
+            Assert.Equal(0.5m, fractional.MinimumStockLevel);
         }
     }
 

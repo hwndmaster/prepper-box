@@ -61,7 +61,7 @@ internal sealed class ApiScenarioClient
         int categoryId,
         string name,
         UnitOfMeasure unitOfMeasure = UnitOfMeasure.Piece,
-        int minimumStockLevel = 0)
+        decimal minimumStockLevel = 0)
     {
         var response = await PostJsonAsync(ProductFamiliesUri, new
         {
@@ -80,7 +80,7 @@ internal sealed class ApiScenarioClient
         int categoryId,
         string name,
         UnitOfMeasure unitOfMeasure = UnitOfMeasure.Piece,
-        int minimumStockLevel = 0)
+        decimal minimumStockLevel = 0)
     {
         var response = await PutJsonAsync(ProductFamiliesUri, new
         {

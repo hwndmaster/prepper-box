@@ -63,7 +63,7 @@ const EditProductFamily: React.FC<EditProductFamilyProps> = ({ family, visible, 
                     optionLabel="label"
                     optionValue="value"
                 />
-                <FormInputNumber name="minimumStockLevel" form={form} label="Minimum Stock Level" />
+                <FormInputNumber name="minimumStockLevel" form={form} allowDecimals={true} label="Minimum Stock Level" />
                 <div className={styles.formActions}>
                     <Button type="submit" label="Save" icon="pi pi-check" data-test_id="ProductFamilies__Save_Button" />
                     <Button type="button" label="Cancel" icon="pi pi-times" severity="secondary" outlined data-test_id="ProductFamilies__Cancel_Button" onClick={onHide} />

@@ -7,7 +7,7 @@ public sealed record ProductFamily(
     CategoryRef CategoryId,
     string Name,
     UnitOfMeasure UnitOfMeasure,
-    int MinimumStockLevel
+    decimal MinimumStockLevel
 ) : EntityBase<int, ProductFamilyRef>
 {
     public static ProductFamily Create(
@@ -15,7 +15,7 @@ public sealed record ProductFamily(
         CategoryRef categoryId,
         string name,
         UnitOfMeasure unitOfMeasure,
-        int minimumStockLevel = 0)
+        decimal minimumStockLevel = 0)
     {
         return new(categoryId, name, unitOfMeasure, minimumStockLevel)
         {

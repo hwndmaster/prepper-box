@@ -44,11 +44,11 @@ public sealed class WorkflowScenarioIntegrationTests
         Assert.Equal("Created by integration test", categoryDetails.GetProperty("description").GetString());
 
         // Step 2: Create a product family in that category.
-        var family = await api.CreateProductFamilyAsync(category.EntityId, "Integration Cans", UnitOfMeasure.Can, minimumStockLevel: 4);
+        var family = await api.CreateProductFamilyAsync(category.EntityId, "Integration Cans", UnitOfMeasure.Can, minimumStockLevel: 4.5m);
         var familyDetails = await api.GetJsonAsync($"{ApiScenarioClient.ProductFamiliesUri}/{family.EntityId}");
         Assert.Equal(category.EntityId, familyDetails.GetProperty("categoryId").GetInt32());
         Assert.Equal((int)UnitOfMeasure.Can, familyDetails.GetProperty("unitOfMeasure").GetInt32());
-        Assert.Equal(4, familyDetails.GetProperty("minimumStockLevel").GetInt32());
+        Assert.Equal(4.5m, familyDetails.GetProperty("minimumStockLevel").GetDecimal());
         Assert.Equal(0, familyDetails.GetProperty("productsCount").GetInt32());
 
         // Step 3: Create a product in that family and verify the family's product counter.
@@ -184,7 +184,7 @@ public sealed class WorkflowScenarioIntegrationTests
             targetCategory.EntityId,
             "Integration Jars Renamed",
             UnitOfMeasure.Kilogram,
-            minimumStockLevel: 2);
+            minimumStockLevel: 0.5m);
 
         // Step 4: Validate the family and its product report the new category.
         var familyDetails = await api.GetJsonAsync($"{ApiScenarioClient.ProductFamiliesUri}/{family.EntityId}");
@@ -192,7 +192,7 @@ public sealed class WorkflowScenarioIntegrationTests
         Assert.Equal("Integration Jars Renamed", ApiScenarioClient.Name(familyDetails));
         Assert.Equal(targetCategory.EntityId, familyDetails.GetProperty("categoryId").GetInt32());
         Assert.Equal((int)UnitOfMeasure.Kilogram, familyDetails.GetProperty("unitOfMeasure").GetInt32());
-        Assert.Equal(2, familyDetails.GetProperty("minimumStockLevel").GetInt32());
+        Assert.Equal(0.5m, familyDetails.GetProperty("minimumStockLevel").GetDecimal());
 
         var productDetails = await api.GetJsonAsync($"{ApiScenarioClient.ProductsUri}/{product.EntityId}");
         Assert.Equal(targetCategory.EntityId, productDetails.GetProperty("categoryId").GetInt32());

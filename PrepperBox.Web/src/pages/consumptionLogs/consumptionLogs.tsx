@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from "react";
-import { ticksToDate } from "@hwndmaster/atom-web-core";
 import { LoadingSpinner } from "@hwndmaster/atom-react-redux";
 import { Column, DataTable } from "@/primereact";
 import * as store from "@/store";
 import ConsumptionLog from "@/models/consumptionLog";
+import { formatTicksAsDate } from "@/shared/dateFormat";
 import LoadingTargets from "@/shared/loadingTargets";
 
 const ConsumptionLogs: React.FC = () => {
@@ -27,7 +27,7 @@ const ConsumptionLogs: React.FC = () => {
     };
 
     const dateTemplate = (log: ConsumptionLog): React.ReactNode => {
-        return <span>{ticksToDate(log.dateCreated).toLocaleDateString()}</span>;
+        return <span>{formatTicksAsDate(log.dateCreated)}</span>;
     };
 
     return (

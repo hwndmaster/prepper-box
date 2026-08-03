@@ -8,7 +8,7 @@ public sealed record ProductFamilyDto(
     CategoryRef CategoryId,
     string Name,
     UnitOfMeasure UnitOfMeasure,
-    int MinimumStockLevel,
+    decimal MinimumStockLevel,
     int ProductsCount,
     DateTimeOffset DateCreated,
     DateTimeOffset LastModified

@@ -9,5 +9,5 @@ public sealed record UpdateProductFamilyRequest(
     CategoryRef CategoryId,
     string Name,
     UnitOfMeasure UnitOfMeasure,
-    int MinimumStockLevel
+    decimal MinimumStockLevel
 ) : IPrimaryInt32Id<ProductFamilyRef>, ITimeStamped;
