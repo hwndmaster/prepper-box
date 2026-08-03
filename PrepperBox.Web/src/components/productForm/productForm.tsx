@@ -5,7 +5,7 @@ import { translateErrorsToForm, FormValidationErrors } from "@hwndmaster/atom-re
 import { toastService, FormInputText, FormDropdown, FormInputTextarea } from "@hwndmaster/atom-react-prime";
 import { Button, Divider } from "@/primereact";
 import * as store from "@/store";
-import { categoryRef, productFamilyRef } from "@/models/types";
+import { categoryRef, CategoryRef, productFamilyRef, ProductFamilyRef } from "@/models/types";
 import Product from "@/models/product";
 import OpenFoodFactsProduct from "@/models/openFoodFactsProduct";
 
@@ -25,12 +25,14 @@ interface PendingTrackedProduct {
 interface ProductFormProps {
     product?: Product;
     initialBarCode?: string;
+    initialCategoryId?: CategoryRef;
+    initialFamilyId?: ProductFamilyRef;
     submitLabel: string;
     onSubmit: (data: ProductSchemaData, pendingTrackedProducts: TrackedProductSchemaData[], translateErrors: (errors: FormValidationErrors<ProductSchemaData>) => void) => void;
     onCancel: () => void;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, submitLabel, onSubmit, onCancel }) => {
+const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, initialCategoryId, initialFamilyId, submitLabel, onSubmit, onCancel }) => {
     const dispatch = store.useAppDispatch();
     const categories = store.useAppSelector((state) => state.categories.categories);
     const productFamilies = store.useAppSelector((state) => state.productFamilies.productFamilies);
@@ -40,6 +42,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
     const [nextKey, setNextKey] = useState(1);
     const [barCodeSuggestions, setBarCodeSuggestions] = useState<OpenFoodFactsProduct[]>([]);
     const [isLoadingBarCodeSuggestions, setIsLoadingBarCodeSuggestions] = useState(false);
+    const [isInitialFamilyApplied, setIsInitialFamilyApplied] = useState(false);
 
     const trackedProductForm = useTrackedProductForm();
 
@@ -54,7 +57,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
         defaultValues: {
             name: product?.name ?? "",
             description: product?.description ?? undefined,
-            categoryId: product?.categoryId ?? categoryRef.default(),
+            categoryId: product?.categoryId ?? initialCategoryId ?? categoryRef.default(),
             familyId: product?.familyId ?? productFamilyRef.default(),
             manufacturer: product?.manufacturer ?? undefined,
             barCode: product?.barCode ?? initialBarCode ?? undefined,
@@ -86,6 +89,19 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, subm
             form.setValue("familyId", productFamilyRef.default());
         }
     }, [familyOptions, selectedFamilyId, form]);
+
+    useEffect(() => {
+        if (isInitialFamilyApplied || initialFamilyId == null || initialFamilyId === productFamilyRef.default()) {
+            return;
+        }
+        const initialFamily = productFamilies.find((family) => family.id === initialFamilyId);
+        if (initialFamily == null) {
+            return;
+        }
+        form.setValue("categoryId", initialFamily.categoryId);
+        form.setValue("familyId", initialFamily.id, { shouldValidate: true });
+        setIsInitialFamilyApplied(true);
+    }, [initialFamilyId, isInitialFamilyApplied, productFamilies, form]);
 
     const fetchBarCodeSuggestions = (barCode: string): void => {
         if (barCode.trim() === "") {

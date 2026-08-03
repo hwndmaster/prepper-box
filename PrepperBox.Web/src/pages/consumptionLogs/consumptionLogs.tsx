@@ -23,7 +23,7 @@ const ConsumptionLogs: React.FC = () => {
 
     const productNameTemplate = (log: ConsumptionLog): React.ReactNode => {
         const product = products.find((p) => p.id === log.productId);
-        return <span>{product?.name ?? log.productId}`</span>;
+        return <span>{product?.name ?? log.productId}</span>;
     };
 
     const dateTemplate = (log: ConsumptionLog): React.ReactNode => {

@@ -1,0 +1,70 @@
+.panel {
+    border: 1px solid var(--surface-border);
+    border-radius: var(--border-radius);
+    background-color: var(--surface-card);
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.panelHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.15rem 0;
+}
+
+.name {
+    font-weight: 600;
+}
+
+.meta {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+}
+
+.action {
+    margin-left: auto;
+}
+
+.chipDanger {
+    background-color: var(--red-900);
+    color: var(--surface-a);
+    font-size: 0.75rem;
+}
+
+.chipWarning {
+    background-color: var(--yellow-900);
+    color: var(--surface-a);
+    font-size: 0.75rem;
+}
+
+.reasonList {
+    margin: 0;
+    padding-left: 1rem;
+}
+
+@media (max-width: 640px) {
+    .item {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .action :global(.p-button-label) {
+        display: none;
+    }
+}

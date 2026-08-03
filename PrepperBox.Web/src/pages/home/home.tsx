@@ -8,8 +8,9 @@ import { Button, Chip, Column, DataTable, IconField, InputIcon, InputText, Split
 import { useRowExpansion } from "@/hooks/useRowExpansion";
 import * as store from "@/store";
 import Product from "@/models/product";
+import ProductFamily from "@/models/productFamily";
 import TrackedProduct from "@/models/trackedProduct";
-import { CategoryRef, storageLocationRef } from "@/models/types";
+import { CategoryRef, productFamilyRef, storageLocationRef } from "@/models/types";
 import { getCategoryIconClass } from "@/shared/categoryIcons";
 import { formatTicksAsDate } from "@/shared/dateFormat";
 import LoadingTargets from "@/shared/loadingTargets";
@@ -18,6 +19,7 @@ import { StockValidationLevel, validateStockLevel } from "@/shared/stockValidati
 import { UnitOfMeasureLabels } from "@/shared/unitOfMeasureLabels";
 import BarcodeScannerDialog from "./barcodeScannerDialog";
 import ProductSelectionDialog from "./productSelectionDialog";
+import RestockPanel from "./restockPanel";
 import WithdrawStockDialog from "./withdrawStockDialog";
 import styles from "./home.module.scss";
 
@@ -129,7 +131,7 @@ const Home: React.FC = () => {
         setIsScannerVisible(false);
         dispatch(store.Products.Actions.fetchProductsByBarCode(barcode, (foundProducts) => {
             if (foundProducts == null || foundProducts.length === 0) {
-                void goTo(navigate, AppRoutes.AddProduct, undefined, { barCode: barcode, selectedCategoryId: selectedCategoryId ?? 0 });
+                void goTo(navigate, AppRoutes.AddProduct, undefined, { barCode: barcode, familyId: productFamilyRef.default(), selectedCategoryId: selectedCategoryId ?? 0 });
             } else if (foundProducts.length === 1) {
                 void goTo(navigate, AppRoutes.AddTrackedProduct, { productId: foundProducts[0].id }, { selectedCategoryId: selectedCategoryId ?? 0 });
             } else {
@@ -152,6 +154,14 @@ const Home: React.FC = () => {
 
     const onGlobalFilterChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setGlobalFilterValue(event.target.value);
+    };
+
+    const handleAddProductForFamily = (family: ProductFamily): void => {
+        void goTo(navigate, AppRoutes.AddProduct, undefined, {
+            barCode: "",
+            familyId: family.id,
+            selectedCategoryId: selectedCategoryId ?? 0,
+        });
     };
 
     const addProductMenuItems: MenuItem[] = [
@@ -386,10 +396,12 @@ const Home: React.FC = () => {
                         severity="success"
                         model={addProductMenuItems}
                         data-test_id="Home__Add_Product"
-                        onClick={() => void goTo(navigate, AppRoutes.AddProduct, undefined, { barCode: "", selectedCategoryId: selectedCategoryId ?? 0 })}
+                        onClick={() => void goTo(navigate, AppRoutes.AddProduct, undefined, { barCode: "", familyId: productFamilyRef.default(), selectedCategoryId: selectedCategoryId ?? 0 })}
                     />
                 </div>
             </div>
+
+            <RestockPanel categoryId={selectedCategoryId} onAddProduct={handleAddProductForFamily} />
 
             <DataTable
                 value={groupedProducts}

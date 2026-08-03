@@ -23,6 +23,7 @@ const AppRoutes = {
         defaultParams: {},
         state: {
             barCode: "",
+            familyId: 0,
             selectedCategoryId: 0,
         },
     },

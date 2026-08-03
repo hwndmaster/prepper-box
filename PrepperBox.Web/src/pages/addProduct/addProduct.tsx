@@ -4,6 +4,7 @@ import { goTo, FormValidationErrors } from "@hwndmaster/atom-react-core";
 import { inputDateToTicks } from "@hwndmaster/atom-web-core";
 import { toastService } from "@hwndmaster/atom-react-prime";
 import * as store from "@/store";
+import { CategoryRef, ProductFamilyRef } from "@/models/types";
 import AppRoutes from "@/shared/routes";
 import { ProductForm } from "@/components/productForm";
 import type { ProductSchemaData } from "@/schemas/productSchema";
@@ -12,7 +13,9 @@ import styles from "./addProduct.module.scss";
 
 interface AddProductLocationState {
     barCode?: string;
-    selectedCategoryId?: number;
+    familyId?: ProductFamilyRef;
+    /** The category tab the user came from; doubles as the form's initial category. */
+    selectedCategoryId?: CategoryRef;
 }
 
 const AddProduct: React.FC = () => {
@@ -61,6 +64,8 @@ const AddProduct: React.FC = () => {
             <ProductForm
                 submitLabel="Create Product"
                 initialBarCode={locationState?.barCode}
+                initialCategoryId={locationState?.selectedCategoryId}
+                initialFamilyId={locationState?.familyId}
                 onSubmit={handleSubmit}
                 onCancel={handleCancel}
             />
