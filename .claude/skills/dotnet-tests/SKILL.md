@@ -29,23 +29,29 @@ Coverlet is wired in `Directory.Build.props` for every test project: output form
 
 **Important:** the solution references locally built Atom DLLs when `C:\Dev\Src\atom` exists — build the Atom solution first (`dotnet build C:\Dev\Src\atom\Atom.slnx`) if you changed anything there, or tests run against stale DLLs. A locally running app (Aspire AppHost / `PrepperBox.WebApi`) locks those DLLs in `PrepperBox.WebApi\bin\` and makes the build fail with MSB3021/MSB3027 — stop the app before building.
 
+## Project wiring
+
+Test projects reference Atom through the MSBuild flags provided by `Genius.Atom.Build.props`, not explicit `PackageReference` entries — set `ReferenceAtomInfrastructure`, `ReferenceAtomData`, `ReferenceAtomDataEf`, `ReferenceAtomWeb` in the `.csproj` as needed, and the matching `*.TestingUtil` packages come along. Only non-Atom packages (e.g. `Microsoft.AspNetCore.Mvc.Testing`, `Microsoft.EntityFrameworkCore.Sqlite`, `Microsoft.EntityFrameworkCore.InMemory`) are listed explicitly, always versionless (versions live in `Directory.Packages.props`).
+
 ## Frameworks & idioms
 
 - **xUnit v3** — note `TestContext.Current.CancellationToken`; pass it to every async repository/EF/API call (existing tests do).
 - **AutoFixture + FakeItEasy** — `AutoFixture.AutoFakeItEasy` is globally `using`-imported in test projects (via `Directory.Build.props`). Use FakeItEasy (`A.Fake<T>()`, `A.CallTo(...)`) for fakes; AutoFixture for data.
-- **Genius.Atom TestingUtil** — `Genius.Atom.Infrastructure.TestingUtil` provides `FakeDateTime` (`new FakeDateTime()`, `.Advance(TimeSpan)`) for deterministic time. `Genius.Atom.Data.Ef.TestingUtil` provides `BaseRepositoryTests<...>`, the base class for repository tests.
+- **Genius.Atom TestingUtil** — `Genius.Atom.Infrastructure.TestingUtil` provides `FakeDateTime` (`new FakeDateTime()`, `.Advance(TimeSpan)`) for deterministic time and `FakeLogger<T>` (assert over `.Logs`, e.g. `Assert.DoesNotContain(_logger.Logs, x => x.LogLevel is LogLevel.Error)`). `Genius.Atom.Data.Ef.TestingUtil` provides `BaseRepositoryTests<...>`, the base class for repository tests.
 - Assertions use the built-in xUnit `Assert.*` API.
-- Test classes are `public sealed`; test methods are `[Fact]` (use `[Theory]` + `[InlineData]` for parameterized cases).
+- Test classes are `public sealed`; test methods are `[Fact]` (use `[Theory]` + `[InlineData]` for parameterized cases). Infrastructure helpers inside a test project are `internal sealed`.
 - Prefer a deterministic signal over sleeping/polling when a test drives asynchronous code (see the signalling logger in `ExpirationCheckWorkerTests`).
 
 ## Structure & naming
 
 - Namespace mirrors the project, e.g. `namespace Genius.PrepperBox.Db.Tests;`.
 - Method name pattern: `MethodOrScenario_GivenSomething_WhenCondition_ThenExpectedOutcome` — parts are optional depending on the scenario (e.g. `MigrateWithBackupAsync_GivenFreshDatabase_CreatesSchemaViaMigrations`, `UpdateAsync_MovesStockToAnotherStorageLocation`).
-- Body uses **Arrange / Act / Assert** comment sections.
+- Body uses **Arrange / Act / Assert** comment sections. Lifecycle tests that interleave them use `// Act & Assert: <stage>` per stage.
 - Integration scenario tests carry a `/* Scenario Summary + numbered Steps */` block above `[Fact]`, with matching `// Step N:` comments inline — preserve this style when extending them.
 
 ## Repository tests (`PrepperBox.Db.Tests/Repositories/`)
+
+- Use `await using var context = new RepositoryTestContext();` for an isolated EF context per test. It is a hand-rolled `IDatabaseContext` over the EF **in-memory** provider with a fresh `Guid` database name, so it bypasses DI entirely — no SQLite, no migrations.
 
 Repository tests derive from Atom's `BaseRepositoryTests`, which supplies the CRUD lifecycle tests (including the optimistic-concurrency conflict case) — see `Repositories/CategoriesRepositoryTests.cs`:
 

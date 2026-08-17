@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Genius.PrepperBox.Db.Models;
 using Genius.PrepperBox.Dto.References;
 using Microsoft.EntityFrameworkCore;
@@ -34,19 +33,19 @@ public sealed class PrepperBoxDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         // Configure reference type value conversions for entity IDs
-        ConfigureReferenceId<Category, CategoryRef>(modelBuilder, id => new CategoryRef(id));
-        ConfigureReferenceId<ProductFamily, ProductFamilyRef>(modelBuilder, id => new ProductFamilyRef(id));
-        ConfigureReferenceId<Product, ProductRef>(modelBuilder, id => new ProductRef(id));
-        ConfigureReferenceId<StorageLocation, StorageLocationRef>(modelBuilder, id => new StorageLocationRef(id));
-        ConfigureReferenceId<TrackedProduct, TrackedProductRef>(modelBuilder, id => new TrackedProductRef(id));
-        ConfigureReferenceId<ConsumptionLog, ConsumptionLogRef>(modelBuilder, id => new ConsumptionLogRef(id));
+        modelBuilder.ConfigureReferenceId<Category, CategoryRef>(id => new CategoryRef(id));
+        modelBuilder.ConfigureReferenceId<ProductFamily, ProductFamilyRef>(id => new ProductFamilyRef(id));
+        modelBuilder.ConfigureReferenceId<Product, ProductRef>(id => new ProductRef(id));
+        modelBuilder.ConfigureReferenceId<StorageLocation, StorageLocationRef>(id => new StorageLocationRef(id));
+        modelBuilder.ConfigureReferenceId<TrackedProduct, TrackedProductRef>(id => new TrackedProductRef(id));
+        modelBuilder.ConfigureReferenceId<ConsumptionLog, ConsumptionLogRef>(id => new ConsumptionLogRef(id));
 
         // Configure reference type value conversions for foreign key properties
-        ConfigureReferenceFk<ProductFamily, CategoryRef>(modelBuilder, nameof(ProductFamily.CategoryId), id => new CategoryRef(id));
-        ConfigureReferenceFk<Product, ProductFamilyRef>(modelBuilder, nameof(Product.FamilyId), id => new ProductFamilyRef(id));
-        ConfigureReferenceFk<TrackedProduct, ProductRef>(modelBuilder, nameof(TrackedProduct.ProductId), id => new ProductRef(id));
-        ConfigureReferenceFk<TrackedProduct, StorageLocationRef>(modelBuilder, nameof(TrackedProduct.StorageLocationId), id => new StorageLocationRef(id));
-        ConfigureReferenceFk<ConsumptionLog, ProductRef>(modelBuilder, nameof(ConsumptionLog.ProductId), id => new ProductRef(id));
+        modelBuilder.ConfigureReferenceFk<ProductFamily, CategoryRef>(nameof(ProductFamily.CategoryId), id => new CategoryRef(id));
+        modelBuilder.ConfigureReferenceFk<Product, ProductFamilyRef>(nameof(Product.FamilyId), id => new ProductFamilyRef(id));
+        modelBuilder.ConfigureReferenceFk<TrackedProduct, ProductRef>(nameof(TrackedProduct.ProductId), id => new ProductRef(id));
+        modelBuilder.ConfigureReferenceFk<TrackedProduct, StorageLocationRef>(nameof(TrackedProduct.StorageLocationId), id => new StorageLocationRef(id));
+        modelBuilder.ConfigureReferenceFk<ConsumptionLog, ProductRef>(nameof(ConsumptionLog.ProductId), id => new ProductRef(id));
 
         // Configure ProductFamily N:1 relationship with Category (FK constraint)
         modelBuilder.Entity<ProductFamily>()
@@ -93,40 +92,6 @@ public sealed class PrepperBoxDbContext : DbContext
                 property.SetValueConverter(dateTimeOffsetConverter);
             }
         }
-    }
-
-    /// <summary>
-    /// Configures a value conversion for the <see cref="EntityOnInt32Base{TReference}.Id"/> property
-    /// to map between a strongly-typed <typeparamref name="TReference"/> and an <see cref="int"/> in the database.
-    /// </summary>
-    private static void ConfigureReferenceId<TEntity, TReference>(ModelBuilder modelBuilder,
-        Expression<Func<int, TReference>> fromProvider)
-        where TEntity : EntityBase<int, TReference>
-        where TReference : IReference<int, TReference>
-    {
-        modelBuilder.Entity<TEntity>()
-            .Property(e => e.Id)
-            .HasConversion(
-                r => r.Id,
-                fromProvider)
-            .ValueGeneratedOnAdd()
-            .HasSentinel(TReference.Create(0));
-    }
-
-    /// <summary>
-    /// Configures a value conversion for a foreign key property of type <typeparamref name="TReference"/>
-    /// to map between the strongly-typed reference and an <see cref="int"/> in the database.
-    /// </summary>
-    private static void ConfigureReferenceFk<TEntity, TReference>(ModelBuilder modelBuilder,
-        string propertyName, Expression<Func<int, TReference>> fromProvider)
-        where TEntity : class
-        where TReference : IReference<int, TReference>
-    {
-        modelBuilder.Entity<TEntity>()
-            .Property<TReference>(propertyName)
-            .HasConversion(
-                r => r.Id,
-                fromProvider);
     }
 
     public DbSet<Category> Categories { get; set; }
