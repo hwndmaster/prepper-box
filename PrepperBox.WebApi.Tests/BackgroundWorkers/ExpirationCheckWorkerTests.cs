@@ -51,9 +51,49 @@ public sealed class ExpirationCheckWorkerTests
         Assert.Contains("<b>Canned Beans</b> expires <b>today</b>!", sentMessage, StringComparison.Ordinal);
         Assert.Contains("<b>Still Water</b> expires in <b>10 day(s)</b>.", sentMessage, StringComparison.Ordinal);
         // Product #3 is not in the products list, so it falls back to its identifier.
+        // Its 45 remaining days are a multiple of the green interval (5), so it is reported.
         Assert.Contains("<b>Product #3</b> expires in <b>45 day(s)</b>.", sentMessage, StringComparison.Ordinal);
         // Neither the stock without an expiration date nor the one expiring in 200 days is reported.
         Assert.DoesNotContain("Multi-tool", sentMessage, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_GivenGreenZoneStock_WhenDaysLeftNotOnInterval_DoesNotNotify()
+    {
+        // Arrange
+        var today = DateTimeOffset.Now;
+        // 44 days left is inside the green zone (1-2 months) but not a multiple of the interval (5).
+        SetupStock(
+            [CreateTrackedProduct(1, productId: 1, expirationDate: today.AddDays(44))],
+            [CreateProduct(1, "Rice")]);
+
+        // Act
+        await RunSingleCheckAsync();
+
+        // Assert
+        A.CallTo(() => _telegramNotificationService.SendMessageAsync(A<string>._, A<CancellationToken>._))
+            .MustNotHaveHappened();
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_GivenGreenZoneStock_WhenIntervalIsOneDay_NotifiesEveryDay()
+    {
+        // Arrange
+        var today = DateTimeOffset.Now;
+        SetupStock(
+            [CreateTrackedProduct(1, productId: 1, expirationDate: today.AddDays(44))],
+            [CreateProduct(1, "Rice")]);
+
+        string? sentMessage = null;
+        A.CallTo(() => _telegramNotificationService.SendMessageAsync(A<string>._, A<CancellationToken>._))
+            .Invokes((string message, CancellationToken _) => sentMessage = message);
+
+        // Act
+        await RunSingleCheckAsync(greenNotificationIntervalDays: 1);
+
+        // Assert
+        Assert.NotNull(sentMessage);
+        Assert.Contains("<b>Rice</b> expires in <b>44 day(s)</b>.", sentMessage, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -88,7 +128,7 @@ public sealed class ExpirationCheckWorkerTests
     /// Starts the worker configured to run its daily check immediately, and waits until that single
     /// check has completed (the worker then reschedules itself for the next day).
     /// </summary>
-    private async Task RunSingleCheckAsync()
+    private async Task RunSingleCheckAsync(int greenNotificationIntervalDays = 5)
     {
         var services = new ServiceCollection()
             .AddSingleton(_trackedProductsRepository)
@@ -99,7 +139,8 @@ public sealed class ExpirationCheckWorkerTests
         var settings = Options.Create(new ExpirationCheckSettings
         {
             NotificationTime = TimeSpan.Zero,
-            NotificationWindowMinutes = 24 * 60
+            NotificationWindowMinutes = 24 * 60,
+            GreenNotificationIntervalDays = greenNotificationIntervalDays
         });
 
         using var worker = new ExpirationCheckWorker(

@@ -22,4 +22,11 @@ public sealed class ExpirationCheckSettings
     /// If the app starts within this window, the check runs immediately.
     /// </summary>
     public int NotificationWindowMinutes { get; set; } = 30;
+
+    /// <summary>
+    /// How often, in days, a product in the "green" zone (between 1 and 2 months before expiration)
+    /// is included in the notification. A product is reported only when its remaining days
+    /// are a multiple of this interval. Must be at least 1 (1 = every day).
+    /// </summary>
+    public int GreenNotificationIntervalDays { get; set; } = 5;
 }

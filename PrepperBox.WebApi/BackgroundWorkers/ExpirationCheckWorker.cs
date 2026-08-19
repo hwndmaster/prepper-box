@@ -16,7 +16,8 @@ namespace Genius.PrepperBox.WebApi.BackgroundWorkers;
 /// <remarks>
 /// Notification schedule:
 /// <list type="bullet">
-///   <item>First notification: 2 months before the expiration date.</item>
+///   <item>First notification: 2 months before the expiration date ("green"), repeated every
+///   <see cref="ExpirationCheckSettings.GreenNotificationIntervalDays"/> days instead of daily.</item>
 ///   <item>Second notification: 1 month before the expiration date.</item>
 ///   <item>Third notification: on the day of the expiration.</item>
 /// </list>
@@ -29,6 +30,7 @@ internal sealed class ExpirationCheckWorker : BackgroundService
     private readonly ILogger<ExpirationCheckWorker> _logger;
     private readonly TimeSpan _notificationTime;
     private readonly TimeSpan _notificationWindow;
+    private readonly int _greenNotificationIntervalDays;
 
     private DateOnly? _lastRunDate;
 
@@ -44,6 +46,15 @@ internal sealed class ExpirationCheckWorker : BackgroundService
         var configuredNotificationTime = settings.NotificationTimeUtc ?? settings.NotificationTime;
         _notificationTime = NormalizeNotificationTime(configuredNotificationTime);
         _notificationWindow = TimeSpan.FromMinutes(Math.Clamp(settings.NotificationWindowMinutes, 0, 24 * 60));
+        _greenNotificationIntervalDays = Math.Max(1, settings.GreenNotificationIntervalDays);
+
+        if (settings.GreenNotificationIntervalDays < 1)
+        {
+            _logger.LogWarning(
+                "Invalid ExpirationCheck:GreenNotificationIntervalDays value {ConfiguredInterval}; using fallback {FallbackInterval}.",
+                settings.GreenNotificationIntervalDays,
+                _greenNotificationIntervalDays);
+        }
 
         if (settings.NotificationTimeUtc is not null)
         {
@@ -168,7 +179,13 @@ internal sealed class ExpirationCheckWorker : BackgroundService
             else if (expirationDate > oneMonthFromNow && expirationDate <= twoMonthsFromNow)
             {
                 var daysLeft = (expirationDate - today).Days;
-                notifications.Add($"🟢 <b>{productName}</b> expires in <b>{daysLeft} day(s)</b>. (Qty: {tp.Quantity})");
+
+                // Green notifications are throttled: report each product only every
+                // GreenNotificationIntervalDays days as its countdown decreases.
+                if (daysLeft % _greenNotificationIntervalDays == 0)
+                {
+                    notifications.Add($"🟢 <b>{productName}</b> expires in <b>{daysLeft} day(s)</b>. (Qty: {tp.Quantity})");
+                }
             }
         }
 
