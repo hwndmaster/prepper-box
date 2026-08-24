@@ -4,7 +4,7 @@ import { toastService } from "@hwndmaster/atom-react-prime";
 import { LoadingSpinner } from "@hwndmaster/atom-react-redux";
 import { goTo } from "@hwndmaster/atom-react-core";
 import type { MenuItem } from "@/primereact";
-import { Button, Chip, Column, DataTable, IconField, InputIcon, InputText, SplitButton, TabPanel, TabView, Tooltip } from "@/primereact";
+import { Button, Chip, Column, DataTable, IconField, InputIcon, InputSwitch, InputText, SplitButton, TabPanel, TabView, Tooltip } from "@/primereact";
 import { useRowExpansion } from "@/hooks/useRowExpansion";
 import * as store from "@/store";
 import Product from "@/models/product";
@@ -48,6 +48,7 @@ const Home: React.FC = () => {
     const [matchedProducts, setMatchedProducts] = useState<Product[]>([]);
     const [isProductSelectionVisible, setIsProductSelectionVisible] = useState(false);
     const [globalFilterValue, setGlobalFilterValue] = useState("");
+    const [shouldShowEmpty, setShouldShowEmpty] = useState(false);
 
     useEffect(() => {
         dispatch(store.Categories.Actions.fetchCategories());
@@ -71,6 +72,10 @@ const Home: React.FC = () => {
                 return false;
             }
 
+            if (!shouldShowEmpty && (trackedProductsByProductId.get(p.id) ?? []).length === 0) {
+                return false;
+            }
+
             if (normalizedFilter === "") {
                 return true;
             }
@@ -84,7 +89,7 @@ const Home: React.FC = () => {
 
             return searchableContent.includes(normalizedFilter);
         });
-    }, [products, selectedCategoryId, globalFilterValue]);
+    }, [products, selectedCategoryId, globalFilterValue, shouldShowEmpty, trackedProductsByProductId]);
 
     // Subheader grouping requires the rows to be contiguous per family.
     const groupedProducts = useMemo(() => {
@@ -358,6 +363,15 @@ const Home: React.FC = () => {
     const renderHeader = (): React.ReactNode => {
         return (
             <div className={styles.tableHeader}>
+                <div className={styles.showEmptyToggle}>
+                    <label htmlFor="showEmptySwitch">Show empty</label>
+                    <InputSwitch
+                        inputId="showEmptySwitch"
+                        checked={shouldShowEmpty}
+                        data-test_id="Home__Show_Empty_Switch"
+                        onChange={(e) => setShouldShowEmpty(e.value)}
+                    />
+                </div>
                 <IconField iconPosition="left" className={styles.searchField}>
                     <InputIcon className="pi pi-search" />
                     <InputText

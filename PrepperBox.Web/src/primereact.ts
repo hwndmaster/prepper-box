@@ -19,6 +19,7 @@ export { FloatLabel } from "primereact/floatlabel";
 export { IconField } from "primereact/iconfield";
 export { InputIcon } from "primereact/inputicon";
 export { InputNumber } from "primereact/inputnumber";
+export { InputSwitch } from "primereact/inputswitch";
 export { InputText } from "primereact/inputtext";
 export type { InputTextProps } from "primereact/inputtext";
 export { InputTextarea } from "primereact/inputtextarea";

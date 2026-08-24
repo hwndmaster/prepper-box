@@ -19,7 +19,21 @@
 
 .tableHeader {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.showEmptyToggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    label {
+        cursor: pointer;
+        white-space: nowrap;
+    }
 }
 
 .searchField {
