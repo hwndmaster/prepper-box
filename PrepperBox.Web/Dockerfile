@@ -21,8 +21,18 @@ RUN pnpm run build
 FROM nginx:alpine AS runtime
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Optional: custom nginx config for React Router (handles page refresh)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Custom nginx config for React Router (handles page refresh) plus the /api/ and /otlp/ proxies.
+# Installed as a TEMPLATE, not as conf.d/default.conf: the nginx image runs envsubst over
+# /etc/nginx/templates at start-up, which is what makes the two upstreams configurable per deployment.
+COPY nginx.conf /etc/nginx/templates/default.conf.template
+
+# Restricts envsubst to our own variables so nginx's $uri, $host, $upstream and $1 are left alone.
+ENV NGINX_ENVSUBST_FILTER=^PREPPER_BOX_
+
+# Defaults match the compose-owned deployment, where every container shares one network and resolves
+# these names. The app host overrides them when DCP owns the containers and sits on its own network.
+ENV PREPPER_BOX_API_UPSTREAM=http://prepper-box-api:8045
+ENV PREPPER_BOX_OTLP_UPSTREAM=http://prepper-box-apphost:21193
 
 EXPOSE 8046
 EXPOSE 8443

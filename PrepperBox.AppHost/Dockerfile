@@ -36,6 +36,14 @@ RUN --mount=type=cache,id=prepper-box-apphost-nuget-packages,target=/root/.nuget
 # ---- Runtime Stage ----
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
+
+# In "deployed" mode the app host's DCP orchestrator creates the api and web containers on the host's
+# Docker daemon, whose socket is bind-mounted in by compose. DCP locates the runtime by probing for the
+# CLI (Aspire.Shared.ContainerRuntimeDetector.IsCliInstalledAsync), so the binary has to be present.
+# Copied from the official CLI image rather than installed via apt: it is a single static binary, and
+# the docker.io package would drag in the daemon we explicitly do not want here.
+COPY --from=docker:28-cli /usr/local/bin/docker /usr/local/bin/docker
+
 COPY --from=build /src/PrepperBox.AppHost/bin/Release/net10.0 .
 COPY --from=build /aspire-runtime-packages /root/.nuget/packages
 

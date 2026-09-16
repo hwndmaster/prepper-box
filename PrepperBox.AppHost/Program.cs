@@ -1,9 +1,35 @@
+using Genius.PrepperBox.AppHost;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
-var appHostMode = builder.Configuration["AppHost:Mode"];
-var runDashboardOnly = string.Equals(appHostMode, "dashboard", StringComparison.OrdinalIgnoreCase);
+// ── Modes ────────────────────────────────────────────────────────────────────────────────────
+// (unset)    Local development: the app host builds and supervises the projects from source.
+// deployed   Containerized deployment: DCP owns the api and web containers, so the dashboard's
+//            Resources page can start, stop, restart and stream logs for them.
+// external   Containerized deployment where compose owns the containers and the app host only
+//            observes them. The fallback for when DCP cannot drive the container runtime.
+// dashboard  Telemetry sink only — no resource model, so the Resources page stays empty.
+switch (builder.Configuration["AppHost:Mode"]?.ToLowerInvariant())
+{
+    case "dashboard":
+        break;
 
-if (!runDashboardOnly)
+    case "deployed":
+        ConfigureDeployed(builder);
+        break;
+
+    case "external":
+        ConfigureExternal(builder);
+        break;
+
+    default:
+        ConfigureLocalDevelopment(builder);
+        break;
+}
+
+await builder.Build().RunAsync().ConfigureAwait(false);
+
+static void ConfigureLocalDevelopment(IDistributedApplicationBuilder builder)
 {
     var api = builder.AddProject<Projects.WebApi>("webapi")
         .WithHttpHealthCheck("/health");
@@ -18,4 +44,107 @@ if (!runDashboardOnly)
     api.WithEnvironment("Cors__Origins__0", web.GetEndpoint("http"));
 }
 
-await builder.Build().RunAsync().ConfigureAwait(false);
+/// <summary>
+/// DCP creates and supervises the published images as sibling containers on the host's Docker daemon
+/// (its socket is bind-mounted into this container). Compose only starts this app host; everything else
+/// is owned here, which is what makes the Resources page controllable rather than empty.
+/// </summary>
+static void ConfigureDeployed(IDistributedApplicationBuilder builder)
+{
+    var settings = DeploymentSettings.From(builder.Configuration);
+
+    // No "--network" runtime argument anywhere below. DCP reconciles the networks of the containers it
+    // owns, and an externally supplied network makes it try to detach the container from a network it
+    // has no record of, which fails the start outright with:
+    //   ContainerReconciler  Could not detach network from the container ... network ... not found
+    // DCP puts everything it owns on one network of its own, so prepper-box-web already resolves
+    // prepper-box-api by name there. Only the hop back to this app host leaves that network, and that
+    // goes over the host gateway instead.
+    var api = builder.AddContainer("webapi", $"{settings.Registry}/prepper-box-api", settings.ImageTag)
+        // The web image's nginx.conf proxies to prepper-box-api by name, so the container name is part
+        // of the contract rather than a cosmetic choice.
+        .WithContainerName("prepper-box-api")
+        .WithImagePullPolicy(settings.ImagePullPolicy)
+        // Persistent: restarting this app host must not take the application down with it.
+        .WithLifetime(ContainerLifetime.Persistent)
+        // No explicit host port, and the reachable publish is added as a runtime argument below.
+        // DCP always publishes its own endpoints on 127.0.0.1 (DcpPublisher:BindAddress does not change
+        // that), which on a server would leave the app reachable only from the machine itself.
+        .WithHttpEndpoint(targetPort: DeploymentSettings.ApiContainerPort, isProxied: false)
+        .WithContainerRuntimeArgs("-p", $"{settings.BindAddress}:{settings.ApiPort}:{DeploymentSettings.ApiContainerPort}")
+        // Deliberately runtime arguments rather than WithBindMount. WithBindMount normalises the path
+        // with the APP HOST's OS conventions, but this app host runs in a Linux container while the
+        // daemon resolving the mount is the Windows host's. A "C:/..." path is not absolute to Linux, so
+        // it got prefixed with the app host's working directory and the container failed to create:
+        //   bind source path does not exist: /src/PrepperBox.AppHost/C:/...
+        // Passed as -v, the string reaches the daemon untouched.
+        .WithContainerRuntimeArgs("-v", $"{settings.DataPath}:/app/Data")
+        .WithContainerRuntimeArgs("-v", $"{settings.LogsPath}:/app/Logs")
+        // Docker Desktop resolves host.docker.internal on its own; a plain Linux daemon does not, hence
+        // the explicit host-gateway mapping. Harmless where it is already provided.
+        .WithContainerRuntimeArgs("--add-host", "host.docker.internal:host-gateway")
+        // Docker Desktop groups containers by these labels. Set explicitly rather than left to chance:
+        // `docker compose build` bakes the BUILDING project's name into the image (the repo directory,
+        // "prepper-box"), containers inherit image labels, and the result was the app host sitting in
+        // one stack while the containers it owns sat in another. Compose does not claim containers just
+        // because they carry its project label, so the persistent lifetime is unaffected.
+        .WithContainerRuntimeArgs("--label", $"com.docker.compose.project={settings.ComposeProject}")
+        .WithContainerRuntimeArgs("--label", "com.docker.compose.service=prepper-box-api")
+        .WithEnvironment("OTEL_EXPORTER_OTLP_ENDPOINT", settings.OtlpGrpcEndpoint)
+        .WithEnvironment("OTEL_EXPORTER_OTLP_PROTOCOL", "grpc")
+        .WithEnvironment("OTEL_EXPORTER_OTLP_INSECURE", "true")
+        // Aspire injects this for project resources but not for plain containers, and without it every
+        // log line and span arrives in the dashboard under "unknown_service:dotnet" — indistinguishable
+        // from anything else reporting in.
+        .WithEnvironment("OTEL_SERVICE_NAME", "prepper-box-api");
+
+    // PrepperBox is the only app in the family that also serves HTTPS, from certificates mounted into
+    // the web container. Read straight from configuration rather than added to DeploymentSettings:
+    // that file is rendered from the shared atom-devops template and must stay app-agnostic.
+    var httpsPort = builder.Configuration["Deployment:WebHttpsPort"] ?? "5097";
+    var certsPath = builder.Configuration["Deployment:CertsPath"];
+
+    var web = builder.AddContainer("web", $"{settings.Registry}/prepper-box-web", settings.ImageTag)
+        .WithContainerName("prepper-box-web")
+        .WithImagePullPolicy(settings.ImagePullPolicy)
+        .WithLifetime(ContainerLifetime.Persistent)
+        .WithHttpEndpoint(targetPort: DeploymentSettings.WebContainerPort, isProxied: false)
+        .WithContainerRuntimeArgs("-p", $"{settings.BindAddress}:{settings.WebPort}:{DeploymentSettings.WebContainerPort}")
+        .WithExternalHttpEndpoints()
+        .WithContainerRuntimeArgs("--add-host", "host.docker.internal:host-gateway")
+        .WithContainerRuntimeArgs("--label", $"com.docker.compose.project={settings.ComposeProject}")
+        .WithContainerRuntimeArgs("--label", "com.docker.compose.service=prepper-box-web")
+        // nginx in this image renders its config from these at start-up. Its defaults assume every
+        // container shares one network, which is true when compose owns them but not here.
+        .WithEnvironment("PREPPER_BOX_API_UPSTREAM", settings.WebApiUpstream)
+        .WithEnvironment("PREPPER_BOX_OTLP_UPSTREAM", settings.WebOtlpUpstream)
+        .WaitFor(api);
+
+    // Not optional: the web image's nginx config declares an HTTPS server that references its
+    // certificate files unconditionally, so without them nginx refuses to start and the SPA is down.
+    // Fail here with something readable rather than leaving a container that will not come up.
+    if (string.IsNullOrWhiteSpace(certsPath))
+    {
+        throw new InvalidOperationException(
+            "Deployment:CertsPath is required. The web image serves HTTPS from /etc/nginx/certs and "
+            + "nginx will not start without server.crt and server.key. Set PREPPER_BOX_CERTS_PATH in "
+            + "Deployment/.env to the host folder holding them.");
+    }
+
+    // A host path, resolved by the host's daemon — same reasoning as the data and logs mounts above.
+    web.WithContainerRuntimeArgs("-v", $"{certsPath}:/etc/nginx/certs:ro")
+        .WithContainerRuntimeArgs("-p", $"{settings.BindAddress}:{httpsPort}:8443");
+}
+
+/// <summary>
+/// Compose owns the containers; the app host only reports them. Needs no container runtime access, so
+/// it works without the Docker socket — at the cost of a read-only Resources page.
+/// </summary>
+static void ConfigureExternal(IDistributedApplicationBuilder builder)
+{
+    builder.AddExternalService("webapi", $"http://prepper-box-api:{DeploymentSettings.ApiContainerPort}")
+        .WithHttpHealthCheck("/health");
+
+    builder.AddExternalService("web", $"http://prepper-box-web:{DeploymentSettings.WebContainerPort}")
+        .WithHttpHealthCheck("/");
+}
