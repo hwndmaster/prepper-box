@@ -10,14 +10,14 @@ import ConsumptionLogs from "./pages/consumptionLogs";
 import AddProduct from "./pages/addProduct";
 import EditProduct from "./pages/editProduct";
 import AddTrackedProduct from "./pages/addTrackedProduct";
-import Error from "./pages/error";
+import ErrorPage from "./pages/error";
 import NotFound from "./pages/notFound";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Layout />,
-        errorElement: <Error />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: AppRoutes.Default.path,
