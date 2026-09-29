@@ -3,7 +3,6 @@
 interface ImportMetaEnv {
   readonly SERVER_OPEN_BROWSER: "true" | "false";
   readonly MODE: Modes;
-  readonly VITE_BASE_URL: string;
   readonly VITE_API_URL: string;
   readonly VITE_OTEL_EXPORTER_OTLP_ENDPOINT?: string;
   readonly VITE_OTEL_SERVICE_NAME?: string;

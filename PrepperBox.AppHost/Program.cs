@@ -1,5 +1,9 @@
 using Genius.PrepperBox.AppHost;
 
+// The port the Vite dev server runs on locally. Named in one more place that has to agree with it:
+// `server.port` in vite.config.ts, for when the dev server is started on its own.
+const int WebDevServerPort = 5096;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 // ── Modes ────────────────────────────────────────────────────────────────────────────────────
@@ -37,9 +41,36 @@ static void ConfigureLocalDevelopment(IDistributedApplicationBuilder builder)
     var web = builder.AddViteApp("web", "../PrepperBox.Web", "start:aspire")
         .WithPnpm()
         .WithReference(api)
+        // AddViteApp leaves the endpoint's ports unset, so Aspire allocates a fresh pair on every run:
+        // one for its proxy and one it passes to vite as --port. The dev server then moved every time,
+        // and two different ports served the SPA at once.
+        //
+        // Unproxied on purpose. Proxying would still hand vite a random port of its own, and the point
+        // here is that the dev server sits where vite.config.ts and .env already say it does - the same
+        // address as a plain `pnpm start`, with vite's HMR socket reaching it without a hop in between.
+        .WithEndpoint("http", endpoint =>
+        {
+            endpoint.Port = WebDevServerPort;
+            endpoint.TargetPort = WebDevServerPort;
+            endpoint.IsProxied = false;
+        })
         .WithEnvironment("VITE_API_URL", api.GetEndpoint("http"))
         .WithExternalHttpEndpoints()
         .WaitFor(api);
+
+    // The browser's OTLP exporter always posts to <origin>/otlp. In the published image nginx carries
+    // that on to the dashboard; the dev server has to make the same hop, so it is told where to.
+    //
+    // Passed explicitly rather than derived from the OTEL_* variables Aspire injects into the node
+    // process: those address the gRPC endpoint, and a browser exporter can only speak OTLP/HTTP.
+    //
+    // Left unset — an app host started without this launch profile — vite.config.ts configures no proxy
+    // and the SPA leaves telemetry off, rather than posting into a dev server that has no such route.
+    var otlpHttpEndpoint = builder.Configuration["ASPIRE_DASHBOARD_OTLP_HTTP_ENDPOINT_URL"];
+    if (!string.IsNullOrWhiteSpace(otlpHttpEndpoint))
+    {
+        web.WithEnvironment("VITE_OTLP_UPSTREAM", otlpHttpEndpoint);
+    }
 
     api.WithEnvironment("Cors__Origins__0", web.GetEndpoint("http"));
 }
@@ -72,6 +103,9 @@ static void ConfigureDeployed(IDistributedApplicationBuilder builder)
         // that), which on a server would leave the app reachable only from the machine itself.
         .WithHttpEndpoint(targetPort: DeploymentSettings.ApiContainerPort, isProxied: false)
         .WithContainerRuntimeArgs("-p", $"{settings.BindAddress}:{settings.ApiPort}:{DeploymentSettings.ApiContainerPort}")
+        // The endpoint's own URL is DCP's 127.0.0.1 publish, which only works from this machine, so the
+        // dashboard is given the reachable publish above instead. Display only: nothing connects by it.
+        .WithUrlForEndpoint("http", url => url.Url = settings.PublicUrl(settings.ApiPort))
         // Deliberately runtime arguments rather than WithBindMount. WithBindMount normalises the path
         // with the APP HOST's OS conventions, but this app host runs in a Linux container while the
         // daemon resolving the mount is the Windows host's. A "C:/..." path is not absolute to Linux, so
@@ -110,6 +144,7 @@ static void ConfigureDeployed(IDistributedApplicationBuilder builder)
         .WithLifetime(ContainerLifetime.Persistent)
         .WithHttpEndpoint(targetPort: DeploymentSettings.WebContainerPort, isProxied: false)
         .WithContainerRuntimeArgs("-p", $"{settings.BindAddress}:{settings.WebPort}:{DeploymentSettings.WebContainerPort}")
+        .WithUrlForEndpoint("http", url => url.Url = settings.PublicUrl(settings.WebPort))
         .WithExternalHttpEndpoints()
         .WithContainerRuntimeArgs("--add-host", "host.docker.internal:host-gateway")
         .WithContainerRuntimeArgs("--label", $"com.docker.compose.project={settings.ComposeProject}")
@@ -133,7 +168,9 @@ static void ConfigureDeployed(IDistributedApplicationBuilder builder)
 
     // A host path, resolved by the host's daemon — same reasoning as the data and logs mounts above.
     web.WithContainerRuntimeArgs("-v", $"{certsPath}:/etc/nginx/certs:ro")
-        .WithContainerRuntimeArgs("-p", $"{settings.BindAddress}:{httpsPort}:8443");
+        .WithContainerRuntimeArgs("-p", $"{settings.BindAddress}:{httpsPort}:8443")
+        // No endpoint behind this publish, so without it the Resources page would not list HTTPS at all.
+        .WithUrl($"https://{settings.PublicHost}:{httpsPort}");
 }
 
 /// <summary>
