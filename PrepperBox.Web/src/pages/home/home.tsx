@@ -14,6 +14,7 @@ import { CategoryRef, productFamilyRef, storageLocationRef } from "@/models/type
 import { getCategoryIconClass } from "@/shared/categoryIcons";
 import { formatTicksAsDate } from "@/shared/dateFormat";
 import LoadingTargets from "@/shared/loadingTargets";
+import { sortProductsByExpiration, sortProductsByFamily } from "@/shared/productSorting";
 import AppRoutes from "@/shared/routes";
 import { StockValidationLevel, validateStockLevel } from "@/shared/stockValidation";
 import { UnitOfMeasureLabels } from "@/shared/unitOfMeasureLabels";
@@ -37,6 +38,7 @@ const Home: React.FC = () => {
     const storageLocations = store.useAppSelector((state) => state.storageLocations.storageLocations);
     const trackedProductsByProductId = store.useAppSelector(store.TrackedProducts.Selectors.selectTrackedProductsByProductId);
     const trackedQuantityByProductId = store.useAppSelector(store.TrackedProducts.Selectors.selectTrackedQuantityByProductId);
+    const soonestExpirationByProductId = store.useAppSelector(store.TrackedProducts.Selectors.selectSoonestExpirationByProductId);
     const familyAggregates = store.useAppSelector(store.TrackedProducts.Selectors.selectStockAggregatesByFamilyId);
 
     const [selectedCategoryId, setSelectedCategoryId] = useState<CategoryRef | null>(null);
@@ -49,6 +51,7 @@ const Home: React.FC = () => {
     const [isProductSelectionVisible, setIsProductSelectionVisible] = useState(false);
     const [globalFilterValue, setGlobalFilterValue] = useState("");
     const [shouldShowEmpty, setShouldShowEmpty] = useState(false);
+    const [shouldSortByExpiration, setShouldSortByExpiration] = useState(false);
 
     useEffect(() => {
         dispatch(store.Categories.Actions.fetchCategories());
@@ -91,15 +94,12 @@ const Home: React.FC = () => {
         });
     }, [products, selectedCategoryId, globalFilterValue, shouldShowEmpty, trackedProductsByProductId]);
 
-    // Subheader grouping requires the rows to be contiguous per family.
+    // Subheader grouping requires the rows to be contiguous per family; both orders keep them so.
     const groupedProducts = useMemo(() => {
-        return [...filteredProducts].sort((a, b) => {
-            if (a.familyId !== b.familyId) {
-                return Number(a.familyId) - Number(b.familyId);
-            }
-            return a.name.localeCompare(b.name);
-        });
-    }, [filteredProducts]);
+        return shouldSortByExpiration
+            ? sortProductsByExpiration(filteredProducts, soonestExpirationByProductId)
+            : sortProductsByFamily(filteredProducts);
+    }, [filteredProducts, shouldSortByExpiration, soonestExpirationByProductId]);
 
     const handleOpenWithdrawDialog = (tp: TrackedProduct): void => {
         setWithdrawTrackedProduct(tp);
@@ -322,6 +322,7 @@ const Home: React.FC = () => {
         const label = product.manufacturer != null && product.manufacturer !== ""
             ? `${product.name}, ${product.manufacturer}`
             : product.name;
+        const soonestExpiration = soonestExpirationByProductId.get(product.id);
         return (
             <div className={styles.nameCell}>
                 {product.imageSmallUrl != null && (
@@ -329,12 +330,19 @@ const Home: React.FC = () => {
                         <img src={product.imageSmallUrl} alt={product.name} />
                     </div>
                 )}
-                <span
-                    className={styles.clickableName}
-                    data-test_id="Home__Product_Name"
-                    onClick={() => productExpansion.toggleRow(product)}
-                >
-                    {label}
+                <span className={styles.nameText}>
+                    <span
+                        className={styles.clickableName}
+                        data-test_id="Home__Product_Name"
+                        onClick={() => productExpansion.toggleRow(product)}
+                    >
+                        {label}
+                    </span>
+                    {soonestExpiration != null && (
+                        <span className={styles.expirationHint} data-test_id="Home__Product_Expiration">
+                            exp. {formatTicksAsDate(soonestExpiration)}
+                        </span>
+                    )}
                 </span>
             </div>
         );
@@ -363,7 +371,16 @@ const Home: React.FC = () => {
     const renderHeader = (): React.ReactNode => {
         return (
             <div className={styles.tableHeader}>
-                <div className={styles.showEmptyToggle}>
+                <div className={styles.headerToggle}>
+                    <label htmlFor="sortByExpirationSwitch">Expiring first</label>
+                    <InputSwitch
+                        inputId="sortByExpirationSwitch"
+                        checked={shouldSortByExpiration}
+                        data-test_id="Home__Sort_By_Expiration_Switch"
+                        onChange={(e) => setShouldSortByExpiration(e.value)}
+                    />
+                </div>
+                <div className={styles.headerToggle}>
                     <label htmlFor="showEmptySwitch">Show empty</label>
                     <InputSwitch
                         inputId="showEmptySwitch"
@@ -424,9 +441,7 @@ const Home: React.FC = () => {
                 rowExpansionTemplate={rowExpansionTemplate}
                 rowGroupMode="subheader"
                 groupRowsBy="familyId"
-                sortMode="single"
-                sortField="familyId"
-                sortOrder={1}
+                // No sortField: the table would re-sort by it on its own and undo the order of groupedProducts.
                 rowGroupHeaderTemplate={familyHeaderTemplate}
                 dataKey="id"
                 data-test_id="Home__Products_Table"

@@ -25,7 +25,7 @@
     flex-wrap: wrap;
 }
 
-.showEmptyToggle {
+.headerToggle {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -48,6 +48,8 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    // Otherwise the name column, widened by its expiration, squeezes "5 cans" onto two lines on phones.
+    white-space: nowrap;
 }
 
 .stockChipDanger {
@@ -67,11 +69,25 @@
     align-items: center;
 }
 
+// The expiration follows the name, and drops below it when the name leaves no room.
+.nameText {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.5rem;
+}
+
 .clickableName {
     cursor: pointer;
     &:hover {
         text-decoration: underline;
     }
+}
+
+.expirationHint {
+    font-size: 0.8rem;
+    color: var(--text-color-secondary);
+    white-space: nowrap;
 }
 
 .avatar {

@@ -41,6 +41,24 @@ export const selectTrackedQuantityByProductId: (state: AppState) => Map<ProductR
     }
 );
 
+/** The soonest expiration date (as ticks) per product; products without any dated stock are absent. */
+export const selectSoonestExpirationByProductId: (state: AppState) => Map<ProductRef, number> = createSelector(
+    [(state: AppState): TrackedProduct[] => state.trackedProducts.trackedProducts],
+    (trackedProducts) => {
+        const map = new Map<ProductRef, number>();
+        for (const tp of trackedProducts) {
+            if (tp.expirationDate == null) {
+                continue;
+            }
+            const soonest = map.get(tp.productId);
+            if (soonest == null || tp.expirationDate < soonest) {
+                map.set(tp.productId, tp.expirationDate);
+            }
+        }
+        return map;
+    }
+);
+
 export const selectStockAggregatesByFamilyId: (state: AppState) => Map<ProductFamilyRef, FamilyStockAggregate> = createSelector(
     [
         (state: AppState): Product[] => state.products.products,

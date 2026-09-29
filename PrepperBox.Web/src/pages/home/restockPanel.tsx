@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Button, Chip, Tooltip } from "@/primereact";
 import * as store from "@/store";
 import ProductFamily from "@/models/productFamily";
@@ -16,11 +16,13 @@ interface RestockPanelProps {
 /**
  * Lists the families of the selected category that sit below their minimum stock level, including
  * those without any products — precisely the ones the grouped products table cannot surface, since
- * it only renders a family header for a family that has at least one product row.
+ * it only renders a family header for a family that has at least one product row. Starts collapsed
+ * to its header, which keeps the count in view.
  */
 const RestockPanel: React.FC<RestockPanelProps> = ({ categoryId, onAddProduct }) => {
     const productFamilies = store.useAppSelector((state) => state.productFamilies.productFamilies);
     const familyAggregates = store.useAppSelector(store.TrackedProducts.Selectors.selectStockAggregatesByFamilyId);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     const entries = useMemo(
         () => getFamiliesNeedingRestock(productFamilies, familyAggregates, categoryId),
@@ -33,43 +35,52 @@ const RestockPanel: React.FC<RestockPanelProps> = ({ categoryId, onAddProduct })
 
     return (
         <div className={styles.panel} data-test_id="Home__Restock_Panel">
-            <div className={styles.panelHeader}>
+            <button
+                type="button"
+                className={styles.panelHeader}
+                aria-expanded={isExpanded}
+                data-test_id="Home__Restock_Toggle"
+                onClick={() => setIsExpanded((current) => !current)}
+            >
+                <i className={`pi ${isExpanded ? "pi-chevron-down" : "pi-chevron-right"}`} />
                 <i className="pi pi-exclamation-circle" />
                 <span>Needs restocking ({entries.length})</span>
-            </div>
-            <ul className={styles.list}>
-                {entries.map((entry) => {
-                    const isDanger = entry.level === StockValidationLevel.Danger;
-                    const tooltipId = `restock-tooltip-${String(entry.family.id)}`;
+            </button>
+            {isExpanded && (
+                <ul className={styles.list}>
+                    {entries.map((entry) => {
+                        const isDanger = entry.level === StockValidationLevel.Danger;
+                        const tooltipId = `restock-tooltip-${String(entry.family.id)}`;
 
-                    return (
-                        <li key={entry.family.id} className={styles.item} data-test_id="Home__Restock_Family">
-                            <Chip
-                                label={isDanger ? "❗" : "⚠️"}
-                                className={`${isDanger ? styles.chipDanger : styles.chipWarning} ${tooltipId}`}
-                            />
-                            <Tooltip target={`.${tooltipId}`} position="top">
-                                <ul className={styles.reasonList}>
-                                    {entry.reasons.map((reason, i) => <li key={i}>{reason}</li>)}
-                                </ul>
-                            </Tooltip>
-                            <span className={styles.name}>{entry.family.name}</span>
-                            <span className={styles.meta}>
-                                {entry.count} of {entry.family.minimumStockLevel} {UnitOfMeasureLabels[entry.family.unitOfMeasure]}
-                            </span>
-                            <Button
-                                label="Add Product"
-                                icon="pi pi-plus"
-                                severity="secondary"
-                                text
-                                className={styles.action}
-                                data-test_id="Home__Restock_Add_Product"
-                                onClick={() => onAddProduct(entry.family)}
-                            />
-                        </li>
-                    );
-                })}
-            </ul>
+                        return (
+                            <li key={entry.family.id} className={styles.item} data-test_id="Home__Restock_Family">
+                                <Chip
+                                    label={isDanger ? "❗" : "⚠️"}
+                                    className={`${isDanger ? styles.chipDanger : styles.chipWarning} ${tooltipId}`}
+                                />
+                                <Tooltip target={`.${tooltipId}`} position="top">
+                                    <ul className={styles.reasonList}>
+                                        {entry.reasons.map((reason, i) => <li key={i}>{reason}</li>)}
+                                    </ul>
+                                </Tooltip>
+                                <span className={styles.name}>{entry.family.name}</span>
+                                <span className={styles.meta}>
+                                    {entry.count} of {entry.family.minimumStockLevel} {UnitOfMeasureLabels[entry.family.unitOfMeasure]}
+                                </span>
+                                <Button
+                                    label="Add Product"
+                                    icon="pi pi-plus"
+                                    severity="secondary"
+                                    text
+                                    className={styles.action}
+                                    data-test_id="Home__Restock_Add_Product"
+                                    onClick={() => onAddProduct(entry.family)}
+                                />
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
         </div>
     );
 };

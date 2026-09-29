@@ -6,18 +6,35 @@
     margin-bottom: 0.5rem;
 }
 
+// A button, so the whole header toggles the list; styled to read as a plain heading.
 .panelHeader {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    width: 100%;
+    padding: 0;
+    border: 0 none;
+    border-radius: var(--border-radius);
+    background: transparent;
+    font: inherit;
     font-weight: 600;
     color: var(--text-color-secondary);
-    margin-bottom: 0.25rem;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--text-color);
+    }
+
+    &:focus-visible {
+        outline: 0 none;
+        box-shadow: var(--focus-ring);
+    }
 }
 
 .list {
     list-style: none;
-    margin: 0;
+    margin: 0.25rem 0 0;
     padding: 0;
 }
 
