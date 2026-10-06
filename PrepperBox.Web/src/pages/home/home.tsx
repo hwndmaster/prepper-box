@@ -14,6 +14,7 @@ import { CategoryRef, productFamilyRef, storageLocationRef } from "@/models/type
 import { getCategoryIconClass } from "@/shared/categoryIcons";
 import { formatTicksAsDate } from "@/shared/dateFormat";
 import LoadingTargets from "@/shared/loadingTargets";
+import { selectProductThumbnailUrl } from "@/shared/productImage";
 import { sortProductsByExpiration, sortProductsByFamily } from "@/shared/productSorting";
 import AppRoutes from "@/shared/routes";
 import { StockValidationLevel, validateStockLevel } from "@/shared/stockValidation";
@@ -323,11 +324,12 @@ const Home: React.FC = () => {
             ? `${product.name}, ${product.manufacturer}`
             : product.name;
         const soonestExpiration = soonestExpirationByProductId.get(product.id);
+        const thumbnailUrl = selectProductThumbnailUrl(product);
         return (
             <div className={styles.nameCell}>
-                {product.imageSmallUrl != null && (
+                {thumbnailUrl != null && (
                     <div className={styles.avatar}>
-                        <img src={product.imageSmallUrl} alt={product.name} />
+                        <img src={thumbnailUrl} alt={product.name} referrerPolicy="no-referrer" />
                     </div>
                 )}
                 <span className={styles.nameText}>

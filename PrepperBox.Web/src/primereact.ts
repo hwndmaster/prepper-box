@@ -4,6 +4,8 @@ export { PrimeReactProvider } from "primereact/api";
 export { AutoComplete } from "primereact/autocomplete";
 export type { AutoCompleteProps } from "primereact/autocomplete";
 export { Button } from "primereact/button";
+export { Calendar } from "primereact/calendar";
+export type { CalendarProps } from "primereact/calendar";
 export { Chip } from "primereact/chip";
 export { Chips } from "primereact/chips";
 export type { ChipsProps } from "primereact/chips";

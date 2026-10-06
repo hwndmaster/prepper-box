@@ -8,18 +8,26 @@ import * as store from "@/store";
 import { categoryRef, CategoryRef, productFamilyRef, ProductFamilyRef } from "@/models/types";
 import Product from "@/models/product";
 import OpenFoodFactsProduct from "@/models/openFoodFactsProduct";
+import ImageSearchResult from "@/models/imageSearchResult";
 
 import { TrackedProductFormFields, useTrackedProductForm } from "@/components/trackedProductForm";
-import { formatDate } from "@/shared/dateFormat";
-import { selectProductImageUrl } from "@/shared/productImage";
+import { formatDate, isoDateToLocalDate } from "@/shared/dateFormat";
+import { buildImageSearchQuery, selectProductImageUrl } from "@/shared/productImage";
 import { productSchema, ProductSchemaData } from "@/schemas/productSchema";
 import type { TrackedProductSchemaData } from "@/schemas/trackedProductSchema";
 import BarCodeSuggestions from "./BarCodeSuggestions";
+import ImageSearchDialog from "./imageSearchDialog";
 import styles from "./productForm.module.scss";
 
 interface PendingTrackedProduct {
     key: number;
     data: TrackedProductSchemaData;
+}
+
+/** The expiration part of a pending tracked product's summary, empty when it has no expiration date. */
+function formatPendingExpiration(isoDate: string | undefined): string {
+    const date = isoDateToLocalDate(isoDate);
+    return date != null ? `, Exp: ${formatDate(date)}` : "";
 }
 
 interface ProductFormProps {
@@ -43,6 +51,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, init
     const [barCodeSuggestions, setBarCodeSuggestions] = useState<OpenFoodFactsProduct[]>([]);
     const [isLoadingBarCodeSuggestions, setIsLoadingBarCodeSuggestions] = useState(false);
     const [isInitialFamilyApplied, setIsInitialFamilyApplied] = useState(false);
+    const [isImageSearchVisible, setIsImageSearchVisible] = useState(false);
+    const [imageSearchQuery, setImageSearchQuery] = useState("");
+    const [failedImageUrl, setFailedImageUrl] = useState<string>();
 
     const trackedProductForm = useTrackedProductForm();
 
@@ -69,11 +80,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, init
     const selectedCategoryId = form.watch("categoryId");
     const selectedFamilyId = form.watch("familyId");
 
-    // Watched so the preview follows the URLs a picked bar code suggestion writes into the form.
+    // Watched so the preview follows the URLs a picked bar code suggestion or found image writes into the form.
     const productImageUrl = selectProductImageUrl({
         imageUrl: form.watch("imageUrl"),
         imageSmallUrl: form.watch("imageSmallUrl"),
     });
+    // A URL that failed to load, e.g. one taken down since, or a site refusing to serve its images elsewhere.
+    const isProductImageUnavailable = productImageUrl != null && productImageUrl === failedImageUrl;
 
     // Families belong to a category, so only offer those under the selected category, listed by name.
     const familyOptions = useMemo(
@@ -169,6 +182,20 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, init
         setPendingTrackedProducts((prev) => prev.filter((tp) => tp.key !== key));
     };
 
+    const handleOpenImageSearch = (): void => {
+        const { manufacturer, name } = form.getValues();
+        setImageSearchQuery(buildImageSearchQuery({ manufacturer, name }));
+        setIsImageSearchVisible(true);
+    };
+
+    const handleSelectImage = (image: ImageSearchResult): void => {
+        form.setValue("imageUrl", image.imageUrl, { shouldDirty: true });
+        // The found image replaces both URLs: a small image left over from OpenFoodFacts would otherwise
+        // keep showing the previous picture in the product list.
+        form.setValue("imageSmallUrl", undefined, { shouldDirty: true });
+        setIsImageSearchVisible(false);
+    };
+
     const handleSubmit = form.handleSubmit((data) => {
         if (isShowingTrackedProductForm) {
             toastService.showWarn("Please confirm or cancel the pending tracked product before submitting.");
@@ -186,7 +213,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, init
             <div className={styles.row}>
                 <FormInputText name="manufacturer" form={form} label="Manufacturer" />
             </div>
-            <div className={productImageUrl != null ? styles.fieldsWithImage : undefined}>
+            <div className={styles.fieldsWithImage}>
                 <div className={styles.row}>
                     <div className={styles.barCodeWrapper}>
                         <FormInputText name="barCode" form={form} label="Bar Code" onBlur={handleBarCodeBlur} />
@@ -213,15 +240,38 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, init
                         optionValue="id"
                     />
                 </div>
-                {productImageUrl != null && (
-                    <div className={styles.productImage}>
+                <div className={styles.productImage}>
+                    {productImageUrl != null && !isProductImageUnavailable && (
                         <img
                             src={productImageUrl}
                             alt={product?.name ?? "Product image"}
+                            // Some sites refuse to serve their images to other sites' pages, judging by the referrer.
+                            referrerPolicy="no-referrer"
                             data-test_id="ProductForm__Product_Image"
+                            onError={() => setFailedImageUrl(productImageUrl)}
                         />
-                    </div>
-                )}
+                    )}
+                    {isProductImageUnavailable && (
+                        <small className={styles.imageUnavailable} data-test_id="ProductForm__Product_Image_Unavailable">
+                            The product image could not be loaded.
+                        </small>
+                    )}
+                    <Button
+                        type="button"
+                        label={productImageUrl != null ? "Change image" : "Find image"}
+                        icon="pi pi-images"
+                        link
+                        className={styles.findImageButton}
+                        data-test_id="ProductForm__Find_Image"
+                        onClick={handleOpenImageSearch}
+                    />
+                    <ImageSearchDialog
+                        visible={isImageSearchVisible}
+                        initialQuery={imageSearchQuery}
+                        onSelect={handleSelectImage}
+                        onHide={() => setIsImageSearchVisible(false)}
+                    />
+                </div>
             </div>
             <div className={styles.row}>
                 <FormInputTextarea name="description" form={form} label="Description" inputProps={{ rows: 5 }} />
@@ -236,7 +286,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, initialBarCode, init
                         <li key={tp.key} className={styles.trackedProductItem}>
                             <span>
                                 Qty: {tp.data.quantity}
-                                {tp.data.expirationDate != null && tp.data.expirationDate !== "" ? `, Exp: ${formatDate(new Date(tp.data.expirationDate))}` : ""}
+                                {formatPendingExpiration(tp.data.expirationDate)}
                                 {tp.data.notes != null && tp.data.notes !== "" ? `, Notes: ${tp.data.notes}` : ""}
                             </span>
                             <Button

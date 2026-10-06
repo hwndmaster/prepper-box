@@ -23,6 +23,9 @@ namespace Genius.PrepperBox.WebApi
             services.Configure<ExpirationCheckSettings>(
                 configuration.GetSection(ExpirationCheckSettings.SectionName));
 
+            services.Configure<ImageSearchSettings>(
+                configuration.GetSection(ImageSearchSettings.SectionName));
+
             services.AddHostedService<ExpirationCheckWorker>();
         }
     }

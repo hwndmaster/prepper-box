@@ -18,6 +18,16 @@ internal sealed class PrepperBoxWebApiFactory : WebApplicationFactory<Program>
     /// </summary>
     private const string OpenFoodFactsClientName = "IOpenFoodFactsClient";
 
+    /// <summary>
+    /// The logical name of the typed <c>IImageSearchClient</c> registered by <see cref="Core.Module.Configure"/>.
+    /// </summary>
+    private const string ImageSearchClientName = "IImageSearchClient";
+
+    /// <summary>
+    /// The SerpApi key the image search is configured with, unless <see cref="IsImageSearchConfigured"/> is off.
+    /// </summary>
+    public const string TestSerpApiKey = "integration-test-serpapi-key";
+
     private readonly SqliteConnection _databaseConnection;
 
     public PrepperBoxWebApiFactory()
@@ -27,6 +37,13 @@ internal sealed class PrepperBoxWebApiFactory : WebApplicationFactory<Program>
     }
 
     public FakeOpenFoodFactsHttpMessageHandler OpenFoodFactsHttpMessageHandler { get; } = new();
+
+    public FakeSerpApiHttpMessageHandler SerpApiHttpMessageHandler { get; } = new();
+
+    /// <summary>
+    /// Whether the app gets a SerpApi key. Turn off to exercise the image search being disabled.
+    /// </summary>
+    public bool IsImageSearchConfigured { get; init; } = true;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -39,7 +56,9 @@ internal sealed class PrepperBoxWebApiFactory : WebApplicationFactory<Program>
                 // tolerance window is closed, so it schedules itself for the next day and never runs.
                 ["ExpirationCheck:NotificationTime"] = "00:00:00",
                 ["ExpirationCheck:NotificationWindowMinutes"] = "0",
-                ["Database:Backup:Enabled"] = "false"
+                ["Database:Backup:Enabled"] = "false",
+                // Always set, so a key in the developer's environment never decides what the tests see.
+                ["ImageSearch:SerpApiKey"] = IsImageSearchConfigured ? TestSerpApiKey : ""
             });
         });
 
@@ -49,9 +68,11 @@ internal sealed class PrepperBoxWebApiFactory : WebApplicationFactory<Program>
             services.RemoveAll<PrepperBoxDbContext>();
             services.AddDbContext<PrepperBoxDbContext>(options => options.UseSqlite(_databaseConnection));
 
-            // Appended last, so it wins over the primary handler the application configured.
+            // Appended last, so they win over the primary handlers the application configured.
             services.AddHttpClient(OpenFoodFactsClientName)
                 .ConfigurePrimaryHttpMessageHandler(() => OpenFoodFactsHttpMessageHandler);
+            services.AddHttpClient(ImageSearchClientName)
+                .ConfigurePrimaryHttpMessageHandler(() => SerpApiHttpMessageHandler);
         });
     }
 

@@ -873,6 +873,94 @@ export class ConsumptionLogsClient extends ApiClientBase {
     }
 }
 
+export class ImageSearchClient extends ApiClientBase {
+    protected instance: AxiosInstance;
+    protected baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        super();
+
+        this.instance = instance || axios.create();
+
+        this.baseUrl = baseUrl ?? "http://localhost:5095/";
+
+    }
+
+    static operations = {
+
+        searchImages: "api/v1/ImageSearch",
+    }
+
+    static operationParams = {
+
+        searchImages: {} as {
+            query: string;
+        },
+    }
+
+    /**
+     * @return OK
+     */
+    searchImages(query: string, cancelToken?: CancelToken): Promise<ApiResponse<ImageSearchResultDto[]>> {
+        let url_ = this.baseUrl + "/api/v1/ImageSearch?";
+        if (query === undefined || query === null)
+            throw new Error("The parameter 'query' must be defined and cannot be null.");
+        else
+            url_ += "query=" + encodeURIComponent("" + query) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processSearchImages(_response);
+        });
+    }
+
+    protected processSearchImages(response: AxiosResponse): Promise<ApiResponse<ImageSearchResultDto[]>> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = typeof(resultData200) === "object" ? resultData200 : JSON.parse(resultData200);
+            return Promise.resolve<ApiResponse<ImageSearchResultDto[]>>(new ApiResponse<ImageSearchResultDto[]>(status, _headers, result200));
+
+        } else if (status === 404) {
+            return throwException("NotFound: " + response.config.url, status, response.data, _headers, null);
+        }
+        else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponse<ImageSearchResultDto[]>>(new ApiResponse(status, _headers, null as any));
+    }
+}
+
 export class OpenFoodFactsClient extends ApiClientBase {
     protected instance: AxiosInstance;
     protected baseUrl: string;
@@ -2828,6 +2916,16 @@ export interface HttpValidationProblemDetails {
     detail: string | undefined;
     instance: string | undefined;
     errors: { [key: string]: string[]; };
+}
+
+export interface ImageSearchResultDto {
+    imageUrl: string;
+    thumbnailUrl: string;
+    title: string | undefined;
+    sourcePageUrl: string | undefined;
+    sourceName: string | undefined;
+    width: number | undefined;
+    height: number | undefined;
 }
 
 export interface OpenFoodFactsProductDto {

@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Genius.PrepperBox.Core.Services.ImageSearch;
 using Genius.PrepperBox.Core.Services.OpenFoodFacts;
 using Genius.PrepperBox.Core.Services.Telegram;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,11 @@ namespace Genius.PrepperBox.Core
             {
                 client.BaseAddress = new Uri("https://world.openfoodfacts.org");
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("PrepperBox/0.2.0 (https://github.com/hwndmaster/prepper-box)");
+            });
+
+            services.AddHttpClient<IImageSearchClient, SerpApiImageSearchClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://serpapi.com");
             });
 
             services.AddHttpClient<ITelegramNotificationService, TelegramNotificationService>();

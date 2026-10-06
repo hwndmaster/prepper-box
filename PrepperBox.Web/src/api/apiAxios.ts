@@ -4,6 +4,7 @@ import * as api from "./api.generated";
 interface ApiClient {
     categories: api.CategoriesClient;
     consumptionLogs: api.ConsumptionLogsClient;
+    imageSearch: api.ImageSearchClient;
     openFoodFacts: api.OpenFoodFactsClient;
     productFamilies: api.ProductFamiliesClient;
     products: api.ProductsClient;
@@ -29,6 +30,7 @@ const apiClient = (): ApiClient => {
     client ??= {
         categories: new api.CategoriesClient("", getApiAxiosInstance()),
         consumptionLogs: new api.ConsumptionLogsClient("", getApiAxiosInstance()),
+        imageSearch: new api.ImageSearchClient("", getApiAxiosInstance()),
         openFoodFacts: new api.OpenFoodFactsClient("", getApiAxiosInstance()),
         productFamilies: new api.ProductFamiliesClient("", getApiAxiosInstance()),
         products: new api.ProductsClient("", getApiAxiosInstance()),

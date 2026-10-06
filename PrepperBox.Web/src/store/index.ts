@@ -1,5 +1,6 @@
 export * as Categories from "./categories";
 export * as ConsumptionLogs from "./consumptionLogs";
+export * as ImageSearch from "./imageSearch";
 export * as OpenFoodFacts from "./openFoodFacts";
 export * as ProductFamilies from "./productFamilies";
 export * as Products from "./products";

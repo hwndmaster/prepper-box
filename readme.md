@@ -68,6 +68,7 @@ Create a `.env` file on the remote server with your secrets:
 ```
 TELEGRAM_BOT_TOKEN=123123:xxxxxxx
 TELEGRAM_CHAT_ID=-10099999999
+SERPAPI_API_KEY=xxxxxxxx
 ```
 
 Then create `docker-compose.yml`:
@@ -85,6 +86,7 @@ services:
     environment:
       - Telegram__BotToken=${TELEGRAM_BOT_TOKEN:-}
       - Telegram__ChatId=${TELEGRAM_CHAT_ID:-}
+      - ImageSearch__SerpApiKey=${SERPAPI_API_KEY:-}
     restart: unless-stopped
 
   prepper-box-web:
@@ -168,6 +170,7 @@ ATOM_PKG_ACCESS_TOKEN=ghp_TOKEN_FOR_PACKAGE_READ
 GITHUB_REGISTRY_TOKEN=ghp_TOKEN_FOR_GHCR
 TELEGRAM_BOT_TOKEN=123123:xxxxxxx
 TELEGRAM_CHAT_ID=-10099999999
+SERPAPI_API_KEY=xxxxxxxx
 ```
 
 Then build:
@@ -177,6 +180,8 @@ docker compose build
 ```
 
 The `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` values are passed as runtime environment variables to the API container (see `docker-compose.yml`). They are mapped to `Telegram__BotToken` / `Telegram__ChatId`, which ASP.NET Core binds automatically to the `Telegram` config section.
+
+`SERPAPI_API_KEY` is mapped the same way to `ImageSearch__SerpApiKey`. It enables the product image search (Google Images through [SerpApi](https://serpapi.com/manage-api-key); the free plan covers 250 searches a month). Left empty, the search is disabled.
 
 Token usage during Docker builds:
 

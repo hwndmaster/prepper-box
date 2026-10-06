@@ -1,9 +1,10 @@
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UseFormReturn, useForm } from "react-hook-form";
-import { FormDropdown, FormInputNumber, FormInputText, FormInputTextarea } from "@hwndmaster/atom-react-prime";
+import { FormDropdown, FormInputNumber, FormInputTextarea } from "@hwndmaster/atom-react-prime";
 import * as store from "@/store";
 import { storageLocationRef } from "@/models/types";
+import { FormCalendar } from "@/components/formCalendar";
 import { trackedProductSchema, TrackedProductSchemaData } from "@/schemas/trackedProductSchema";
 import styles from "./trackedProductForm.module.scss";
 
@@ -13,7 +14,6 @@ interface TrackedProductFormFieldsProps {
 
 const TrackedProductFormFields: React.FC<TrackedProductFormFieldsProps> = ({ form }) => {
     const storageLocations = store.useAppSelector((state) => state.storageLocations.storageLocations);
-    const today = new Date().toISOString().slice(0, 10);
 
     return (
         <>
@@ -21,12 +21,12 @@ const TrackedProductFormFields: React.FC<TrackedProductFormFieldsProps> = ({ for
                 <FormInputNumber name="quantity" form={form}
                     allowDecimals={true}
                     label="Quantity" />
-                <FormInputText
+                <FormCalendar
                     name="expirationDate"
                     form={form}
                     label="Expiration Date"
-                    disableFloatingLabel
-                    inputProps={{ type: "date", min: today }}
+                    inputProps={{ minDate: new Date() }}
+                    data-test_id="TrackedProductForm__Expiration_Date"
                 />
                 <FormDropdown
                     name="storageLocationId"

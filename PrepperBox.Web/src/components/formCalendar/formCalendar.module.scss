@@ -1,0 +1,6 @@
+@use "../../styles/forms.scss";
+
+// The calendar's root wraps the input and its button, so it is the one to stretch like the other inputs.
+.calendar {
+    width: 100%;
+}

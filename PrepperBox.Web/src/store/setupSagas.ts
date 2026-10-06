@@ -2,6 +2,7 @@
 import * as openFoodFactsSagas from "./openFoodFacts/sagas";
 import * as categoriesSagas from "./categories/sagas";
 import * as consumptionLogsSagas from "./consumptionLogs/sagas";
+import * as imageSearchSagas from "./imageSearch/sagas";
 import * as productFamiliesSagas from "./productFamilies/sagas";
 import * as productsSagas from "./products/sagas";
 import * as storageLocationsSagas from "./storageLocations/sagas";
@@ -9,6 +10,7 @@ import * as trackedProductsSagas from "./trackedProducts/sagas";
 import * as openFoodFacts from "./openFoodFacts";
 import * as categories from "./categories";
 import * as consumptionLogs from "./consumptionLogs";
+import * as imageSearch from "./imageSearch";
 import * as productFamilies from "./productFamilies";
 import * as products from "./products";
 import * as storageLocations from "./storageLocations";
@@ -16,6 +18,10 @@ import * as trackedProducts from "./trackedProducts";
 
 const openFoodFactsWatchers: SagaWatcher[] = [
     { handlingType: SagaHandlingType.TakeLatest, action: openFoodFacts.Actions.searchByBarCode, saga: openFoodFactsSagas.searchByBarCodeSaga },
+];
+
+const imageSearchWatchers: SagaWatcher[] = [
+    { handlingType: SagaHandlingType.TakeLatest, action: imageSearch.Actions.searchImages, saga: imageSearchSagas.searchImagesSaga },
 ];
 
 const categoriesWatchers: SagaWatcher[] = [
@@ -64,6 +70,7 @@ const consumptionLogsWatchers: SagaWatcher[] = [
 export const domainWatchers: SagaWatcher[] = [
     ...categoriesWatchers,
     ...consumptionLogsWatchers,
+    ...imageSearchWatchers,
     ...openFoodFactsWatchers,
     ...productFamiliesWatchers,
     ...productsWatchers,

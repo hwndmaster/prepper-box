@@ -132,6 +132,15 @@ static void ConfigureDeployed(IDistributedApplicationBuilder builder)
         // from anything else reporting in.
         .WithEnvironment("OTEL_SERVICE_NAME", "prepper-box-api");
 
+    // The product image search key, PrepperBox only and so read straight from configuration like the
+    // HTTPS settings below. The api container gets no environment from compose in this mode, only what
+    // is set here. Left unset, the API keeps the image search disabled.
+    var serpApiKey = builder.Configuration["Deployment:SerpApiKey"];
+    if (!string.IsNullOrWhiteSpace(serpApiKey))
+    {
+        api.WithEnvironment("ImageSearch__SerpApiKey", serpApiKey);
+    }
+
     // PrepperBox is the only app in the family that also serves HTTPS, from certificates mounted into
     // the web container. Read straight from configuration rather than added to DeploymentSettings:
     // that file is rendered from the shared atom-devops template and must stay app-agnostic.

@@ -18,6 +18,7 @@ internal sealed class ApiScenarioClient
     public const string TrackedProductsUri = "/api/v1/TrackedProducts";
     public const string ConsumptionLogsUri = "/api/v1/ConsumptionLogs";
     public const string OpenFoodFactsUri = "/api/v1/OpenFoodFacts";
+    public const string ImageSearchUri = "/api/v1/ImageSearch";
 
     private readonly HttpClient _client;
 

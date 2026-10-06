@@ -14,6 +14,12 @@
       "cwd": "${workspaceFolder}/PrepperBox.AppHost",
       "launchSettingsFilePath": "${workspaceFolder}/PrepperBox.AppHost/Properties/launchSettings.json",
       "launchSettingsProfile": "http",
+      // Merged over the launch profile's variables. Without it the dashboard demands the login token
+      // printed in the debug console, and the page opened below lands on the login screen. Set here
+      // rather than in launchSettings.json so `dotnet run` and other IDEs keep the token.
+      "env": {
+        "ASPIRE_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS": "true"
+      },
       "serverReadyAction": {
         "action": "openExternally",
         "pattern": "\\bNow listening on:\\s+http://localhost:15191\\b",

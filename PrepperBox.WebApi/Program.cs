@@ -54,7 +54,8 @@ app.MapControllers();
 
 app.LogAtomStartupSummary(summary => summary
     .AddFile("Database", dbPath)
-    // Whether the integration is wired up, never the token itself.
-    .Add("Telegram configured", !string.IsNullOrWhiteSpace(builder.Configuration["Telegram:BotToken"])));
+    // Whether the integrations are wired up, never the secrets themselves.
+    .Add("Telegram configured", !string.IsNullOrWhiteSpace(builder.Configuration["Telegram:BotToken"]))
+    .Add("Image search configured", !string.IsNullOrWhiteSpace(builder.Configuration["ImageSearch:SerpApiKey"])));
 
 await app.RunAsync().ConfigureAwait(false);

@@ -59,6 +59,11 @@ same-origin `/api/` proxy instead.
 Docker also injects `Telegram__BotToken` and `Telegram__ChatId` from `TELEGRAM_BOT_TOKEN` /
 `TELEGRAM_CHAT_ID` — this is the only app in the set with outbound notifications.
 
+The product image search runs on **SerpApi** (Google Images engine), keyed by `ImageSearch:SerpApiKey`.
+Without a key the search is disabled and `GET /api/v1/ImageSearch` answers 503. The root compose file
+maps it from `SERPAPI_API_KEY`; in the `Deployment/` stack the api container gets no environment from
+compose, so the app host forwards `Deployment__SerpApiKey` (`PREPPER_BOX_SERPAPI_KEY`) to it.
+
 ## Backend specifics
 
 - **Repository tests** derive from Atom's `BaseRepositoryTests` — see
@@ -80,13 +85,17 @@ Docker also injects `Telegram__BotToken` and `Telegram__ChatId` from `TELEGRAM_B
   - `FakeOpenFoodFactsHttpMessageHandler` — stubs the external **OpenFoodFacts** service (per-path
     JSON responses, a configurable fallback status, and the recorded outgoing requests), swapped in as
     the primary handler of the typed client registered under `IOpenFoodFactsClient`;
+  - `FakeSerpApiHttpMessageHandler` — stubs **SerpApi** behind the image search (one configurable
+    status + JSON response, and the recorded outgoing requests), swapped in under `IImageSearchClient`.
+    The factory always configures a test SerpApi key; `IsImageSearchConfigured = false` starts the API
+    without one;
   - `HttpClientJsonExtensions`.
 - **Timestamps**: use `ApiScenarioClient.Ticks(...)` to build expected values — the database stores
   Unix seconds, so sub-second precision does not round-trip.
 - Scenario coverage: `MandatoryDataIntegrationTests` (startup seeding),
   `WorkflowScenarioIntegrationTests` (full stock lifecycle, aggregated counters, cascaded deletes,
   a family moved between categories), `RequestValidationIntegrationTests`,
-  `VersionConflictIntegrationTests`, `OpenFoodFactsIntegrationTests`,
+  `VersionConflictIntegrationTests`, `OpenFoodFactsIntegrationTests`, `ImageSearchIntegrationTests`,
   `DatabaseIsolationIntegrationTests`.
 - `ExpirationCheckWorkerTests` drives async code with a **signalling logger** rather than sleeping —
   follow that pattern for other background workers.
@@ -96,8 +105,8 @@ Docker also injects `Telegram__BotToken` and `Telegram__ChatId` from `TELEGRAM_B
 `PrepperBox.Web`, dev server on 5096. `pnpm nswag` reads `http://localhost:5095/openapi/v1.json`, so
 the API must be running.
 
-- **Store slices**: `categories`, `consumptionLogs`, `openFoodFacts`, `productFamilies`, `products`,
-  `storageLocations`, `trackedProducts`.
+- **Store slices**: `categories`, `consumptionLogs`, `imageSearch`, `openFoodFacts`, `productFamilies`,
+  `products`, `storageLocations`, `trackedProducts`.
 - `persistVersion: 3`, `persistBlacklist: ["common"]`.
 - PrimeReact theme is `viva-dark`.
 - `fakeAxios` and `fakeStore` live at `@/utils/tests/` — not under `store/testUtils/` as in the
@@ -106,3 +115,6 @@ the API must be running.
 - Barcode scanning uses `react-zxing`; charts use `recharts`.
 - Forms: `productForm`, `trackedProductForm`, `editCategory`, `editStorageLocation`,
   `editProductFamily`. Schemas are `schemas/<entity>Schema.ts` exporting `<Entity>SchemaData`.
+- Dates display as **DD-MMM-YYYY** (`shared/dateFormat.ts`). Date fields use `FormCalendar`
+  (`components/formCalendar`), never a native `<input type="date">`, whose display follows the browser
+  locale (MM/DD/YYYY on en-US). The form value stays an ISO `YYYY-MM-DD` string for `inputDateToTicks`.

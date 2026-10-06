@@ -4,9 +4,9 @@
     position: relative;
 }
 
-// Bar Code / Category / Family keep two thirds; the product image takes the remaining third.
-// The nested .row is still an auto-fit grid, so those three fields sit side by side on wide
-// screens and stack once their column drops below the 200px-per-field threshold.
+// Bar Code / Category / Family keep two thirds; the remaining third holds the product image, if any,
+// and the link to find one. The nested .row is still an auto-fit grid, so those three fields sit side
+// by side on wide screens and stack once their column drops below the 200px-per-field threshold.
 .fieldsWithImage {
     display: grid;
     grid-template-columns: 2fr minmax(0, 1fr);
@@ -21,6 +21,10 @@
 }
 
 .productImage {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
     padding-top: 0.3rem;
 
     // Bounded on both axes so the aspect ratio is preserved without distortion or letterboxing.
@@ -29,6 +33,16 @@
         max-width: 100%;
         max-height: 14rem;
     }
+}
+
+.imageUnavailable {
+    color: var(--text-color-secondary);
+}
+
+// Lined up with the image above it rather than indented by the button padding.
+.findImageButton:global(.p-button) {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .trackedProductList {
