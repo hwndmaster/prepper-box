@@ -56,13 +56,18 @@ Entity ids are **`int`** — `models/types.ts` uses `EntityIntId` with `createIn
 `VITE_API_URL` in `.env` points the SPA at the API in development; production relies on the nginx
 same-origin `/api/` proxy instead.
 
-Docker also injects `Telegram__BotToken` and `Telegram__ChatId` from `TELEGRAM_BOT_TOKEN` /
-`TELEGRAM_CHAT_ID` — this is the only app in the set with outbound notifications.
+The expiration notifications go out through **Telegram** (`Telegram:BotToken` + `Telegram:ChatId`,
+both needed) — this is the only app in the set with outbound notifications. The product image search
+runs on **SerpApi** (Google Images engine), keyed by `ImageSearch:SerpApiKey`; without a key the search
+is disabled and `GET /api/v1/ImageSearch` answers 503.
 
-The product image search runs on **SerpApi** (Google Images engine), keyed by `ImageSearch:SerpApiKey`.
-Without a key the search is disabled and `GET /api/v1/ImageSearch` answers 503. The root compose file
-maps it from `SERPAPI_API_KEY`; in the `Deployment/` stack the api container gets no environment from
-compose, so the app host forwards `Deployment__SerpApiKey` (`PREPPER_BOX_SERPAPI_KEY`) to it.
+All three come from the same env variables in both compose files — `PREPPER_BOX_TELEGRAM_BOT_TOKEN`,
+`PREPPER_BOX_TELEGRAM_CHAT_ID`, `PREPPER_BOX_SERPAPI_KEY` — and the names must stay in sync. The root
+compose maps them onto the api container directly. In the `Deployment/` stack (`deployed` mode) the api
+container gets no environment from compose: the app host receives them as `Deployment__TelegramBotToken`,
+`Deployment__TelegramChatId` and `Deployment__SerpApiKey` and forwards them in `ConfigureDeployed`. The
+profiled `prepper-box-api` service there maps them directly too, for `external` mode. A new secret for
+the api needs all three places.
 
 ## Backend specifics
 

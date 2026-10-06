@@ -59,13 +59,17 @@ services:
       Deployment__PublicHost: ${PREPPER_BOX_PUBLIC_HOST:-}
       Deployment__ApiPort: "${PREPPER_BOX_API_PORT:-5095}"
       # PrepperBox only: the web image also serves HTTPS from mounted certificates. A host path again,
-      # since the host's daemon resolves it. Leave unset to publish HTTP only.
-      Deployment__CertsPath: ${PREPPER_BOX_CERTS_PATH:-}
+      # since the host's daemon resolves it. Required: nginx declares the HTTPS server unconditionally
+      # and will not start without server.crt and server.key.
+      Deployment__CertsPath: ${PREPPER_BOX_CERTS_PATH:?PREPPER_BOX_CERTS_PATH must be set (see .env.example)}
       Deployment__WebHttpsPort: "${PREPPER_BOX_WEB_HTTPS_PORT:-5097}"
       Deployment__WebPort: "${PREPPER_BOX_WEB_PORT:-5096}"
-      # PrepperBox only: the SerpApi key the app host hands on to the api container for the product image
-      # search. Leave unset to keep the image search disabled.
+      # PrepperBox only: the integration secrets the app host hands on to the api container — the SerpApi
+      # key for the product image search, and the Telegram bot for the expiration notifications. Each
+      # one left unset keeps its integration disabled.
       Deployment__SerpApiKey: ${PREPPER_BOX_SERPAPI_KEY:-}
+      Deployment__TelegramBotToken: ${PREPPER_BOX_TELEGRAM_BOT_TOKEN:-}
+      Deployment__TelegramChatId: ${PREPPER_BOX_TELEGRAM_CHAT_ID:-}
 
       # IMPORTANT: these are paths on the DOCKER HOST, not inside this container. The app host asks the
       # host's daemon to create the api container, and the daemon resolves bind mounts against its own
@@ -109,6 +113,8 @@ services:
       OTEL_EXPORTER_OTLP_INSECURE: "true"
       OTEL_SERVICE_NAME: prepper-box-api
       ImageSearch__SerpApiKey: ${PREPPER_BOX_SERPAPI_KEY:-}
+      Telegram__BotToken: ${PREPPER_BOX_TELEGRAM_BOT_TOKEN:-}
+      Telegram__ChatId: ${PREPPER_BOX_TELEGRAM_CHAT_ID:-}
     volumes:
       - ${PREPPER_BOX_DATA_PATH}:/app/Data
       - ${PREPPER_BOX_LOGS_PATH}:/app/Logs
@@ -120,6 +126,9 @@ services:
     container_name: prepper-box-web
     ports:
       - "${PREPPER_BOX_WEB_PORT:-5096}:8046"
+      - "${PREPPER_BOX_WEB_HTTPS_PORT:-5097}:8443"
+    volumes:
+      - ${PREPPER_BOX_CERTS_PATH}:/etc/nginx/certs:ro
     depends_on:
       - prepper-box-api
     restart: unless-stopped

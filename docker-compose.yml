@@ -33,9 +33,10 @@ services:
       - C:/Dev/Src/prepper-box-docker-data:/app/Data      # Persist SQLite database
       - C:/Dev/Src/prepper-box-docker-logs:/app/Logs      # Logs
     environment:
-      - Telegram__BotToken=${TELEGRAM_BOT_TOKEN:-}
-      - Telegram__ChatId=${TELEGRAM_CHAT_ID:-}
-      - ImageSearch__SerpApiKey=${SERPAPI_API_KEY:-}
+      # Same variable names as Deployment/.env.example, so one set of keys works in both .env files.
+      - Telegram__BotToken=${PREPPER_BOX_TELEGRAM_BOT_TOKEN:-}
+      - Telegram__ChatId=${PREPPER_BOX_TELEGRAM_CHAT_ID:-}
+      - ImageSearch__SerpApiKey=${PREPPER_BOX_SERPAPI_KEY:-}
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://prepper-box-apphost:21192
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
       - OTEL_EXPORTER_OTLP_INSECURE=true

@@ -1,4 +1,5 @@
 using Genius.PrepperBox.AppHost;
+using Microsoft.Extensions.Configuration;
 
 // The port the Vite dev server runs on locally. Named in one more place that has to agree with it:
 // `server.port` in vite.config.ts, for when the dev server is started on its own.
@@ -132,14 +133,12 @@ static void ConfigureDeployed(IDistributedApplicationBuilder builder)
         // from anything else reporting in.
         .WithEnvironment("OTEL_SERVICE_NAME", "prepper-box-api");
 
-    // The product image search key, PrepperBox only and so read straight from configuration like the
-    // HTTPS settings below. The api container gets no environment from compose in this mode, only what
-    // is set here. Left unset, the API keeps the image search disabled.
-    var serpApiKey = builder.Configuration["Deployment:SerpApiKey"];
-    if (!string.IsNullOrWhiteSpace(serpApiKey))
-    {
-        api.WithEnvironment("ImageSearch__SerpApiKey", serpApiKey);
-    }
+    // The integration secrets, PrepperBox only and so read straight from configuration like the HTTPS
+    // settings below. The api container gets no environment from compose in this mode, only what is set
+    // here. Each one left unset keeps its integration disabled in the API.
+    ForwardIfSet(builder.Configuration, api, "Deployment:SerpApiKey", "ImageSearch__SerpApiKey");
+    ForwardIfSet(builder.Configuration, api, "Deployment:TelegramBotToken", "Telegram__BotToken");
+    ForwardIfSet(builder.Configuration, api, "Deployment:TelegramChatId", "Telegram__ChatId");
 
     // PrepperBox is the only app in the family that also serves HTTPS, from certificates mounted into
     // the web container. Read straight from configuration rather than added to DeploymentSettings:
@@ -180,6 +179,19 @@ static void ConfigureDeployed(IDistributedApplicationBuilder builder)
         .WithContainerRuntimeArgs("-p", $"{settings.BindAddress}:{httpsPort}:8443")
         // No endpoint behind this publish, so without it the Resources page would not list HTTPS at all.
         .WithUrl($"https://{settings.PublicHost}:{httpsPort}");
+}
+
+static void ForwardIfSet(
+    IConfiguration configuration,
+    IResourceBuilder<ContainerResource> container,
+    string configurationKey,
+    string environmentName)
+{
+    var value = configuration[configurationKey];
+    if (!string.IsNullOrWhiteSpace(value))
+    {
+        container.WithEnvironment(environmentName, value);
+    }
 }
 
 /// <summary>

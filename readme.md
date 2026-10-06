@@ -61,58 +61,10 @@ docker push ghcr.io/hwndmaster/prepper-box-web:latest
 
 ### Remotely
 
-Create `docker-compose.yml`:
-
-Create a `.env` file on the remote server with your secrets:
-
-```
-TELEGRAM_BOT_TOKEN=123123:xxxxxxx
-TELEGRAM_CHAT_ID=-10099999999
-SERPAPI_API_KEY=xxxxxxxx
-```
-
-Then create `docker-compose.yml`:
-
-```yaml
-services:
-  prepper-box-api:
-    image: ghcr.io/hwndmaster/prepper-box-api:latest
-    container_name: prepper-box-api
-    ports:
-      - "5095:8045"
-    volumes:
-      - C:/path/to/your/remote/data:/app/Data
-      - C:/path/to/logs/folder:/app/Logs
-    environment:
-      - Telegram__BotToken=${TELEGRAM_BOT_TOKEN:-}
-      - Telegram__ChatId=${TELEGRAM_CHAT_ID:-}
-      - ImageSearch__SerpApiKey=${SERPAPI_API_KEY:-}
-    restart: unless-stopped
-
-  prepper-box-web:
-    image: ghcr.io/hwndmaster/prepper-box-web:latest
-    container_name: prepper-box-web
-    ports:
-      - "5096:8046"
-      - "5097:8443"
-    volumes:
-      - ./certs:/etc/nginx/certs:ro
-    depends_on:
-      - prepper-box-api
-    restart: unless-stopped
-```
-
-Replace `C:/path/to/your/remote/data` with the actual folder where you want the database on the remote server.
-
-Then start the containers:
-```shell
-docker compose up -d
-```
-
-After updating the docker:
-```shell
-docker compose pull && docker compose up -d
-```
+The server deployment lives in [`Deployment/`](Deployment/README.md): copy `Deployment/.env.example`
+to `Deployment/.env`, fill it in, and run `docker compose --env-file .env up -d` from that folder.
+Updates go through `Deployment/update.ps1` — see the README there for why a plain
+`docker compose pull && docker compose up -d` silently keeps the previous build running.
 
 ### Miscellaneous
 
@@ -168,9 +120,9 @@ Create a `.env` file at the repo root with your secrets (this file should not be
 ```
 ATOM_PKG_ACCESS_TOKEN=ghp_TOKEN_FOR_PACKAGE_READ
 GITHUB_REGISTRY_TOKEN=ghp_TOKEN_FOR_GHCR
-TELEGRAM_BOT_TOKEN=123123:xxxxxxx
-TELEGRAM_CHAT_ID=-10099999999
-SERPAPI_API_KEY=xxxxxxxx
+PREPPER_BOX_TELEGRAM_BOT_TOKEN=123123:xxxxxxx
+PREPPER_BOX_TELEGRAM_CHAT_ID=-10099999999
+PREPPER_BOX_SERPAPI_KEY=xxxxxxxx
 ```
 
 Then build:
@@ -179,9 +131,9 @@ Then build:
 docker compose build
 ```
 
-The `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` values are passed as runtime environment variables to the API container (see `docker-compose.yml`). They are mapped to `Telegram__BotToken` / `Telegram__ChatId`, which ASP.NET Core binds automatically to the `Telegram` config section.
+The `PREPPER_BOX_TELEGRAM_BOT_TOKEN` and `PREPPER_BOX_TELEGRAM_CHAT_ID` values are passed as runtime environment variables to the API container (see `docker-compose.yml`). They are mapped to `Telegram__BotToken` / `Telegram__ChatId`, which ASP.NET Core binds automatically to the `Telegram` config section.
 
-`SERPAPI_API_KEY` is mapped the same way to `ImageSearch__SerpApiKey`. It enables the product image search (Google Images through [SerpApi](https://serpapi.com/manage-api-key); the free plan covers 250 searches a month). Left empty, the search is disabled.
+`PREPPER_BOX_SERPAPI_KEY` is mapped the same way to `ImageSearch__SerpApiKey`. It enables the product image search (Google Images through [SerpApi](https://serpapi.com/manage-api-key); the free plan covers 250 searches a month). Left empty, the search is disabled.
 
 Token usage during Docker builds:
 
@@ -189,6 +141,8 @@ Token usage during Docker builds:
 * `GITHUB_REGISTRY_TOKEN`: used for `docker login ghcr.io` before push.
 
 If one token has both package read and GHCR push permissions, you can reuse the same value for both variables.
+
+The `PREPPER_BOX_*` names are the same ones `Deployment/.env.example` uses, so the integration keys can be copied between the two `.env` files as they are. The two tokens above keep their unprefixed names: they belong to the shared build and publish toolchain, not to this app.
 
 ### Troubleshooting
 
