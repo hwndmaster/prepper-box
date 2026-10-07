@@ -10,7 +10,7 @@ import * as store from "@/store";
 import Product from "@/models/product";
 import ProductFamily from "@/models/productFamily";
 import TrackedProduct from "@/models/trackedProduct";
-import { CategoryRef, productFamilyRef, storageLocationRef } from "@/models/types";
+import { CategoryRef, productFamilyRef, StorageLocationRef, storageLocationRef } from "@/models/types";
 import { getCategoryIconClass } from "@/shared/categoryIcons";
 import { formatTicksAsDate } from "@/shared/dateFormat";
 import LoadingTargets from "@/shared/loadingTargets";
@@ -20,6 +20,7 @@ import AppRoutes from "@/shared/routes";
 import { StockValidationLevel, validateStockLevel } from "@/shared/stockValidation";
 import { UnitOfMeasureLabels } from "@/shared/unitOfMeasureLabels";
 import BarcodeScannerDialog from "./barcodeScannerDialog";
+import ChangeStorageDialog from "./changeStorageDialog";
 import ProductSelectionDialog from "./productSelectionDialog";
 import RestockPanel from "./restockPanel";
 import WithdrawStockDialog from "./withdrawStockDialog";
@@ -47,6 +48,8 @@ const Home: React.FC = () => {
     const [expandedTrackedRows, setExpandedTrackedRows] = useState<TrackedProduct[]>([]);
     const [isWithdrawDialogVisible, setIsWithdrawDialogVisible] = useState(false);
     const [withdrawTrackedProduct, setWithdrawTrackedProduct] = useState<TrackedProduct | null>(null);
+    const [isChangeStorageDialogVisible, setIsChangeStorageDialogVisible] = useState(false);
+    const [changeStorageTrackedProduct, setChangeStorageTrackedProduct] = useState<TrackedProduct | null>(null);
     const [isScannerVisible, setIsScannerVisible] = useState(false);
     const [matchedProducts, setMatchedProducts] = useState<Product[]>([]);
     const [isProductSelectionVisible, setIsProductSelectionVisible] = useState(false);
@@ -133,6 +136,40 @@ const Home: React.FC = () => {
         setWithdrawTrackedProduct(null);
     };
 
+    const handleOpenChangeStorageDialog = (tp: TrackedProduct): void => {
+        setChangeStorageTrackedProduct(tp);
+        setIsChangeStorageDialogVisible(true);
+    };
+
+    const handleChangeStorageConfirm = (storageLocationId: StorageLocationRef): void => {
+        if (changeStorageTrackedProduct == null) {
+            return;
+        }
+
+        const productName = products.find((p) => p.id === changeStorageTrackedProduct.productId)?.name ?? "Unknown";
+        const storageLocationName = storageLocations.find((s) => s.id === storageLocationId)?.name;
+
+        dispatch(store.TrackedProducts.Actions.changeTrackedProductStorage(
+            {
+                trackedProductId: changeStorageTrackedProduct.id,
+                storageLocationId,
+            },
+            () => {
+                toastService.showSuccess(storageLocationName != null
+                    ? `Product ${productName} was moved to ${storageLocationName}`
+                    : `Product ${productName} was moved out of its storage`);
+            }
+        ));
+
+        setIsChangeStorageDialogVisible(false);
+        setChangeStorageTrackedProduct(null);
+    };
+
+    const handleChangeStorageCancel = (): void => {
+        setIsChangeStorageDialogVisible(false);
+        setChangeStorageTrackedProduct(null);
+    };
+
     const handleBarcodeScan = (barcode: string): void => {
         setIsScannerVisible(false);
         dispatch(store.Products.Actions.fetchProductsByBarCode(barcode, (foundProducts) => {
@@ -185,16 +222,28 @@ const Home: React.FC = () => {
         return <span>{formatTicksAsDate(tp.expirationDate)}</span>;
     };
 
-    const withdrawActionTemplate = (tp: TrackedProduct): React.ReactNode => {
+    const trackedProductActionsTemplate = (tp: TrackedProduct): React.ReactNode => {
         return (
-            <Button
-                icon="pi pi-minus"
-                severity="warning"
-                text
-                rounded
-                data-test_id="Home__Withdraw_TrackedProduct"
-                onClick={() => handleOpenWithdrawDialog(tp)}
-            />
+            <div className={styles.trackedProductActions}>
+                <Button
+                    icon="pi pi-minus"
+                    severity="warning"
+                    text
+                    rounded
+                    data-test_id="Home__Withdraw_TrackedProduct"
+                    onClick={() => handleOpenWithdrawDialog(tp)}
+                />
+                <Button
+                    icon="pi pi-warehouse"
+                    severity="info"
+                    text
+                    rounded
+                    tooltip="Change storage"
+                    tooltipOptions={{ position: "top" }}
+                    data-test_id="Home__Change_Storage_TrackedProduct"
+                    onClick={() => handleOpenChangeStorageDialog(tp)}
+                />
+            </div>
         );
     };
 
@@ -303,7 +352,7 @@ const Home: React.FC = () => {
                     <Column field="expirationDate" header="Expiration" body={expirationDateTemplate} />
                     <Column field="quantity" header="Quantity" body={quantityTemplate} />
                     <Column field="storageLocationId" header="Storage" body={storageLocationTemplate} />
-                    <Column header="Actions" body={withdrawActionTemplate} className={styles.actionColumn} />
+                    <Column header="Actions" body={trackedProductActionsTemplate} className={styles.trackedProductActionsColumn} />
                 </DataTable>
                 <div className={styles.addRowButton}>
                     <Button
@@ -459,6 +508,14 @@ const Home: React.FC = () => {
                 visible={isWithdrawDialogVisible}
                 onConfirm={handleWithdrawConfirm}
                 onCancel={handleWithdrawCancel}
+            />
+
+            <ChangeStorageDialog
+                trackedProduct={changeStorageTrackedProduct}
+                storageLocations={storageLocations}
+                visible={isChangeStorageDialogVisible}
+                onConfirm={handleChangeStorageConfirm}
+                onCancel={handleChangeStorageCancel}
             />
 
             <BarcodeScannerDialog

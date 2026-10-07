@@ -204,6 +204,29 @@
     text-align: center;
 }
 
+.trackedProductActionsColumn {
+    width: 7rem;
+    text-align: center;
+}
+
+.trackedProductActions {
+    display: flex;
+    justify-content: center;
+}
+
+// Side by side, the two actions push the nested table past a phone viewport; stacked, they take no
+// more width than the single action did.
+@media (max-width: 640px) {
+    .trackedProductActionsColumn {
+        width: 4rem;
+    }
+
+    .trackedProductActions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
 .familyGroupHeader {
     display: flex;
     align-items: center;

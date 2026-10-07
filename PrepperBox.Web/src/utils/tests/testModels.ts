@@ -1,6 +1,7 @@
 import Category from "@/models/category";
 import Product from "@/models/product";
 import ProductFamily from "@/models/productFamily";
+import StorageLocation from "@/models/storageLocation";
 import TrackedProduct from "@/models/trackedProduct";
 import { categoryRef, productFamilyRef, productRef, storageLocationRef, trackedProductRef } from "@/models/types";
 import { UnitOfMeasure } from "@/models/unitOfMeasure";
@@ -48,6 +49,17 @@ export function createProduct(overrides?: Partial<Product>): Product {
         familyId: productFamilyRef(1),
         categoryId: categoryRef(1),
         trackedProductsCount: 0,
+        lastModified: 0,
+        dateCreated: 0,
+        ...overrides,
+    };
+}
+
+/** Creates a StorageLocation model with a generated id and override support. */
+export function createStorageLocation(overrides?: Partial<StorageLocation>): StorageLocation {
+    return {
+        id: storageLocationRef(nextId()),
+        name: "Basement",
         lastModified: 0,
         dateCreated: 0,
         ...overrides,

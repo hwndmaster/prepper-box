@@ -1,0 +1,19 @@
+.changeStorageDialog {
+    width: 20rem;
+}
+
+.changeStorageContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.storageDropdown {
+    width: 100%;
+}
+
+.changeStorageActions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}

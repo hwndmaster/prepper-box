@@ -10,6 +10,7 @@ import { fakeAxios } from "@/utils/tests/fakeAxios";
 import * as actions from "./actions";
 import * as actionsInternal from "./actionsInternal";
 import {
+    changeTrackedProductStorageSaga,
     createTrackedProductSaga,
     deleteTrackedProductSaga,
     fetchTrackedProductsSaga,
@@ -244,6 +245,76 @@ describe("trackedProducts sagas", () => {
 
         // Assert
         expect(reject).toHaveBeenCalledWith("API did not return created consumption log.");
+        expect(sagaRunner.findDispatchedAction(actionsInternal.setTrackedProduct)).toBeUndefined();
+    });
+
+    it("changeTrackedProductStorageSaga: moves the tracked product to the new storage location, keeping its other fields", async () => {
+        // Arrange
+        const existing = createTrackedProduct({ id: trackedProductRef(23), storageLocationId: storageLocationRef(3), lastModified: 12 });
+        sagaRunner.setInitialState({ trackedProducts: { trackedProducts: [existing] } });
+        fakeAxios.setupPut(api.TrackedProductsClient, "trackedProductsPUT", {
+            body: {
+                id: trackedProductRef(23),
+                lastModified: 12,
+                productId: existing.productId,
+                storageLocationId: storageLocationRef(7),
+                expirationDate: existing.expirationDate,
+                quantity: existing.quantity,
+                notes: existing.notes,
+            },
+        }).reply(200, { entityId: trackedProductRef(23), lastModified: 120 });
+        const resolve = vi.fn();
+        const action = actions.changeTrackedProductStorage(
+            { trackedProductId: trackedProductRef(23), storageLocationId: storageLocationRef(7) },
+            resolve);
+
+        // Act
+        await sagaRunner.runSaga(changeTrackedProductStorageSaga, action);
+
+        // Assert
+        expect(sagaRunner.dispatched).toContainEqual({ type: Common.Actions.showLoader.type, payload: LoadingTargets.ActiveView });
+        expect(sagaRunner.findDispatchedAction(actionsInternal.setTrackedProduct)).toEqual({
+            ...existing,
+            storageLocationId: storageLocationRef(7),
+            lastModified: 120,
+        });
+        expect(resolve).toHaveBeenCalled();
+        expect(sagaRunner.dispatched).toContainEqual({ type: Common.Actions.hideLoader.type, payload: LoadingTargets.ActiveView });
+    });
+
+    it("changeTrackedProductStorageSaga: rejects when the tracked product is not in the store", async () => {
+        // Arrange
+        const reject = vi.fn<(reason?: string) => void>();
+        const action = actions.changeTrackedProductStorage(
+            { trackedProductId: trackedProductRef(999), storageLocationId: storageLocationRef(7) },
+            undefined,
+            reject);
+
+        // Act
+        await sagaRunner.runSaga(changeTrackedProductStorageSaga, action);
+
+        // Assert
+        expect(reject).toHaveBeenCalledWith("Cannot change the storage of tracked product with ID 999 because it does not exist in the store.");
+        expect(sagaRunner.findDispatchedAction(actionsInternal.setTrackedProduct)).toBeUndefined();
+    });
+
+    it("changeTrackedProductStorageSaga: rejects when the API returns no result", async () => {
+        // Arrange
+        const existing = createTrackedProduct({ id: trackedProductRef(24) });
+        sagaRunner.setInitialState({ trackedProducts: { trackedProducts: [existing] } });
+        fakeAxios.setupPut(api.TrackedProductsClient, "trackedProductsPUT")
+            .reply(200, null);
+        const reject = vi.fn<(reason?: string) => void>();
+        const action = actions.changeTrackedProductStorage(
+            { trackedProductId: trackedProductRef(24), storageLocationId: storageLocationRef(7) },
+            undefined,
+            reject);
+
+        // Act
+        await sagaRunner.runSaga(changeTrackedProductStorageSaga, action);
+
+        // Assert
+        expect(reject).toHaveBeenCalledWith("API did not return updated tracked product.");
         expect(sagaRunner.findDispatchedAction(actionsInternal.setTrackedProduct)).toBeUndefined();
     });
 });

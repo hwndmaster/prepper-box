@@ -14,6 +14,35 @@ import * as trackedProductsActionsInternal from "./actionsInternal";
 import { selectTrackedProductById } from "./selectors";
 
 /**
+ * Saves the given changes of a tracked product via the API, keeping its other fields, and stores the result.
+ * @param existing The tracked product as currently held in the store.
+ * @param changes The fields to change.
+ */
+function* saveTrackedProductChangesSaga(existing: TrackedProduct, changes: Partial<Pick<TrackedProduct, "quantity" | "storageLocationId">>): SagaGenerator {
+    const updated: TrackedProduct = { ...existing, ...changes };
+    const updateRequest: api.UpdateTrackedProductRequest = {
+        id: updated.id,
+        lastModified: updated.lastModified,
+        productId: updated.productId,
+        storageLocationId: updated.storageLocationId,
+        expirationDate: updated.expirationDate,
+        quantity: updated.quantity,
+        notes: updated.notes,
+    };
+    const updateResult = yield* callApi(() => apiClient().trackedProducts.trackedProductsPUT(updateRequest))
+        .invoke();
+
+    if (updateResult == null) {
+        throw new Error("API did not return updated tracked product.");
+    }
+
+    yield put(trackedProductsActionsInternal.setTrackedProduct({
+        ...updated,
+        lastModified: updateResult.lastModified,
+    }));
+}
+
+/**
  * Fetches tracked products from the API and updates the store.
  */
 export function* fetchTrackedProductsSaga(): Generator<unknown, void, unknown> {
@@ -145,29 +174,26 @@ export function* withdrawTrackedProductSaga(action: ReturnType<typeof trackedPro
                     .invoke();
                 yield put(trackedProductsActionsInternal.removeTrackedProductFromStore(action.payload.trackedProductId));
             } else {
-                const updateRequest: api.UpdateTrackedProductRequest = {
-                    id: existing.id,
-                    lastModified: existing.lastModified,
-                    productId: existing.productId,
-                    storageLocationId: existing.storageLocationId,
-                    expirationDate: existing.expirationDate,
-                    quantity: newQuantity,
-                    notes: existing.notes,
-                };
-                const updateResult = yield* callApi(() => apiClient().trackedProducts.trackedProductsPUT(updateRequest))
-                    .invoke();
-
-                if (updateResult == null) {
-                    throw new Error("API did not return updated tracked product.");
-                }
-
-                const updatedTrackedProduct: TrackedProduct = {
-                    ...existing,
-                    quantity: newQuantity,
-                    lastModified: updateResult.lastModified,
-                };
-                yield put(trackedProductsActionsInternal.setTrackedProduct(updatedTrackedProduct));
+                yield* saveTrackedProductChangesSaga(existing, { quantity: newQuantity });
             }
         });
     });
 }
+
+/**
+ * Moves a tracked product to another storage location via the API.
+ * @param action The action containing the tracked product ID and the storage location to move it to.
+ */
+export function* changeTrackedProductStorageSaga(action: ReturnType<typeof trackedProductsActions.changeTrackedProductStorage>): SagaGenerator {
+    yield* withLoading(LoadingTargets.ActiveView, function* () {
+        yield* withCallback(action.meta, function* () {
+            const existing: TrackedProduct | undefined = yield* typedSelect(selectTrackedProductById, action.payload.trackedProductId);
+            if (existing == null) {
+                throw new Error(`Cannot change the storage of tracked product with ID ${String(action.payload.trackedProductId)} because it does not exist in the store.`);
+            }
+
+            yield* saveTrackedProductChangesSaga(existing, { storageLocationId: action.payload.storageLocationId });
+        });
+    });
+}
+
