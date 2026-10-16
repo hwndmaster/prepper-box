@@ -29,10 +29,11 @@ COPY nginx.conf /etc/nginx/templates/default.conf.template
 # Restricts envsubst to our own variables so nginx's $uri, $host, $upstream and $1 are left alone.
 ENV NGINX_ENVSUBST_FILTER=^PREPPER_BOX_
 
-# Defaults match the compose-owned deployment, where every container shares one network and resolves
-# these names. The app host overrides them when DCP owns the containers and sits on its own network.
+# Defaults for the repo-root docker-compose.yml, where both containers share one network and resolve each
+# other by name, and telemetry goes to the shared app host if one runs on this machine. On the server the
+# app host sets both.
 ENV PREPPER_BOX_API_UPSTREAM=http://prepper-box-api:8045
-ENV PREPPER_BOX_OTLP_UPSTREAM=http://prepper-box-apphost:21193
+ENV PREPPER_BOX_OTLP_UPSTREAM=http://host.docker.internal:21101
 
 EXPOSE 8046
 EXPOSE 8443

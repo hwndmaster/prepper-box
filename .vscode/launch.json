@@ -2,31 +2,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      // First, so that a plain F5 starts the API, the dev server and the telemetry dashboard
-      // together. The WebAPI-only configurations below leave nothing listening on the OTLP
-      // endpoint, which switches the SPA's browser telemetry off for that session.
-      "name": "Launch Aspire AppHost",
-      "type": "coreclr",
+      // The Vite dev server on 5096, talking to the API on 5095 (VITE_API_URL in the web project's .env).
+      "name": "Launch Web",
+      "type": "node-terminal",
       "request": "launch",
-      "preLaunchTask": "build",
-      "program": "${workspaceFolder}/PrepperBox.AppHost/bin/Debug/net10.0/Genius.PrepperBox.AppHost.exe",
-      "args": [],
-      "cwd": "${workspaceFolder}/PrepperBox.AppHost",
-      "launchSettingsFilePath": "${workspaceFolder}/PrepperBox.AppHost/Properties/launchSettings.json",
-      "launchSettingsProfile": "http",
-      // Merged over the launch profile's variables. Without it the dashboard demands the login token
-      // printed in the debug console, and the page opened below lands on the login screen. Set here
-      // rather than in launchSettings.json so `dotnet run` and other IDEs keep the token.
-      "env": {
-        "ASPIRE_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS": "true"
-      },
-      "serverReadyAction": {
-        "action": "openExternally",
-        "pattern": "\\bNow listening on:\\s+http://localhost:15191\\b",
-        "uriFormat": "http://localhost:15191/"
-      },
-      "console": "internalConsole",
-      "stopAtEntry": false
+      "command": "pnpm start",
+      "cwd": "${workspaceFolder}/PrepperBox.Web"
     },
     {
       "name": "Launch WebAPI (no build)",
@@ -54,6 +35,15 @@
       "type": "coreclr",
       "request": "attach",
       "processId": "${command:pickProcess}"
+    }
+  ],
+  "compounds": [
+    {
+      // The API and the dev server together. Pick it once in the Run and Debug dropdown and F5 keeps
+      // starting both; stopping one stops the other.
+      "name": "API + Web",
+      "configurations": ["Launch WebAPI", "Launch Web"],
+      "stopAll": true
     }
   ]
 }

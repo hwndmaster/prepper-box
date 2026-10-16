@@ -1,0 +1,37 @@
+{
+  "$schema": "../app-host/app.schema.json",
+  "name": "prepper-box",
+  "displayName": "PrepperBox",
+  "type": "atom-webapp",
+  "registry": "${PREPPER_BOX_REGISTRY:-ghcr.io/hwndmaster}",
+  "imageTag": "${PREPPER_BOX_IMAGE_TAG:-latest}",
+  "api": {
+    "containerPort": 8045,
+    "hostPort": "${PREPPER_BOX_API_PORT:-5095}",
+    "memory": "${PREPPER_BOX_API_MEMORY_LIMIT:-384m}",
+    "volumes": [
+      { "host": "${PREPPER_BOX_DATA_PATH}", "container": "/app/Data" },
+      { "host": "${PREPPER_BOX_LOGS_PATH}", "container": "/app/Logs" }
+    ],
+    "environment": {
+      "ImageSearch__SerpApiKey": "${PREPPER_BOX_SERPAPI_KEY:-}",
+      "Telegram__BotToken": "${PREPPER_BOX_TELEGRAM_BOT_TOKEN:-}",
+      "Telegram__ChatId": "${PREPPER_BOX_TELEGRAM_CHAT_ID:-}"
+    }
+  },
+  "web": {
+    "containerPort": 8046,
+    "hostPort": "${PREPPER_BOX_WEB_PORT:-5096}",
+    "memory": "${PREPPER_BOX_WEB_MEMORY_LIMIT:-64m}",
+    "ports": [
+      { "containerPort": 8443, "hostPort": "${PREPPER_BOX_WEB_HTTPS_PORT:-5097}", "scheme": "https" }
+    ],
+    "volumes": [
+      {
+        "host": "${PREPPER_BOX_CERTS_PATH:?must name the folder holding server.crt and server.key, which nginx needs to start}",
+        "container": "/etc/nginx/certs",
+        "readOnly": true
+      }
+    ]
+  }
+}

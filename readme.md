@@ -61,10 +61,15 @@ docker push ghcr.io/hwndmaster/prepper-box-web:latest
 
 ### Remotely
 
-The server deployment lives in [`Deployment/`](Deployment/README.md): copy `Deployment/.env.example`
-to `Deployment/.env`, fill it in, and run `docker compose --env-file .env up -d` from that folder.
-Updates go through `Deployment/update.ps1` — see the README there for why a plain
-`docker compose pull && docker compose up -d` silently keeps the previous build running.
+On the server PrepperBox runs under the shared app host
+([hwndmaster/app-host](https://github.com/hwndmaster/app-host)). It creates and supervises the
+containers, and its one dashboard (port 15100) shows every application's resources, logs, traces and
+metrics.
+
+[`Deployment/`](Deployment/README.md) is this application's folder for it. Copy it to
+`C:\Docker\PrepperBox` on the server, create `.env` from `.env.example` (data, logs and certificates paths,
+plus the optional integration secrets), register the folder in the app host's `apps.json`, and run
+`.\update.ps1`. The same script updates it later, while the other applications keep running.
 
 ### Miscellaneous
 

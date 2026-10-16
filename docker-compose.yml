@@ -1,25 +1,6 @@
+# Builds the images (publish-docker.ps1) and can run them locally. On the server the shared app host runs
+# them instead, from Deployment/app.json.
 services:
-  prepper-box-apphost:
-    build:
-      context: .
-      dockerfile: PrepperBox.AppHost/Dockerfile
-      secrets:
-        - atom_pkg_access_token
-    container_name: prepper-box-apphost
-    ports:
-      - "15191:15191"
-      - "21192:21192"
-      - "21193:21193"
-    environment:
-      ASPNETCORE_ENVIRONMENT: Production
-      DOTNET_ENVIRONMENT: Production
-      ASPNETCORE_URLS: http://+:15191
-      ASPIRE_ALLOW_UNSECURED_TRANSPORT: "true"
-      ASPIRE_DASHBOARD_OTLP_ENDPOINT_URL: http://0.0.0.0:21192
-      ASPIRE_DASHBOARD_OTLP_HTTP_ENDPOINT_URL: http://0.0.0.0:21193
-      AppHost__Mode: dashboard
-    restart: unless-stopped
-
   prepper-box-api:
     build:
       context: .                          # Root, so all projects are in scope
@@ -37,11 +18,14 @@ services:
       - Telegram__BotToken=${PREPPER_BOX_TELEGRAM_BOT_TOKEN:-}
       - Telegram__ChatId=${PREPPER_BOX_TELEGRAM_CHAT_ID:-}
       - ImageSearch__SerpApiKey=${PREPPER_BOX_SERPAPI_KEY:-}
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://prepper-box-apphost:21192
+      # The shared app host's OTLP port, when one runs on this machine. Without it the exporter drops the
+      # telemetry and the API runs as usual.
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://host.docker.internal:21100
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
       - OTEL_EXPORTER_OTLP_INSECURE=true
-    depends_on:
-      - prepper-box-apphost
+      - OTEL_SERVICE_NAME=prepper-box-api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # Docker Desktop resolves it by itself; a Linux daemon does not
     restart: unless-stopped
 
   prepper-box-web:

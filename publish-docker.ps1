@@ -105,7 +105,6 @@ Ensure-DockerReady
 
 $apiImage = "$Registry/$DockerUser/prepper-box-api:latest"
 $webImage = "$Registry/$DockerUser/prepper-box-web:latest"
-$appHostImage = "$Registry/$DockerUser/prepper-box-apphost:latest"
 $previousAtomPkgAccessToken = $env:ATOM_PKG_ACCESS_TOKEN
 $hadPreviousAtomPkgAccessToken = $null -ne $previousAtomPkgAccessToken
 $previousComposeParallelLimit = $env:COMPOSE_PARALLEL_LIMIT
@@ -120,7 +119,6 @@ try {
     }
 
     Invoke-Step "Build Docker compose images" {
-        docker compose --progress=plain build prepper-box-apphost
         docker compose --progress=plain build prepper-box-api
         docker compose --progress=plain build prepper-box-web
     }
@@ -133,20 +131,12 @@ try {
         docker tag prepper-box-prepper-box-web $webImage
     }
 
-    Invoke-Step "Tag AppHost image" {
-        docker tag prepper-box-prepper-box-apphost $appHostImage
-    }
-
     Invoke-Step "Push API image" {
         docker push $apiImage
     }
 
     Invoke-Step "Push Web image" {
         docker push $webImage
-    }
-
-    Invoke-Step "Push AppHost image" {
-        docker push $appHostImage
     }
 
     Write-Host ""

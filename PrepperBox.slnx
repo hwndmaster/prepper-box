@@ -1,7 +1,4 @@
 <Solution>
-  <Folder Name="/PrepperBox.AppHost/">
-    <Project Path="PrepperBox.AppHost\PrepperBox.AppHost.csproj" />
-  </Folder>
   <Folder Name="/PrepperBox.Core/">
     <Project Path="PrepperBox.Core\PrepperBox.Core.csproj" />
   </Folder>

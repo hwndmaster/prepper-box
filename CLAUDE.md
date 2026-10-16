@@ -30,7 +30,6 @@ This file carries only what is specific to *this* app.
 
 | Project | Scope |
 |---------|-------|
-| `PrepperBox.AppHost` | Aspire host — dashboard and orchestration |
 | `PrepperBox.Core` | Domain logic |
 | `PrepperBox.Db` | EF Core context, entities, migrations, repositories |
 | `PrepperBox.Dto` | DTOs, references and request messages |
@@ -50,24 +49,28 @@ Entity ids are **`int`** — `models/types.ts` uses `EntityIntId` with `createIn
 | WebApi (local) | 5095 |
 | Web dev server | 5096 |
 | Web HTTPS (container) | 5097 → 8443, certs mounted from `./certs` |
-| Aspire dashboard (container) | 15191 |
-| OTLP gRPC / HTTP ingest | 21192 / 21193 |
+| Shared app host dashboard | 15100 |
+| OTLP gRPC / HTTP ingest (shared app host) | 21100 / 21101 |
 
 `VITE_API_URL` in `.env` points the SPA at the API in development; production relies on the nginx
 same-origin `/api/` proxy instead.
+
+Local development runs the WebApi and `pnpm start` side by side (the "API + Web" launch compound); there
+is no AppHost project. On the server the app runs under the shared app host
+([hwndmaster/app-host](https://github.com/hwndmaster/app-host)); `Deployment/` is its folder there, with
+`app.json` describing the containers. The dev server sends browser telemetry only when
+`VITE_OTLP_UPSTREAM` is set.
 
 The expiration notifications go out through **Telegram** (`Telegram:BotToken` + `Telegram:ChatId`,
 both needed) — this is the only app in the set with outbound notifications. The product image search
 runs on **SerpApi** (Google Images engine), keyed by `ImageSearch:SerpApiKey`; without a key the search
 is disabled and `GET /api/v1/ImageSearch` answers 503.
 
-All three come from the same env variables in both compose files — `PREPPER_BOX_TELEGRAM_BOT_TOKEN`,
+All three come from the same env variables in both places — `PREPPER_BOX_TELEGRAM_BOT_TOKEN`,
 `PREPPER_BOX_TELEGRAM_CHAT_ID`, `PREPPER_BOX_SERPAPI_KEY` — and the names must stay in sync. The root
-compose maps them onto the api container directly. In the `Deployment/` stack (`deployed` mode) the api
-container gets no environment from compose: the app host receives them as `Deployment__TelegramBotToken`,
-`Deployment__TelegramChatId` and `Deployment__SerpApiKey` and forwards them in `ConfigureDeployed`. The
-profiled `prepper-box-api` service there maps them directly too, for `external` mode. A new secret for
-the api needs all three places.
+compose maps them onto the api container directly. On the server `Deployment/app.json` maps them under
+`api.environment`, from `Deployment/.env`; an unset one leaves its integration off. A new secret for the
+api needs the root compose, `Deployment/app.json` and `Deployment/.env.example`.
 
 ## Backend specifics
 
