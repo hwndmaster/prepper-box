@@ -2,7 +2,7 @@
 
 PrepperBox runs under the shared **app host** ([hwndmaster/app-host](https://github.com/hwndmaster/app-host)),
 which creates and supervises its containers and shows them, with their logs, traces and metrics, on its
-dashboard. This folder goes to `C:\Docker\PrepperBox` on the server, next to `C:\Docker\app-host`;
+dashboard. This folder goes to `C:\Docker\prepper-box` on the server, next to `C:\Docker\app-host`;
 the data and logs folders sit inside it by default.
 
 | File | What it is |
@@ -15,15 +15,15 @@ the data and logs folders sit inside it by default.
 ## Install
 
 1. Install the app host first (its `Deployment\README.md`).
-2. Copy this folder to `C:\Docker\PrepperBox`, then:
+2. Copy this folder to `C:\Docker\prepper-box`, then:
    ```powershell
    Copy-Item .env.example .env   # and fill it in
    ```
    Create the data and logs folders it names.
-3. Register PrepperBox in `C:\Docker\app-host\apps.json`. `path` is the folder inside the apps root,
-   `C:\Docker`:
+3. Register PrepperBox in `C:\Docker\app-host\apps.json` by its folder inside the apps root,
+   `C:\Docker` (use whatever the folder is called):
    ```json
-   { "name": "prepper-box", "path": "PrepperBox" }
+   { "path": "prepper-box" }
    ```
 4. Run `.\update.ps1`. The first run is the installation.
 
